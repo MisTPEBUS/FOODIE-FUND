@@ -21,7 +21,6 @@ router.get(
         const { timeSort, keyWord, page = 1, limit = 10 } = req.query;
         const tSort = timeSort == "asc" ? "publicAt" : "-publicAt";
         let query = {};
-        console.log(1);
 
         if (keyWord) {
             const regex = new RegExp(keyWord, 'i');
@@ -111,13 +110,13 @@ router.post(
     handleErrorAsync(async (req, res, next) => {
 
         const updateData = req.body;
-
+        console.log(updateData)
         if (!updateData.title || !updateData.content) {
             return next(appError("傳入格式異常!請查閱API文件", next));
         }
         // Content cannot null
 
-        if (!!updateData.title.trim()) {
+        if (!updateData.title.trim()) {
             return next(appError("title欄位不能為空值！", next));
         }
         if (!updateData.content.trim()) {
@@ -132,31 +131,26 @@ router.post(
                 isTop: updateData.isTop
 
             });
-            generateSendJWT(newUser, 201, res);
+            if (!Activity) {
+                return next(appError("建立失敗!", next));
+            }
+            Success(res, "已建立貼文", newActivity, 201);
         } catch (err) {
             return next(appError(err.message, next));
         }
 
-        if (!Activity) {
-            return next(appError("建立失敗!", next));
-        }
-        Success(res, "", Activity);
+
+
 
         /*
         #swagger.tags =  ['公告管理']
-        #swagger.path = '/v1/api/Activity/admin/{id}'
-        #swagger.method = 'put'
-        #swagger.summary='更新基本資料'
-        #swagger.description = '更新基本資料'
+        #swagger.path = '/v1/api/Activity/admin'
+        #swagger.method = 'post'
+        #swagger.summary='新增公告'
+        #swagger.description = '新增公告'
         #swagger.produces = ["application/json"] 
       */
-        /*
-         #swagger.parameters['id'] = {
-                in: 'path',
-                description: '使用者id',
-                type: 'string'
-             } 
-    */
+
         /*
            #swagger.requestBody = {
                 required: true,
@@ -166,6 +160,10 @@ router.post(
                     schema: {
                         type: "object",
                         properties: {
+                            publicAt:{
+                                type: Date,
+                                 example: "2024-09-03"
+                            },
                              title: {
                                 type: "string",
                                  example: ""
@@ -177,20 +175,13 @@ router.post(
                             
                              isTop: {
                                  type: "Boolean",
-                                default: true
+                                default: false
                             },
                             
                              isEnabled: {
                                  type: "Boolean",
                                 default: true
-                            }, publicAt: {
-                                type: "Date",
-                                 example: ""
-                            },
-                             isEnabled: {
-                                type: "Boolean",
-                                default: true
-                            },
+                            }
                         },
                        
                     }  
