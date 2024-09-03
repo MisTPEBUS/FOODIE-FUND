@@ -1660,6 +1660,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "publicAt": {
+                    "example": "2024-09-03"
+                  },
                   "title": {
                     "type": "string",
                     "example": ""
@@ -1675,10 +1678,6 @@
                   "isEnabled": {
                     "type": "Boolean",
                     "default": true
-                  },
-                  "publicAt": {
-                    "type": "Date",
-                    "example": ""
                   }
                 }
               }

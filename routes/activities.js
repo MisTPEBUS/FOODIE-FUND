@@ -131,7 +131,7 @@ router.post(
                 isTop: updateData.isTop
 
             });
-            if (!Activity) {
+            if (!newActivity) {
                 return next(appError("建立失敗!", next));
             }
             Success(res, "已建立貼文", newActivity, 201);
@@ -228,16 +228,16 @@ router.put(
         });
 
 
-        const Activity = await Activity.findByIdAndUpdate(
+        const newActivity = await Activity.findByIdAndUpdate(
             id,
             { $set: filteredData },
             { new: true, useFindAndModify: false }
         );
 
-        if (!Activity) {
+        if (!newActivity) {
             return next(appError("使用者未註冊!", next));
         }
-        Success(res, "", Activity);
+        Success(res, "", newActivity);
 
         /*
         #swagger.tags =  ['公告管理']
@@ -320,13 +320,13 @@ router.delete(
         }
 
 
-        const Activity = await Activity.findByIdAndDelete(
+        const newActivity = await Activity.findByIdAndDelete(
             id,
             { new: true, useFindAndModify: false }
         );
 
-        if (!Activity) {
-            return next(appError("使用者未註冊!", next));
+        if (!newActivity) {
+            return next(appError("資料不存在!", next));
         }
         Success(res, "資料已刪除");
 
