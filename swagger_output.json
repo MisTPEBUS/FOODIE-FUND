@@ -1583,6 +1583,139 @@
           }
         }
       }
+    },
+    "/v1/api/Activity": {
+      "get": {
+        "tags": [
+          "公告管理"
+        ],
+        "summary": "公告清單查詢",
+        "description": "公告清單查詢",
+        "parameters": [
+          {
+            "name": "keyWord",
+            "in": "query",
+            "description": "關鍵字fuzzy[tittle,content], 預設空直為搜尋全部",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "timeSort",
+            "in": "query",
+            "description": "排序遠到近,進到遠default = desc",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "清單顯示比數,default=10",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "顯示第幾頁資料default=1",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/Activity/admin/{id}": {
+      "put": {
+        "tags": [
+          "公告管理"
+        ],
+        "summary": "更新基本資料",
+        "description": "更新基本資料",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "使用者id"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "會員資料",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "isTop": {
+                    "type": "Boolean",
+                    "default": true
+                  },
+                  "isEnabled": {
+                    "type": "Boolean",
+                    "default": true
+                  },
+                  "publicAt": {
+                    "type": "Date",
+                    "example": ""
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "公告管理"
+        ],
+        "summary": "刪除單筆公告",
+        "description": "刪除單筆公告",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "使用者id"
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "components": {
