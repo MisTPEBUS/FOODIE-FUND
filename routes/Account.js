@@ -26,9 +26,7 @@ router.get(
         { email: new RegExp(keyWord, "i") }
       ];
     }
-    // 設定 isBlackListed 的查詢條件
-    console.log(Boolean(Number(isBlackListed)));
-    console.log(isBlackListed == false);
+
     if (isBlackListed !== undefined && Boolean(isBlackListed)) {
 
       query.isBlackListed = isBlackListed;
@@ -131,7 +129,7 @@ router.patch(
   handleErrorAsync(async (req, res, next) => {
     const { id } = req.params;
     const { isBlackListed } = req.body;
-    console.log(isBlackListed);
+
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return next(appError("id格式無效!請使用系統加密過的參數", next));
@@ -244,7 +242,7 @@ router.patch(
   handleErrorAsync(async (req, res, next) => {
     const { id } = req.params;
     const { Role } = req.body;
-    console.log(Role);
+
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return next(appError("id格式無效!請使用系統加密過的參數", next));
