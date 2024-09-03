@@ -25,6 +25,10 @@
       "description": "Account"
     },
     {
+      "name": "公告管理",
+      "description": "Activity"
+    },
+    {
       "name": "管理者設定",
       "description": "Admin_Setting"
     },
@@ -1632,6 +1636,53 @@
         "responses": {
           "default": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/Activity/admin": {
+      "post": {
+        "tags": [
+          "公告管理"
+        ],
+        "summary": "新增公告",
+        "description": "新增公告",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "description": "會員資料",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "content": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "isTop": {
+                    "type": "Boolean",
+                    "default": false
+                  },
+                  "isEnabled": {
+                    "type": "Boolean",
+                    "default": true
+                  },
+                  "publicAt": {
+                    "type": "Date",
+                    "example": ""
+                  }
+                }
+              }
+            }
           }
         }
       }
