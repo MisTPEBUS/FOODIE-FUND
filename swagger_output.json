@@ -25,8 +25,12 @@
       "description": "Account"
     },
     {
-      "name": "公告管理",
-      "description": "Activity"
+      "name": "募資管理",
+      "description": "News"
+    },
+    {
+      "name": "公告最新消息管理",
+      "description": "News"
     },
     {
       "name": "管理者設定",
@@ -1588,7 +1592,7 @@
         }
       }
     },
-    "/v1/api/Activity": {
+    "/v1/api/news": {
       "get": {
         "tags": [
           "公告管理"
@@ -1640,7 +1644,7 @@
         }
       }
     },
-    "/v1/api/Activity/admin": {
+    "/v1/api/news/admin": {
       "post": {
         "tags": [
           "公告管理"
@@ -1686,7 +1690,7 @@
         }
       }
     },
-    "/v1/api/Activity/admin/{id}": {
+    "/v1/api/news/admin/{id}": {
       "put": {
         "tags": [
           "公告管理"
