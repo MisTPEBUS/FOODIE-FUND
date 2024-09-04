@@ -466,7 +466,7 @@ router.put(
                            enum: ['user', 'admin'],
                            default: 'user'
                         },
-                         role: {
+                         remarks: {
                            type: String,
                            
                            default: ''

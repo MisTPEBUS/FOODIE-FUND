@@ -1319,6 +1319,13 @@
                     "default": false
                   },
                   "role": {
+                    "enum": [
+                      "user",
+                      "admin"
+                    ],
+                    "default": "user"
+                  },
+                  "remarks": {
                     "default": ""
                   }
                 }
