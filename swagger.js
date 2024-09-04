@@ -28,8 +28,12 @@ const doc = {
       description: "Account",
     },
     {
-      name: "公告管理",
-      description: "Activity",
+      name: "募資管理",
+      description: "News",
+    },
+    {
+      name: "公告最新消息管理",
+      description: "News",
     },
     {
       name: "管理者設定",

@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 const mongoose = require("mongoose");
 
-const Active = require("../models/activities.js");
+const News = require("../models/news.js");
 const {
     Success,
     SuccessList,
@@ -30,17 +30,23 @@ router.get(
             ];
         }
 
+
+
         const currentPage = Math.max(parseInt(page) || 1, 1); // 確保 page 是正整數
         const itemsPerPage = Math.max(parseInt(limit) || 10, 1); // 確保 limit 是正整數
 
-        const totalCount = await Active.countDocuments(query);
+        const totalCount = await News.countDocuments(query);
 
         const totalPages = Math.ceil(totalCount / itemsPerPage);
 
-        let acties = await Active.find(query)
+        let acties = await News.find(query)
             .sort(tSort)
             .skip((currentPage - 1) * itemsPerPage)
             .limit(itemsPerPage);
+
+
+
+
 
         /*     acties = acties.map(item => {
               return {
@@ -49,6 +55,8 @@ router.get(
                 updateAt: formatDateToYYYYMMDD(new Date(item.publicAt)),
               };
             }); */
+
+
 
         // 設定分頁信息
         const pagination = {
@@ -64,7 +72,7 @@ router.get(
 
         /*
           #swagger.tags =  ['公告管理']
-          #swagger.path = '/v1/api/Active'
+          #swagger.path = '/v1/api/news'
           #swagger.method = 'get'
           #swagger.summary='公告清單查詢'
           #swagger.description = '公告清單查詢'
@@ -100,12 +108,14 @@ router.get(
 router.post(
     "/admin",
     handleErrorAsync(async (req, res, next) => {
+
         const updateData = req.body;
         console.log(updateData)
         if (!updateData.title || !updateData.content) {
             return next(appError("傳入格式異常!請查閱API文件", next));
         }
         // Content cannot null
+
         if (!updateData.title.trim()) {
             return next(appError("title欄位不能為空值！", next));
         }
@@ -114,17 +124,17 @@ router.post(
         }
 
         try {
-            const newActive = await Active.create({
+            const newNews = await News.create({
                 title: updateData.title,
                 content: updateData.content,
                 isEnabled: updateData.isEnabled,
                 isTop: updateData.isTop
 
             });
-            if (!newActive) {
+            if (!newNews) {
                 return next(appError("建立失敗!", next));
             }
-            Success(res, "已建立貼文", newActive, 201);
+            Success(res, "已建立貼文", newNews, 201);
         } catch (err) {
             return next(appError(err.message, next));
         }
@@ -134,7 +144,7 @@ router.post(
 
         /*
         #swagger.tags =  ['公告管理']
-        #swagger.path = '/v1/api/Active/admin'
+        #swagger.path = '/v1/api/news/admin'
         #swagger.method = 'post'
         #swagger.summary='新增公告'
         #swagger.description = '新增公告'
@@ -218,20 +228,20 @@ router.put(
         });
 
 
-        const newActive = await Active.findByIdAndUpdate(
+        const newNews = await News.findByIdAndUpdate(
             id,
             { $set: filteredData },
             { new: true, useFindAndModify: false }
         );
 
-        if (!newActive) {
+        if (!newNews) {
             return next(appError("使用者未註冊!", next));
         }
-        Success(res, "", newActive);
+        Success(res, "", newNews);
 
         /*
         #swagger.tags =  ['公告管理']
-        #swagger.path = '/v1/api/Active/admin/{id}'
+        #swagger.path = '/v1/api/news/admin/{id}'
         #swagger.method = 'put'
         #swagger.summary='更新基本資料'
         #swagger.description = '更新基本資料'
@@ -310,19 +320,19 @@ router.delete(
         }
 
 
-        const newActive = await Active.findByIdAndDelete(
+        const newNews = await News.findByIdAndDelete(
             id,
             { new: true, useFindAndModify: false }
         );
 
-        if (!newActive) {
+        if (!newNews) {
             return next(appError("資料不存在!", next));
         }
         Success(res, "資料已刪除");
 
         /*
         #swagger.tags =  ['公告管理']
-        #swagger.path = '/v1/api/Active/admin/{id}'
+        #swagger.path = '/v1/api/news/admin/{id}'
         #swagger.method = 'delete'
         #swagger.summary='刪除單筆公告'
         #swagger.description = '刪除單筆公告'

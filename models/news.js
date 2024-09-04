@@ -7,7 +7,7 @@ const newsSchema = new mongoose.Schema(
         },
         content: {
             type: String,
-            default: '',
+            default: '請輸入內容',
             required: true,
         },
 
@@ -15,8 +15,12 @@ const newsSchema = new mongoose.Schema(
             type: Boolean,
             default: true,
         },
+        isTop: {
+            type: Boolean,
+            default: false,
+        },
 
-        createdAt: {
+        publicAt: {
             type: Date,
             default: Date.now,
         },
