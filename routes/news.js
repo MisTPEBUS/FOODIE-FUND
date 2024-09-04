@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 const mongoose = require("mongoose");
 
-const Activity = require("../models/activities.js");
+const News = require("../models/news.js");
 const {
     Success,
     SuccessList,
@@ -35,11 +35,11 @@ router.get(
         const currentPage = Math.max(parseInt(page) || 1, 1); // 確保 page 是正整數
         const itemsPerPage = Math.max(parseInt(limit) || 10, 1); // 確保 limit 是正整數
 
-        const totalCount = await Activity.countDocuments(query);
+        const totalCount = await News.countDocuments(query);
 
         const totalPages = Math.ceil(totalCount / itemsPerPage);
 
-        let acties = await Activity.find(query)
+        let acties = await News.find(query)
             .sort(tSort)
             .skip((currentPage - 1) * itemsPerPage)
             .limit(itemsPerPage);
@@ -72,7 +72,7 @@ router.get(
 
         /*
           #swagger.tags =  ['公告管理']
-          #swagger.path = '/v1/api/Activity'
+          #swagger.path = '/v1/api/news'
           #swagger.method = 'get'
           #swagger.summary='公告清單查詢'
           #swagger.description = '公告清單查詢'
@@ -124,17 +124,17 @@ router.post(
         }
 
         try {
-            const newActivity = await Activity.create({
+            const newNews = await News.create({
                 title: updateData.title,
                 content: updateData.content,
                 isEnabled: updateData.isEnabled,
                 isTop: updateData.isTop
 
             });
-            if (!newActivity) {
+            if (!newNews) {
                 return next(appError("建立失敗!", next));
             }
-            Success(res, "已建立貼文", newActivity, 201);
+            Success(res, "已建立貼文", newNews, 201);
         } catch (err) {
             return next(appError(err.message, next));
         }
@@ -144,7 +144,7 @@ router.post(
 
         /*
         #swagger.tags =  ['公告管理']
-        #swagger.path = '/v1/api/Activity/admin'
+        #swagger.path = '/v1/api/news/admin'
         #swagger.method = 'post'
         #swagger.summary='新增公告'
         #swagger.description = '新增公告'
@@ -228,20 +228,20 @@ router.put(
         });
 
 
-        const newActivity = await Activity.findByIdAndUpdate(
+        const newNews = await News.findByIdAndUpdate(
             id,
             { $set: filteredData },
             { new: true, useFindAndModify: false }
         );
 
-        if (!newActivity) {
+        if (!newNews) {
             return next(appError("使用者未註冊!", next));
         }
-        Success(res, "", newActivity);
+        Success(res, "", newNews);
 
         /*
         #swagger.tags =  ['公告管理']
-        #swagger.path = '/v1/api/Activity/admin/{id}'
+        #swagger.path = '/v1/api/news/admin/{id}'
         #swagger.method = 'put'
         #swagger.summary='更新基本資料'
         #swagger.description = '更新基本資料'
@@ -320,19 +320,19 @@ router.delete(
         }
 
 
-        const newActivity = await Activity.findByIdAndDelete(
+        const newNews = await News.findByIdAndDelete(
             id,
             { new: true, useFindAndModify: false }
         );
 
-        if (!newActivity) {
+        if (!newNews) {
             return next(appError("資料不存在!", next));
         }
         Success(res, "資料已刪除");
 
         /*
         #swagger.tags =  ['公告管理']
-        #swagger.path = '/v1/api/Activity/admin/{id}'
+        #swagger.path = '/v1/api/news/admin/{id}'
         #swagger.method = 'delete'
         #swagger.summary='刪除單筆公告'
         #swagger.description = '刪除單筆公告'
