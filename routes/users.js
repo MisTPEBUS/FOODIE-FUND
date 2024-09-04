@@ -17,7 +17,7 @@ const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/au
 router.post(
   "/sign_up",
   handleErrorAsync(async (req, res, next) => {
-    let { name, email, password, photo, phone, address, date_of_birth } = req.body;
+    let { name, email, password, photo, phone, address, date_of_birth, remarks } = req.body;
     if (!name || !email || !password) {
       return next(appError("傳入格式異常!請查閱API文件", next));
     }
@@ -59,7 +59,8 @@ router.post(
         password,
         phone,
         address,
-        date_of_birth
+        date_of_birth,
+        remarks
       });
       generateSendJWT(newUser, 201, res);
     } catch (err) {
@@ -108,6 +109,10 @@ router.post(
                              type: "string",
                              description: "地址",
                               example: "地球某個角落"
+                         }, remarks: {
+                             type: "string",
+                             description: "備註",
+                              example: "FOODIE-FUND讚"
                          },
                           date_of_birth: {
                               type: "string",
@@ -115,6 +120,7 @@ router.post(
                              description: "生日",
                               example: "2006-08-18"
                          },
+                         
                      },
                      required: ["name", "email",  "password"]
                  }  

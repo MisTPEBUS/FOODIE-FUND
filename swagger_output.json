@@ -89,6 +89,11 @@
                     "description": "地址",
                     "example": "地球某個角落"
                   },
+                  "remarks": {
+                    "type": "string",
+                    "description": "備註",
+                    "example": "FOODIE-FUND讚"
+                  },
                   "date_of_birth": {
                     "type": "string",
                     "format": "date",
