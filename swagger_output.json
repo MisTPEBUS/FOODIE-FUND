@@ -1319,11 +1319,7 @@
                     "default": false
                   },
                   "role": {
-                    "enum": [
-                      "user",
-                      "admin"
-                    ],
-                    "default": "user"
+                    "default": ""
                   }
                 }
               }

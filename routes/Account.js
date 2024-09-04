@@ -365,7 +365,7 @@ router.put(
     }
     const allowedFields = ["name",
       "photo", "phone", "address", "dateOfBirth",
-      "isBlackListed", "role"]; // 前端提供的欄位名稱
+      "isBlackListed", "role", "remarks"]; // 前端提供的欄位名稱
     const filteredData = {};
 
 
@@ -466,6 +466,11 @@ router.put(
                            enum: ['user', 'admin'],
                            default: 'user'
                         },
+                         role: {
+                           type: String,
+                           
+                           default: ''
+                        }
                     },
                    
                 }  
