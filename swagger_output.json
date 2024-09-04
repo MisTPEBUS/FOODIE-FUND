@@ -25,7 +25,11 @@
       "description": "Account"
     },
     {
-      "name": "公告管理",
+      "name": "募資管理",
+      "description": "News"
+    },
+    {
+      "name": "公告最新消息管理",
       "description": "News"
     },
     {
@@ -1306,7 +1310,7 @@
                     "type": "string",
                     "example": ""
                   },
-                  "date_of_birth": {
+                  "dateOfBirth": {
                     "type": "Date",
                     "example": ""
                   },
