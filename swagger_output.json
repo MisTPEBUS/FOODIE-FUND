@@ -592,7 +592,7 @@
                           "type": "string",
                           "example": "地球某個角落"
                         },
-                        "date_of_birth": {
+                        "dateOfBirth": {
                           "type": "string",
                           "example": "2006-08-18T00:00:00.000Z"
                         },
@@ -655,7 +655,7 @@
                           "type": "string",
                           "example": "地球某個角落"
                         },
-                        "date_of_birth": {
+                        "dateOfBirth": {
                           "type": "string",
                           "example": "2006-08-18T00:00:00.000Z"
                         },
@@ -851,7 +851,7 @@
                           "type": "string",
                           "example": "地球某個角落"
                         },
-                        "date_of_birth": {
+                        "dateOfBirth": {
                           "type": "string",
                           "example": "2006-08-18T00:00:00.000Z"
                         },
@@ -914,7 +914,7 @@
                           "type": "string",
                           "example": "地球某個角落"
                         },
-                        "date_of_birth": {
+                        "dateOfBirth": {
                           "type": "string",
                           "example": "2006-08-18T00:00:00.000Z"
                         },
@@ -1106,7 +1106,7 @@
                           "type": "string",
                           "example": "地球某個角落"
                         },
-                        "date_of_birth": {
+                        "dateOfBirth": {
                           "type": "string",
                           "example": "2006-08-18T00:00:00.000Z"
                         },
@@ -1169,7 +1169,7 @@
                           "type": "string",
                           "example": "地球某個角落"
                         },
-                        "date_of_birth": {
+                        "dateOfBirth": {
                           "type": "string",
                           "example": "2006-08-18T00:00:00.000Z"
                         },
@@ -1306,7 +1306,7 @@
                     "type": "string",
                     "example": ""
                   },
-                  "date_of_birth": {
+                  "dateOfBirth": {
                     "type": "Date",
                     "example": ""
                   },

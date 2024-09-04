@@ -212,7 +212,7 @@ router.patch(
                   "email": "lobinda123@test.com",
                   "phone": "0987654321",
                   "address": "地球某個角落",
-                  "date_of_birth": "2006-08-18T00:00:00.000Z",
+                  "dateOfBirth": "2006-08-18T00:00:00.000Z",
                   "role": "user",
                   "remarks": "",
                   "isBlackListed": false,
@@ -322,7 +322,7 @@ router.patch(
                   "email": "lobinda123@test.com",
                   "phone": "0987654321",
                   "address": "地球某個角落",
-                  "date_of_birth": "2006-08-18T00:00:00.000Z",
+                  "dateOfBirth": "2006-08-18T00:00:00.000Z",
                   "role": "user",
                   "remarks": "",
                   "isBlackListed": false,
@@ -364,7 +364,7 @@ router.put(
       return next(appError("id欄位不能為空值！", next));
     }
     const allowedFields = ["name",
-      "photo", "phone", "address", "date_of_birth",
+      "photo", "phone", "address", "dateOfBirth",
       "isBlackListed", "role"]; // 前端提供的欄位名稱
     const filteredData = {};
 
@@ -452,7 +452,7 @@ router.put(
                             type: "string",
                              example: ""
                         },
-                         date_of_birth: {
+                         dateOfBirth: {
                             type: "Date",
                              example: ""
                         },
@@ -487,7 +487,7 @@ router.put(
                   "email": "lobinda123@test.com",
                   "phone": "0987654321",
                   "address": "地球某個角落",
-                  "date_of_birth": "2006-08-18T00:00:00.000Z",
+                  "dateOfBirth": "2006-08-18T00:00:00.000Z",
                   "role": "user",
                   "remarks": "",
                   "isBlackListed": false,
