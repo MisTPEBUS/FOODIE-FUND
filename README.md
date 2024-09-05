@@ -1,4 +1,5 @@
-# HexSchool-MailGun
+# FOODIE-FUND
+
 
 ## 項目介紹
 
