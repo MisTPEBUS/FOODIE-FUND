@@ -9,6 +9,35 @@ const {
   NotFound,
   appError,
 } = require("../services/handleResponse.js");
+const { handleErrorAsync } = require("../services/handleResponse.js");
+const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/auth");
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+
+/* GET home page. */
+router.get('/', function (req, res, next) {
+  res.render('index', { title: 'Express' });
+});
+
+router.get('/google', passport.authenticate('google', {
+  scope: ['email', 'profile'],
+}));
+
+router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
+  console.log(req.user)
+  res.send({
+    status: true,
+    data: {
+      id: req.user.id,
+      name: req.user.displayName,
+      email: req.emails[0].value,
+      photo: req.user.picture,
+      provider: req.user.provider
+    }
+  });
+})
+
 
 //註冊
 router.post(
