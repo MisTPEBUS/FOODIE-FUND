@@ -11,7 +11,8 @@ const {
 } = require("../services/handleResponse.js");
 const { handleErrorAsync } = require("../services/handleResponse.js");
 const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/auth");
-
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 //註冊
 router.post(
