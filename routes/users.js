@@ -13,16 +13,25 @@ const { handleErrorAsync } = require("../services/handleResponse.js");
 const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/auth");
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const dotenv = require("dotenv");
+dotenv.config({ path: "./config.env" });
+
+
+
+console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
+
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_AUTH_CLIENTID,
-  clientSecret: process.env.process.env.GOOGLE_AUTH_CLIENTID,
-  callbackURL: "http://localhost:2330/v1/api/auth/google/callback"
+  clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+  /* callbackURL: "http://localhost:2330/v1/api/auth/google/callback" */
+  callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`
 },
   (accessToken, refreshToken, profile, cb) => {
 
     return cb(null, profile);
   }
 ));
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -34,15 +43,16 @@ router.get('/google', passport.authenticate('google', {
 }));
 
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
-  console.log(req.user)
+  console.log(req.user._json)
+  const { _json } = req.user;
   res.send({
     status: true,
     data: {
       id: req.user.id,
       name: req.user.displayName,
-      email: req.emails[0].value,
-      photo: req.user.picture,
-      provider: req.user.provider
+      provider: req.user.provider,
+      email: _json?.email,
+      photo: _json?.picture
     }
   });
 })
