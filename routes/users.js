@@ -13,7 +13,16 @@ const { handleErrorAsync } = require("../services/handleResponse.js");
 const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/auth");
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+passport.use(new GoogleStrategy({
+  clientID: process.env.GOOGLE_AUTH_CLIENTID,
+  clientSecret: process.env.process.env.GOOGLE_AUTH_CLIENTID,
+  callbackURL: "http://localhost:2330/v1/api/auth/google/callback"
+},
+  (accessToken, refreshToken, profile, cb) => {
 
+    return cb(null, profile);
+  }
+));
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
