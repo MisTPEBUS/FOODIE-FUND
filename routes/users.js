@@ -11,7 +11,7 @@ const {
 } = require("../services/handleResponse.js");
 const { handleErrorAsync } = require("../services/handleResponse.js");
 const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/auth");
-
+const test = "";
 
 //註冊
 router.post(
