@@ -1,6 +1,5 @@
 # FOODIE-FUND
 
-
 ## 項目介紹
 
 HexSchool-MailGun
@@ -26,6 +25,8 @@ HexSchool-MailGun
 - multer
 - uuid
 - firebase-admin
+- passport
+- passport-google-oauth20
 
 ## 安裝指南
 
