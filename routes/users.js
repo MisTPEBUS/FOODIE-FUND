@@ -13,48 +13,63 @@ const { handleErrorAsync } = require("../services/handleResponse.js");
 const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/auth");
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const LineStrategy = require('passport-line').Strategy;
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
-
-
-
 console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
 
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_AUTH_CLIENTID,
   clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-  /* callbackURL: "http://localhost:2330/v1/api/auth/google/callback" */
-  callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`
+  callbackURL: "http://localhost:2330/v1/api/auth/google/callback"
+  /*   callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`  */
 },
-  (accessToken, refreshToken, profile, cb) => {
+  async (accessToken, refreshToken, profile, cb) => {
 
     return cb(null, profile);
   }
 ));
+passport.use(new LineStrategy({
+  channelID: '2006309432',
+  channelSecret: 'a0b71be06ffdb0a5edab1a54707f5751',
+  callbackURL: "http://localhost:2330/v1/api/auth/line/callback"
+},
+  async (accessToken, refreshToken, profile, done) => {
+    return done(null, profile);
+  }
+));
+router.get('/line',
+  passport.authenticate('line'));
+
+router.get('/line/callback', passport.authenticate('line', { session: false }), (req, res) => {
+  const code = req.query.code;
 
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' });
+  console.log('Authorization code:', code);
+
+  res.redirect(`http://127.0.0.1:5500/success.html?token=${code}`);
+
 });
+
 
 router.get('/google', passport.authenticate('google', {
   scope: ['email', 'profile'],
 }));
 
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
-  console.log(req.user._json)
-  const { _json } = req.user;
-  res.send({
-    status: true,
-    data: {
-      id: req.user.id,
-      name: req.user.displayName,
-      provider: req.user.provider,
-      email: _json?.email,
-      photo: _json?.picture
-    }
-  });
+  //console.log(req.user._json)
+  // const { _json } = req.user;
+  /*  res.send({
+     status: true,
+     data: {
+       id: req.user.id,
+       name: req.user.displayName,
+       provider: req.user.provider,
+       email: _json?.email,
+       photo: _json?.picture
+     }
+   }); */
+  res.redirect(`http://127.0.0.1:5500/success.html?token=${req.user.id}`);
 })
 
 

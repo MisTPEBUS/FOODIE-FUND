@@ -35,7 +35,8 @@ mongoose.set("strictQuery", false);
 mongoose.connect(constr).then(() => console.log("連線資料成功"));
 
 const app = express();
-
+const session = require('express-session');
+app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
 app.use(cors());
 
 app.use(logger("dev"));
