@@ -126,13 +126,7 @@ router.post(
                 }
             }
         });
-        const newNews = await News.create({
-            title: updateData.title,
-            content: updateData.content,
-            isEnabled: updateData.isEnabled,
-            isTop: updateData.isTop
-
-        });
+        const newNews = await News.create(filteredData);
         if (!newNews) {
             return next(appError("建立失敗!", next));
         }
