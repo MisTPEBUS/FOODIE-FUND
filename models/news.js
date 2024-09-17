@@ -7,8 +7,8 @@ const newsSchema = new mongoose.Schema(
         },
         content: {
             type: String,
-            default: '請輸入內容',
-            required: true,
+            default: '',
+
         },
 
         isEnabled: {
