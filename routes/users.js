@@ -152,7 +152,7 @@ router.post(
     }
 
     const user = await User.findOne({ email }).select("+password");
-
+    console.log(user)
     if (!user) {
       return next(appError("使用者未註冊!", next));
     }
@@ -185,7 +185,7 @@ router.post(
                      properties: {
                           email: {
                              type: "string",
-                              example: "Lobinda123@test.com"
+                             example: "Lobinda123@test.com"
                          },
                           password: {
                              type: "string",
@@ -205,7 +205,8 @@ router.post(
         "data": {
              "user": {
                  "token": "eyJhbGciOiJ..........mDWPvJZSxu98W4",
-                 "name": "Lobinda"
+                 "name": "Lobinda",
+                 "photo":""
              }
         }
       }

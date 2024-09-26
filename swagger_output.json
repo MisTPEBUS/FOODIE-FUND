@@ -144,6 +144,10 @@
                             "name": {
                               "type": "string",
                               "example": "Lobinda"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": ""
                             }
                           }
                         }
@@ -176,6 +180,10 @@
                             "name": {
                               "type": "string",
                               "example": "Lobinda"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": ""
                             }
                           }
                         }
@@ -1609,15 +1617,21 @@
         "description": "公告清單查詢",
         "parameters": [
           {
-            "name": "timeSort",
+            "name": "keyWord",
             "in": "query",
+            "description": "關鍵字fuzzy[tittle,content], 預設空直為搜尋全部",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "page",
+            "name": "timeSort",
             "in": "query",
+            "description": "公告時間排序desc遠到近,asc進到遠",
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "schema": {
               "type": "string"
             }
@@ -1625,16 +1639,17 @@
           {
             "name": "limit",
             "in": "query",
+            "description": "清單顯示比數,default=10",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           },
           {
-            "name": "keyWord",
+            "name": "page",
             "in": "query",
-            "description": "關鍵字fuzzy[tittle,content], 預設空直為搜尋全部",
+            "description": "顯示第幾頁資料default=1",
             "schema": {
-              "type": "string"
+              "type": "number"
             }
           }
         ],
