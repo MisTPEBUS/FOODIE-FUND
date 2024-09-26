@@ -69,6 +69,7 @@ const generateSendJWT = (user, statusCode, res) => {
     , process.env.JWT_SECRET
     , {
       expiresIn: process.env.JWT_EXPIRES_DAY,
+      algorithm: 'HS256'
     });
 
   const decoded = jwt.decode(token);

@@ -155,9 +155,9 @@ router.post(
       return next(appError("使用者未註冊!", next));
     }
 
-    if (!user.confirmedAt) {
-      return next(appError("email未驗證!", next, 403));
-    }
+    /*  if (!user.confirmedAt) {
+       return next(appError("email未驗證!", next, 403));
+     } */
 
 
     const auth = await bcrypt.compare(password, user.password);
@@ -197,7 +197,6 @@ router.post(
              }
              }
          } 
- 
   }
   #swagger.responses[200] = { 
     schema: {
