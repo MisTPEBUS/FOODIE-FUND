@@ -64,19 +64,24 @@ const generateMailSendJWT = (user, statusCode, res, next) => {
 
 const generateSendJWT = (user, statusCode, res) => {
   // 產生 JWT token
-  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_DAY,
-  });
+  const token = jwt.sign(
+    { id: user._id }
+    , process.env.JWT_SECRET
+    , {
+      expiresIn: process.env.JWT_EXPIRES_DAY,
+      algorithm: 'HS256'
+    });
+
+  const decoded = jwt.decode(token);
+  const expired = decoded.exp * 1000;
 
   user.password = undefined;
   res.status(statusCode).json({
-    status: "true",
-    data: {
-      user: {
-        token,
-        name: user.name,
-      },
-    },
+    success: true,
+    message: '登入成功',
+    uid: user.id,
+    token: token,
+    expired: expired
   });
 };
 

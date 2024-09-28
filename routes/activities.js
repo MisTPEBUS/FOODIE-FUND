@@ -13,7 +13,6 @@ const {
 const { handleErrorAsync } = require("../services/handleResponse.js");
 const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/auth.js");
 
-
 //清單
 router.get(
     "/",
@@ -42,13 +41,7 @@ router.get(
             .skip((currentPage - 1) * itemsPerPage)
             .limit(itemsPerPage);
 
-        /*     acties = acties.map(item => {
-              return {
-                ...item._doc,
-                publicAt: formatDateToYYYYMMDD(new Date(item.publicAt)),
-                updateAt: formatDateToYYYYMMDD(new Date(item.publicAt)),
-              };
-            }); */
+
 
         // 設定分頁信息
         const pagination = {
@@ -95,7 +88,6 @@ router.get(
         */
     }),
 );
-
 //新增資料
 router.post(
     "/admin",
@@ -290,8 +282,6 @@ router.put(
        */
     }),
 );
-
-
 //刪除資料
 router.delete(
     "/admin/:id",
@@ -338,9 +328,4 @@ router.delete(
 
     }),
 );
-
-
-
-
-
 module.exports = router;

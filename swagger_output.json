@@ -127,27 +127,25 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "true"
+                    "success": {
+                      "type": "boolean",
+                      "example": true
                     },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "user": {
-                          "type": "object",
-                          "properties": {
-                            "token": {
-                              "type": "string",
-                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Lobinda"
-                            }
-                          }
-                        }
-                      }
+                    "message": {
+                      "type": "string",
+                      "example": "登入成功"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "66d0c762273627e056be5238"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTcyNzA3Njk5OCwiZXhwIjoxNzI3NjgxNzk4fQ.4hksOJDZYEubPSHJ2czNtAPAvygf3DUHQt5ospHyNfA"
+                    },
+                    "expired": {
+                      "type": "number",
+                      "example": 1727681798000
                     }
                   },
                   "xml": {
@@ -159,27 +157,25 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "true"
+                    "success": {
+                      "type": "boolean",
+                      "example": true
                     },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "user": {
-                          "type": "object",
-                          "properties": {
-                            "token": {
-                              "type": "string",
-                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
-                            },
-                            "name": {
-                              "type": "string",
-                              "example": "Lobinda"
-                            }
-                          }
-                        }
-                      }
+                    "message": {
+                      "type": "string",
+                      "example": "登入成功"
+                    },
+                    "uid": {
+                      "type": "string",
+                      "example": "66d0c762273627e056be5238"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTcyNzA3Njk5OCwiZXhwIjoxNzI3NjgxNzk4fQ.4hksOJDZYEubPSHJ2czNtAPAvygf3DUHQt5ospHyNfA"
+                    },
+                    "expired": {
+                      "type": "number",
+                      "example": 1727681798000
                     }
                   },
                   "xml": {
@@ -243,7 +239,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Mail not verified"
+                      "example": "e-mail尚未驗證"
                     }
                   },
                   "xml": {
@@ -261,7 +257,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Mail not verified"
+                      "example": "e-mail尚未驗證"
                     }
                   },
                   "xml": {
@@ -1619,7 +1615,7 @@
           {
             "name": "timeSort",
             "in": "query",
-            "description": "排序遠到近,進到遠default = desc",
+            "description": "公告時間排序遠到近desc,asc進到遠",
             "enum": [
               "asc",
               "desc"
@@ -1677,7 +1673,7 @@
                   },
                   "title": {
                     "type": "string",
-                    "example": ""
+                    "example": "test"
                   },
                   "content": {
                     "type": "string",
@@ -1731,7 +1727,7 @@
                 "properties": {
                   "title": {
                     "type": "string",
-                    "example": ""
+                    "example": "標題123"
                   },
                   "content": {
                     "type": "string",
@@ -1739,7 +1735,7 @@
                   },
                   "isTop": {
                     "type": "Boolean",
-                    "default": true
+                    "default": false
                   },
                   "isEnabled": {
                     "type": "Boolean",

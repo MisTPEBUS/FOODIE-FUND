@@ -135,7 +135,7 @@ router.post(
       #swagger.produces = ["application/json"] 
     */
     /*
- #swagger.requestBody = {
+    #swagger.requestBody = {
              required: true,
              description:"會員資料",
              content: {
@@ -180,16 +180,13 @@ router.post(
                              description: "生日",
                               example: "2006-08-18"
                          },
-                         
                      },
                      required: ["name", "email",  "password"]
                  }  
              }
              }
          } 
- 
   }
-  
  */
   }),
 );
@@ -198,6 +195,7 @@ router.post(
 router.post(
   "/sign_in",
   handleErrorAsync(async (req, res, next) => {
+
     let { email, password } = req.body;
     if (!email || !password) {
       return next(appError("傳入格式異常!請查閱API文件", next));
@@ -217,14 +215,16 @@ router.post(
       return next(appError("使用者未註冊!", next));
     }
 
-    /* if (!user.confirmedAt) {
-      return next(appError("email未驗證!", next, 403));
-    } */
+    /*  if (!user.confirmedAt) {
+       return next(appError("email未驗證!", next, 403));
+     } */
+
 
     const auth = await bcrypt.compare(password, user.password);
     if (!auth) {
       return next(appError("帳號密碼錯誤!", next));
     }
+
     generateSendJWT(user, 200, res);
 
     /*
@@ -257,17 +257,14 @@ router.post(
              }
              }
          } 
- 
   }
   #swagger.responses[200] = { 
     schema: {
-        "status": "true",
-        "data": {
-             "user": {
-                 "token": "eyJhbGciOiJ..........mDWPvJZSxu98W4",
-                 "name": "Lobinda"
-             }
-        }
+       "success": true,
+      "message": "登入成功",
+      "uid": "66d0c762273627e056be5238",
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTcyNzA3Njk5OCwiZXhwIjoxNzI3NjgxNzk4fQ.4hksOJDZYEubPSHJ2czNtAPAvygf3DUHQt5ospHyNfA",
+      "expired": 1727681798000
       }
     } 
   #swagger.responses[400] = { 
@@ -279,7 +276,7 @@ router.post(
     #swagger.responses[403] = { 
     schema: {
         "status": false,
-        "message": "Mail not verified",
+        "message": "e-mail尚未驗證",
       }
     } 
  */

@@ -29,9 +29,6 @@ router.get(
                 { content: { $regex: regex } }
             ];
         }
-
-
-
         const currentPage = Math.max(parseInt(page) || 1, 1); // 確保 page 是正整數
         const itemsPerPage = Math.max(parseInt(limit) || 10, 1); // 確保 limit 是正整數
 
@@ -43,20 +40,6 @@ router.get(
             .sort(tSort)
             .skip((currentPage - 1) * itemsPerPage)
             .limit(itemsPerPage);
-
-
-
-
-
-        /*     acties = acties.map(item => {
-              return {
-                ...item._doc,
-                publicAt: formatDateToYYYYMMDD(new Date(item.publicAt)),
-                updateAt: formatDateToYYYYMMDD(new Date(item.publicAt)),
-              };
-            }); */
-
-
 
         // 設定分頁信息
         const pagination = {
@@ -86,7 +69,7 @@ router.get(
              } 
              #swagger.parameters['timeSort'] = {
                 in: 'query',
-                description: '排序遠到近,進到遠default = desc',
+                description: '公告時間排序遠到近desc,asc進到遠',
                enum: ['asc', 'desc'],
                 type: 'string'
              } 
@@ -110,37 +93,44 @@ router.post(
     handleErrorAsync(async (req, res, next) => {
 
         const updateData = req.body;
-        console.log(updateData)
-        if (!updateData.title || !updateData.content) {
-            return next(appError("傳入格式異常!請查閱API文件", next));
-        }
-        // Content cannot null
+        const allowedFields = ["title",
+            "content", "isEnabled", "isTop", "publicAt"
+        ]; // 前端提供的欄位名稱
+        const filteredData = {};
 
-        if (!updateData.title.trim()) {
-            return next(appError("title欄位不能為空值！", next));
-        }
-        if (!updateData.content.trim()) {
-            return next(appError("content欄位不能為空值！", next));
-        }
+        Object.keys(updateData).forEach((key) => {
 
-        try {
-            const newNews = await News.create({
-                title: updateData.title,
-                content: updateData.content,
-                isEnabled: updateData.isEnabled,
-                isTop: updateData.isTop
-
-            });
-            if (!newNews) {
-                return next(appError("建立失敗!", next));
+            if (allowedFields.includes(key)) {
+                filteredData[key] = updateData[key];
             }
-            Success(res, "已建立貼文", newNews, 201);
-        } catch (err) {
-            return next(appError(err.message, next));
+            if (key === "isTop") {
+
+                if (typeof updateData[key] !== 'boolean') {
+                    return next(appError("isTop必須是boolean", next));
+                }
+            }
+            if (key === "isEnabled") {
+
+                if (typeof updateData[key] !== 'boolean') {
+                    return next(appError("isEnabled必須是boolean", next));
+                }
+            }
+            if (key === "title") {
+                if (!updateData[key].trim()) {
+                    return next(appError("title欄位不能為空值！", next));
+                }
+            }
+            if (key === "publicAt") {
+                if (isNaN(Date.parse(updateData[key]))) {
+                    return next(appError("publicAt必須是日期格式！", next));
+                }
+            }
+        });
+        const newNews = await News.create(filteredData);
+        if (!newNews) {
+            return next(appError("建立失敗!", next));
         }
-
-
-
+        Success(res, "已建立貼文", newNews, 201);
 
         /*
         #swagger.tags =  ['公告管理']
@@ -166,7 +156,7 @@ router.post(
                             },
                              title: {
                                 type: "string",
-                                 example: ""
+                                 example: "test"
                             },
                              content: {
                                 type: "string",
@@ -218,13 +208,33 @@ router.put(
 
 
         Object.keys(updateData).forEach((key) => {
-            if (!(updateData[key].trim()) && key !== "content") {
-                return next(appError(`${key}欄位不能為空值！`, next));
-            }
 
             if (allowedFields.includes(key)) {
                 filteredData[key] = updateData[key];
             }
+            if (key === "isTop") {
+
+                if (typeof updateData[key] !== 'boolean') {
+                    return next(appError("isTop必須是boolean", next));
+                }
+            }
+            if (key === "isEnabled") {
+
+                if (typeof updateData[key] !== 'boolean') {
+                    return next(appError("isEnabled必須是boolean", next));
+                }
+            }
+            if (key === "title") {
+                if (!updateData[key].trim()) {
+                    return next(appError("title欄位不能為空值！", next));
+                }
+            }
+            if (key === "publicAt") {
+                if (isNaN(Date.parse(updateData[key]))) {
+                    return next(appError("publicAt必須是日期格式！", next));
+                }
+            }
+
         });
 
 
@@ -265,7 +275,7 @@ router.put(
                         properties: {
                              title: {
                                 type: "string",
-                                 example: ""
+                                 example: "標題123"
                             },
                              content: {
                                 type: "string",
@@ -274,7 +284,7 @@ router.put(
                             
                              isTop: {
                                  type: "Boolean",
-                                default: true
+                                default: false
                             },
                             
                              isEnabled: {
