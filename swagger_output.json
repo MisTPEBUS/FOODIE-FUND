@@ -135,17 +135,27 @@
                       "type": "string",
                       "example": "登入成功"
                     },
-                    "uid": {
-                      "type": "string",
-                      "example": "66d0c762273627e056be5238"
-                    },
-                    "token": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTcyNzA3Njk5OCwiZXhwIjoxNzI3NjgxNzk4fQ.4hksOJDZYEubPSHJ2czNtAPAvygf3DUHQt5ospHyNfA"
-                    },
-                    "expired": {
-                      "type": "number",
-                      "example": 1727681798000
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Lobinda"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": ""
+                            }
+                          }
+                        }
+                      }
                     }
                   },
                   "xml": {
@@ -165,17 +175,23 @@
                       "type": "string",
                       "example": "登入成功"
                     },
-                    "uid": {
-                      "type": "string",
-                      "example": "66d0c762273627e056be5238"
-                    },
-                    "token": {
-                      "type": "string",
-                      "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTcyNzA3Njk5OCwiZXhwIjoxNzI3NjgxNzk4fQ.4hksOJDZYEubPSHJ2czNtAPAvygf3DUHQt5ospHyNfA"
-                    },
-                    "expired": {
-                      "type": "number",
-                      "example": 1727681798000
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Lobinda"
+                            }
+                          }
+                        }
+                      }
                     }
                   },
                   "xml": {
@@ -1615,11 +1631,6 @@
           {
             "name": "timeSort",
             "in": "query",
-            "description": "公告時間排序遠到近desc,asc進到遠",
-            "enum": [
-              "asc",
-              "desc"
-            ],
             "schema": {
               "type": "string"
             }

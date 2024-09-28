@@ -210,7 +210,7 @@ router.post(
     }
 
     const user = await User.findOne({ email }).select("+password");
-
+    console.log(user)
     if (!user) {
       return next(appError("使用者未註冊!", next));
     }
@@ -245,7 +245,7 @@ router.post(
                      properties: {
                           email: {
                              type: "string",
-                              example: "Lobinda123@test.com"
+                             example: "Lobinda123@test.com"
                          },
                           password: {
                              type: "string",
@@ -260,11 +260,14 @@ router.post(
   }
   #swagger.responses[200] = { 
     schema: {
-       "success": true,
-      "message": "登入成功",
-      "uid": "66d0c762273627e056be5238",
-      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTcyNzA3Njk5OCwiZXhwIjoxNzI3NjgxNzk4fQ.4hksOJDZYEubPSHJ2czNtAPAvygf3DUHQt5ospHyNfA",
-      "expired": 1727681798000
+        "status": "true",
+        "data": {
+             "user": {
+                 "token": "eyJhbGciOiJ..........mDWPvJZSxu98W4",
+                 "name": "Lobinda",
+                  "photo":""
+             }
+        }
       }
     } 
   #swagger.responses[400] = { 

@@ -77,11 +77,14 @@ const generateSendJWT = (user, statusCode, res) => {
 
   user.password = undefined;
   res.status(statusCode).json({
-    success: true,
-    message: '登入成功',
-    uid: user.id,
-    token: token,
-    expired: expired
+    status: "true",
+    data: {
+      user: {
+        token,
+        name: user.name,
+        photo: user.photo
+      },
+    },
   });
 };
 

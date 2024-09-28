@@ -69,7 +69,7 @@ router.get(
              } 
              #swagger.parameters['timeSort'] = {
                 in: 'query',
-                description: '公告時間排序遠到近desc,asc進到遠',
+               description: '公告時間排序遠到近desc,asc進到遠',
                enum: ['asc', 'desc'],
                 type: 'string'
              } 
