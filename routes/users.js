@@ -18,17 +18,17 @@ const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
 /*   callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`  */
-/* passport.use(new GoogleStrategy({
+passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_AUTH_CLIENTID,
   clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-  callbackURL: "http://localhost:2330/v1/api/auth/google/callback"
- 
+  callbackURL: "https://foodiefund.onrender.com/v1/api/auth/google/callback"
+
 },
   async (accessToken, refreshToken, profile, cb) => {
 
     return cb(null, profile);
   }
-)); */
+));
 /* passport.use(new LineStrategy({
   channelID: '2006309432',
   channelSecret: 'a0b71be06ffdb0a5edab1a54707f5751',
