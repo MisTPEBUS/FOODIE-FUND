@@ -70,6 +70,8 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
          photo: _json?.picture
        }
      }); */
+    console.log(req.user)
+
     res.redirect(`https://tomchen102.github.io/foodiefund/login?token=${req.user.id}`);
 
   }))
