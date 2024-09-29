@@ -42,6 +42,55 @@
     }
   ],
   "paths": {
+    "/v1/api/auth/line": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/auth/line/callback": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/auth/google": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/v1/api/auth/google/callback": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/v1/api/auth/sign_up": {
       "post": {
         "tags": [
@@ -127,13 +176,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
+                    "status": {
                       "type": "string",
-                      "example": "登入成功"
+                      "example": "true"
                     },
                     "data": {
                       "type": "object",
@@ -167,13 +212,9 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "message": {
+                    "status": {
                       "type": "string",
-                      "example": "登入成功"
+                      "example": "true"
                     },
                     "data": {
                       "type": "object",
@@ -188,6 +229,10 @@
                             "name": {
                               "type": "string",
                               "example": "Lobinda"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": ""
                             }
                           }
                         }
@@ -320,13 +365,6 @@
         "parameters": [
           {
             "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "authorizatio",
             "in": "header",
             "schema": {
               "type": "string"
@@ -476,6 +514,149 @@
             }
           }
         }
+      }
+    },
+    "/v1/api/auth/check": {
+      "post": {
+        "tags": [
+          "使用者登入驗證"
+        ],
+        "summary": "JWT驗證",
+        "description": "JWT驗證",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "true"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Lobinda"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": ""
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "true"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "token": {
+                              "type": "string",
+                              "example": "eyJhbGciOiJ..........mDWPvJZSxu98W4"
+                            },
+                            "name": {
+                              "type": "string",
+                              "example": "Lobinda"
+                            },
+                            "photo": {
+                              "type": "string",
+                              "example": ""
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error Msg"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Error Msg"
+                    }
+                  },
+                  "xml": {
+                    "name": "main"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/v1/api/admin/account/": {
@@ -1631,6 +1812,11 @@
           {
             "name": "timeSort",
             "in": "query",
+            "description": "公告時間排序遠到近desc,asc進到遠",
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "schema": {
               "type": "string"
             }

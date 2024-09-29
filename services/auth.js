@@ -5,38 +5,38 @@ const User = require("../models/users");
 
 const isAuth = handleErrorAsync(async (req, res, next) => {
   let token;
-
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith('Bearer')
   ) {
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(' ')[1];
   }
 
-  console.log(req.headers.authorizatio);
   if (!token) {
-    return next(appError("請重新登入！", next, 401));
+    return next(appError('請重新登入！', next, 401));
   }
 
-  // 驗證 token 正確性
-  const decoded = await new Promise((resolve, reject) => {
-    jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
-      if (!payload) {
 
-        return next(appError("Token格式異常請重新登入！", next));
+  const decoded = await new Promise((resolve, reject) => {
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
+
+      if (!payload) {
+        return next(appError('Token格式異常請重新登入！', next));
       }
 
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve(payload);
+        resolve(payload)
       }
-    });
-  });
+    })
+  })
+
   const currentUser = await User.findById(decoded.id);
 
   if (!currentUser) {
-    return next(appError("Token格式異常請重新登入！", next));
+    return next(appError('Token格式異常請重新登入！', next));
   }
 
 
@@ -62,31 +62,42 @@ const generateMailSendJWT = (user, statusCode, res, next) => {
 
 };
 
+/* const generateSendJWT = (user, statusCode, res) => {
+  // 產生 JWT token
+  const token = jwt.sign({ id: user._id },
+    process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_DAY
+  });
+  user.password = undefined;
+  res.status(statusCode).json({
+    status: 'true',
+    user: {
+      token,
+      name: user.name,
+      photo: user.photo
+    }
+  });
+
+};
+ */
 const generateSendJWT = (user, statusCode, res) => {
   // 產生 JWT token
-  const token = jwt.sign(
-    { id: user._id }
-    , process.env.JWT_SECRET
-    , {
-      expiresIn: process.env.JWT_EXPIRES_DAY,
-      algorithm: 'HS256'
-    });
-
-  const decoded = jwt.decode(token);
-  const expired = decoded.exp * 1000;
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_DAY
+  });
 
   user.password = undefined;
   res.status(statusCode).json({
-    status: "true",
+    status: 'true',
     data: {
       user: {
         token,
         name: user.name,
         photo: user.photo
-      },
-    },
+      }
+    }
   });
-};
+}
 
 module.exports = {
   isAuth,

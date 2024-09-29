@@ -17,19 +17,19 @@ const LineStrategy = require('passport-line').Strategy;
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
-
-passport.use(new GoogleStrategy({
+/*   callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`  */
+/* passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_AUTH_CLIENTID,
   clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
   callbackURL: "http://localhost:2330/v1/api/auth/google/callback"
-  /*   callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`  */
+ 
 },
   async (accessToken, refreshToken, profile, cb) => {
 
     return cb(null, profile);
   }
-));
-passport.use(new LineStrategy({
+)); */
+/* passport.use(new LineStrategy({
   channelID: '2006309432',
   channelSecret: 'a0b71be06ffdb0a5edab1a54707f5751',
   callbackURL: "http://localhost:2330/v1/api/auth/line/callback"
@@ -37,7 +37,7 @@ passport.use(new LineStrategy({
   async (accessToken, refreshToken, profile, done) => {
     return done(null, profile);
   }
-));
+)); */
 router.get('/line',
   passport.authenticate('line'));
 
@@ -381,6 +381,44 @@ router.patch(
   }),
 );
 
+//JWT驗證
+router.post(
+  "/check", isAuth,
+  handleErrorAsync(async (req, res, next) => {
+    generateSendJWT(req.user, 200, res);
+    /*
+    #swagger.tags =  ['使用者登入驗證']
+    #swagger.path = '/v1/api/auth/check'
+    #swagger.method = 'post'
+    #swagger.summary='JWT驗證'
+    #swagger.description = 'JWT驗證'
+    #swagger.produces = ["application/json"] 
+     #swagger.security = [{
+        "bearerAuth": []
+    }]
+  */
+    /*
 
+  #swagger.responses[200] = { 
+    schema: {
+        "status": "true",
+        "data": {
+             "user": {
+                 "token": "eyJhbGciOiJ..........mDWPvJZSxu98W4",
+                 "name": "Lobinda",
+                 "photo":""
+             }
+        }
+      }
+    } 
+  #swagger.responses[400] = { 
+    schema: {
+        "status": false,
+        "message": "Error Msg",
+      }
+    } 
+ */
+  }),
+);
 
 module.exports = router;
