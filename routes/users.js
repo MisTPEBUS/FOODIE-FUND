@@ -56,21 +56,24 @@ router.get('/google', passport.authenticate('google', {
   scope: ['email', 'profile'],
 }));
 
-router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
-  //console.log(req.user._json)
-  // const { _json } = req.user;
-  /*  res.send({
-     status: true,
-     data: {
-       id: req.user.id,
-       name: req.user.displayName,
-       provider: req.user.provider,
-       email: _json?.email,
-       photo: _json?.picture
-     }
-   }); */
-  res.redirect(`http://127.0.0.1:5500/success.html?token=${req.user.id}`);
-})
+router.get('/google/callback', passport.authenticate('google', { session: false }),
+  handleErrorAsync(async (req, res, next) => {
+    //console.log(req.user._json)
+    // const { _json } = req.user;
+    /*  res.send({
+       status: true,
+       data: {
+         id: req.user.id,
+         name: req.user.displayName,
+         provider: req.user.provider,
+         email: _json?.email,
+         photo: _json?.picture
+       }
+     }); */
+    res.redirect(`https://tomchen102.github.io/foodiefund/login?token=${req.user.id}`);
+
+  }))
+
 
 
 //註冊
