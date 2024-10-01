@@ -26,7 +26,13 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
       }
 
       if (err) {
-        reject(err)
+        if (err.name === 'TokenExpiredError') {
+          return next(appError('Token 已過期，請重新登入！', next));
+        } else {
+          // 其他驗證錯誤處理
+          reject(err)
+        }
+
       } else {
         resolve(payload)
       }

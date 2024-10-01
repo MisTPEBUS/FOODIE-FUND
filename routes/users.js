@@ -38,18 +38,15 @@ passport.use(new GoogleStrategy({
     return done(null, profile);
   }
 )); */
-router.get('/line',
-  passport.authenticate('line'));
+/* router.get('/line',
+  passport.authenticate('line')); */
 
-router.get('/line/callback', passport.authenticate('line', { session: false }), (req, res) => {
-  const code = req.query.code;
+/* router.get('/line/callback', passport.authenticate('line', { session: false }), (req, res) => {
 
 
-  console.log('Authorization code:', code);
+  // res.redirect(`http://127.0.0.1:5500/success.html?token=${code}`);
 
-  res.redirect(`http://127.0.0.1:5500/success.html?token=${code}`);
-
-});
+}); */
 
 
 router.get('/google', passport.authenticate('google', {
@@ -70,10 +67,30 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
          photo: _json?.picture
        }
      }); */
-    console.log(req.user)
+    console.log('google', req.user)
+    const user = await User.findOne({ email: req.user.email, memberType: 'FB' });
+    //JWT
+    console.log('user', req.user)
+    if (user) {
+      const params = new URLSearchParams({
+        token: newToken,
+        name: user.username,
+        email: req.user.email,
+        photo: '',
+      });
+      // res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
 
-    res.redirect(`https://tomchen102.github.io/foodiefund/login?token=${req.user.id}`);
+    }
+    else {
+      const params = new URLSearchParams({
+        token: '',
+        name: req.user.username,
+        email: req.user.email,
+        photo: '',
+      });
+      //  res.redirect(`https://tomchen102.github.io/foodiefund/login?${params.toString()}`);
 
+    }
   }))
 
 
@@ -106,7 +123,7 @@ router.post(
     }
     // find user
 
-    const isUser = await User.findOne({ email: email });
+    const isUser = await User.findOne({ email: email, memberType: 'system' });
 
     if (isUser) {
       return next(appError("使用者已經註冊", next, 409));
@@ -214,7 +231,7 @@ router.post(
       return next(appError("Password欄位不能為空值！", next));
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email: email, memberType: 'system' }).select("+password");
     console.log(user)
     if (!user) {
       return next(appError("使用者未註冊!", next));
@@ -386,44 +403,6 @@ router.patch(
   }),
 );
 
-//JWT驗證
-router.post(
-  "/check", isAuth,
-  handleErrorAsync(async (req, res, next) => {
-    generateSendJWT(req.user, 200, res);
-    /*
-    #swagger.tags =  ['使用者登入驗證']
-    #swagger.path = '/v1/api/auth/check'
-    #swagger.method = 'post'
-    #swagger.summary='JWT驗證'
-    #swagger.description = 'JWT驗證'
-    #swagger.produces = ["application/json"] 
-     #swagger.security = [{
-        "bearerAuth": []
-    }]
-  */
-    /*
 
-  #swagger.responses[200] = { 
-    schema: {
-        "status": "true",
-        "data": {
-             "user": {
-                 "token": "eyJhbGciOiJ..........mDWPvJZSxu98W4",
-                 "name": "Lobinda",
-                 "photo":""
-             }
-        }
-      }
-    } 
-  #swagger.responses[400] = { 
-    schema: {
-        "status": false,
-        "message": "Error Msg",
-      }
-    } 
- */
-  }),
-);
 
 module.exports = router;

@@ -12,9 +12,7 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, "Email 未填寫"],
-      unique: true,
       lowercase: true,
-
     },
     password: {
       type: String,
@@ -42,6 +40,12 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    memberType: {
+      type: String,
+      select: false,
+      required: true,
+      default: 'system'
+    },
     confirmedToken: {
       type: Date,
       select: false,
@@ -67,5 +71,6 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   },
 );
+userSchema.index({ email: 1, memberType: 1 }, { unique: true });
 const User = mongoose.model("User", userSchema);
 module.exports = User;

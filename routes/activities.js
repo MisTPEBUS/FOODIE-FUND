@@ -208,8 +208,6 @@ router.put(
                 filteredData[key] = updateData[key];
             }
         });
-
-
         const newActive = await Active.findByIdAndUpdate(
             id,
             { $set: filteredData },
