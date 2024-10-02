@@ -78,7 +78,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: req.user.email,
         photo: '',
       });
-      // res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
+      res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
 
     }
     else {
@@ -88,7 +88,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: req.user.email,
         photo: '',
       });
-      //  res.redirect(`https://tomchen102.github.io/foodiefund/login?${params.toString()}`);
+      res.redirect(`https://tomchen102.github.io/foodiefund/login?${params.toString()}`);
 
     }
   }))
