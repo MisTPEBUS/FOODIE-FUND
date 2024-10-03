@@ -138,7 +138,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
       console.log('tmp', tmp)
       const newUser = await User.create(tmp);
       console.log('898999', newUser)
-      /* const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_DAY
       });
 
@@ -147,22 +147,23 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         name: tmp.name,
         email: tmp.email,
         photo: tmp.photo,
-      }); */
+      });
+      console.log(params);
       // res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
 
     }
     else {
       //create
-      console.log('898999', 2)
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
-      });
-      const params = new URLSearchParams({
-        token: token,
-        name: user.name,
-        email: user.email,
-        photo: user.photo,
-      });
+      console.log('898999', user)
+      /*  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+         expiresIn: process.env.JWT_EXPIRES_DAY
+       });
+       const params = new URLSearchParams({
+         token: token,
+         name: user.name,
+         email: user.email,
+         photo: user.photo,
+       }); */
       // res.redirect(`https://tomchen102.github.io/foodiefund/login?${params.toString()}`);
 
     }
