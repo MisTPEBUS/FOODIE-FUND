@@ -150,6 +150,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         photo: tmp.photo,
       });
       console.log(params);
+      res.redirect(`http://localhost:2330/foodiefund/redirect?${params.toString()}`);
       res.redirect(`https://tomchen102.github.io/foodiefund/redirect?${params.toString()}`);
 
     }
@@ -166,6 +167,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         photo: user.photo,
       });
       console.log(params);
+      res.redirect(`http://localhost:2330/foodiefund/redirect?${params.toString()}`);
       res.redirect(`https://tomchen102.github.io/foodiefund/redirect?${params.toString()}`);
 
     }
