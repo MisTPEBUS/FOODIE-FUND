@@ -131,7 +131,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
       const tmp = {
         name: req.user.displayName,
         photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
-        email: (req.user.emails.length > 0) ? req.user.emails[0] : '',
+        email: (req.user.emails.length > 0) ? req.user.emails[0].value : '',
         password: req.user.id,
         memberType: 'google'
       };
