@@ -125,7 +125,6 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     const user = await User.findOne({ email: req.user.email, memberType: 'google' });
     //JWT
 
-    console.log(tmp);
     if (!user) {
 
       const tmp = {
