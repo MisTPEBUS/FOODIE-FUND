@@ -134,6 +134,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         password: req.user.id,
         memberType: 'google'
       };
+      console.log('898999', tmp)
       const newUser = await User.create(tmp);
       console.log('898999', newUser)
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
