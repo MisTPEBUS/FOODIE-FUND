@@ -124,7 +124,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     console.log('8989', req.user)
     const user = await User.findOne({ email: req.user.email, memberType: 'google' });
     //JWT
-    console.log('user666', req.user)
+    console.log('user', req.user)
     if (user) {
       const params = new URLSearchParams({
         token: newToken,
@@ -132,6 +132,17 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: req.user.email,
         photo: '',
       });
+
+      const tmp = {
+        name: req.user.displayName,
+        photo: req.user.photos[0].value,
+        email: req.user.emails[0],
+        password: req.user.id,
+
+      }
+      console.log(tmp);
+
+      // const newUser = await User.create(tmp);
 
       res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
 
