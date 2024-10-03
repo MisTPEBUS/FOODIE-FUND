@@ -14,6 +14,7 @@ const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/au
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LineStrategy = require('passport-line').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
@@ -29,6 +30,59 @@ passport.use(new GoogleStrategy({
     return cb(null, profile);
   }
 ));
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_CLIENT_ID,
+  clientSecret: process.env.FACEBOOK_SECRET_KEY,
+  callbackURL: "https://foodiefund.onrender.com/v1/api/auth/facebook/callback"
+
+},
+  async (accessToken, refreshToken, profile, cb) => {
+    console.log(profile);
+    const user = await User.findOne({
+      email: profile.id,
+      memberType: 'facebook',
+    });
+    if (!user) {
+      console.log('Adding new facebook user to DB..');
+      const user = new User({
+        accountId: profile.id,
+        name: profile.displayName,
+        provider: profile.provider,
+      });
+      //await user.save();
+      // console.log(user);
+      return cb(null, profile);
+    } else {
+      console.log('Facebook User already exist in DB..');
+      // console.log(profile);
+      return cb(null, profile);
+    }
+
+  }
+));
+router.get(
+  '/callback',
+  passport.authenticate('facebook', {
+    failureRedirect: '/auth/facebook/error',
+  }),
+  function (req, res) {
+    // Successful authentication, redirect to success screen.
+    res.redirect('/auth/facebook/success');
+  }
+);
+
+router.get('/success', async (req, res) => {
+  const userInfo = {
+    id: req.session.passport.user.id,
+    displayName: req.session.passport.user.displayName,
+    provider: req.session.passport.user.provider,
+  };
+  res.render('fb-github-success', { user: userInfo });
+});
+
+router.get('/error', (req, res) => res.send('Error logging in via Facebook..'));
+
+
 /* passport.use(new LineStrategy({
   channelID: '2006309432',
   channelSecret: 'a0b71be06ffdb0a5edab1a54707f5751',
@@ -68,7 +122,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
        }
      }); */
     console.log('google', req.user)
-    const user = await User.findOne({ email: req.user.email, memberType: 'FB' });
+    const user = await User.findOne({ email: req.user.email, memberType: 'google' });
     //JWT
     console.log('user', req.user)
     if (user) {
@@ -78,6 +132,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: req.user.email,
         photo: '',
       });
+
       res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
 
     }
