@@ -124,35 +124,41 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     console.log('8989', req.user)
     const user = await User.findOne({ email: req.user.email, memberType: 'google' });
     //JWT
-    const tmp = {
-      name: req.user.displayName,
-      photo: req.user.photos[0].value,
-      email: req.user.emails[0],
-      password: req.user.id,
 
-    }
     console.log(tmp);
-    if (user) {
-      const params = new URLSearchParams({
-        token: newToken,
-        name: user.username,
-        email: req.user.email,
-        photo: '',
+    if (!user) {
+
+      const tmp = {
+        name: req.user.displayName,
+        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
+        email: (req.user.emails.length > 0) ? req.user.emails[0] : '',
+        password: req.user.id,
+      };
+      const newUser = await User.create(tmp);
+
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
       });
 
-
-
-      // const newUser = await User.create(tmp);
-
+      const params = new URLSearchParams({
+        token: token,
+        name: tmp.name,
+        email: tmp.email,
+        photo: tmp.photo,
+      });
       res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
 
     }
     else {
+      //create
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
       const params = new URLSearchParams({
-        token: '',
-        name: req.user.username,
-        email: req.user.email,
-        photo: '',
+        token: token,
+        name: user.name,
+        email: user.email,
+        photo: user.photo,
       });
       res.redirect(`https://tomchen102.github.io/foodiefund/login?${params.toString()}`);
 
