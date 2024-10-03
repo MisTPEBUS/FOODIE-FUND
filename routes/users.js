@@ -132,9 +132,10 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
         email: (req.user.emails.length > 0) ? req.user.emails[0] : '',
         password: req.user.id,
+        memberType: 'google'
       };
       const newUser = await User.create(tmp);
-
+      console.log('898999', newUser)
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_DAY
       });
