@@ -121,12 +121,12 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
          photo: _json?.picture
        }
      }); */
-    console.log('8989', req.user)
+
     const user = await User.findOne({ email: req.user.email, memberType: 'google' });
     //JWT
 
     if (!user) {
-
+      console.log('898999', 1)
       const tmp = {
         name: req.user.displayName,
         photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
@@ -147,11 +147,12 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: tmp.email,
         photo: tmp.photo,
       });
-      res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
+      // res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
 
     }
     else {
       //create
+      console.log('898999', 2)
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_DAY
       });
@@ -161,7 +162,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: user.email,
         photo: user.photo,
       });
-      res.redirect(`https://tomchen102.github.io/foodiefund/login?${params.toString()}`);
+      // res.redirect(`https://tomchen102.github.io/foodiefund/login?${params.toString()}`);
 
     }
   }))
