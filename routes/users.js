@@ -135,10 +135,10 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         password: req.user.id,
         memberType: 'google'
       };
-
+      console.log('tmp', tmp)
       const newUser = await User.create(tmp);
       console.log('898999', newUser)
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      /* const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_DAY
       });
 
@@ -147,7 +147,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         name: tmp.name,
         email: tmp.email,
         photo: tmp.photo,
-      });
+      }); */
       // res.redirect(`https://tomchen102.github.io/foodiefund/index?${params.toString()}`);
 
     }
