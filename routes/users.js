@@ -84,51 +84,31 @@ router.get('/success', async (req, res) => {
 router.get('/error', (req, res) => res.send('Error logging in via Facebook..'));
 
 
-/* passport.use(new LineStrategy({
+passport.use(new LineStrategy({
   channelID: '2006309432',
   channelSecret: 'a0b71be06ffdb0a5edab1a54707f5751',
   callbackURL: "http://localhost:2330/v1/api/auth/line/callback"
 },
   async (accessToken, refreshToken, profile, done) => {
+    console.log('porfile', profile)
     return done(null, profile);
   }
-)); */
-/* router.get('/line',
-  passport.authenticate('line')); */
+));
+router.get('/line',
+  passport.authenticate('line'));
 
-/* router.get('/line/callback', passport.authenticate('line', { session: false }), (req, res) => {
-
-
-  // res.redirect(`http://127.0.0.1:5500/success.html?token=${code}`);
-
-}); */
-
-
+router.get('/line/callback', passport.authenticate('line', { session: false }),
+  passport.authenticate('line', { failureRedirect: '/login', successRedirect: '/' }));
 router.get('/google', passport.authenticate('google', {
   scope: ['email', 'profile'],
 }));
 
 router.get('/google/callback', passport.authenticate('google', { session: false }),
   handleErrorAsync(async (req, res, next) => {
-    //console.log(req.user._json)
-    // const { _json } = req.user;
-    /*  res.send({
-       status: true,
-       data: {
-         id: req.user.id,
-         name: req.user.displayName,
-         provider: req.user.provider,
-         email: _json?.email,
-         photo: _json?.picture
-       }
-     }); */
-
     const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : ''
     const user = await User.findOne({ email: tmpEmail, memberType: 'google' });
-    //JWT
 
     if (!user) {
-      console.log('898999', 1)
       const tmp = {
         name: req.user.displayName,
         photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
@@ -136,21 +116,16 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         password: req.user.id,
         memberType: 'google'
       };
-      console.log('tmp', tmp)
       const newUser = await User.create(tmp);
-      console.log('898999', newUser)
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_DAY
       });
-
       const params = new URLSearchParams({
         token: token,
         name: tmp.name,
         email: tmp.email,
         photo: tmp.photo,
       });
-      console.log(params);
-      //res.redirect(`http://localhost:3000/foodiefund/redirect?${params.toString()}`);
       res.redirect(`https://tomchen102.github.io/foodiefund/redirect?${params.toString()}`);
 
     }
@@ -166,8 +141,8 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: user.email,
         photo: user.photo,
       });
-      console.log(params);
-      // res.redirect(`http://localhost:3000/foodiefund/redirect?${params.toString()}`);
+
+
       res.redirect(`https://tomchen102.github.io/foodiefund/redirect?${params.toString()}`);
 
     }
