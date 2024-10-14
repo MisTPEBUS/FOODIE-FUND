@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
       default: 'system'
     },
     confirmedToken: {
-      type: Date,
+      type: String,
       select: false,
     },
     confirmedAt: {
@@ -62,6 +62,11 @@ const userSchema = new mongoose.Schema(
     remarks: {
       type: String,
       trim: true,
+      default: ""
+    },
+    oAuthID: {
+      type: String,
+      select: false,
       default: ""
     }
   },
