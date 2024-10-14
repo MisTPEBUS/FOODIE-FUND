@@ -7,7 +7,7 @@ const { appError, handleErrorAsync } = require("../services/handleResponse.js");
 const upload = multer({
   limits: {
     //限制檔案大小為3M
-    fileSize: 3 * 1024 * 1024,
+    fileSize: 4 * 1024 * 1024,
   },
   fileFilter(req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
