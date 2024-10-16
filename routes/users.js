@@ -97,7 +97,7 @@ router.get('/line/callback',
   passport.authenticate('line', { session: false }), handleErrorAsync(async (req, res, next) => {
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'LINE' });
-
+    console.log('666', user)
     if (!user) {
       const tmp = {
         oAuthID: tmpID,
@@ -125,7 +125,7 @@ router.get('/line/callback',
       name: 'tmp.name',
       email: 'tmp.email'
     });
-    res.redirect(`${process.env.FRONTENDURL}/success.html?${params.toString()}`);
+    res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
   }));
 
 router.get('/google', passport.authenticate('google', {
