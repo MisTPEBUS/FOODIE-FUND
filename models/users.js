@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "Email 未填寫"],
       lowercase: true,
     },
     password: {
