@@ -123,7 +123,8 @@ router.get('/line/callback',
     const params = new URLSearchParams({
       token: 'token',
       name: 'tmp.name',
-      email: 'tmp.email'
+      email: 'tmp.email',
+      photo: tmp.photo,
     });
     res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
   }));
