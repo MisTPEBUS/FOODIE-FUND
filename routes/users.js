@@ -18,9 +18,13 @@ dotenv.config({ path: "./config.env" });
 console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
 /*   callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`  */
 passport.use(new GoogleStrategy({
+  /* clientID: process.env.GOOGLE_AUTH_CLIENTID,
+  clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback` */
   clientID: process.env.GOOGLE_AUTH_CLIENTID,
   clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback`
+  callbackURL: "https://foodiefund.onrender.com/v1/api/auth/google/callback"
+
 },
   async (accessToken, refreshToken, profile, cb) => {
     return cb(null, profile);
