@@ -140,44 +140,44 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'google' });
     console.log('88', user);
-    if (!user) {
-      const tmp = {
-        oAuthID: tmpID,
-        name: req.user.displayName,
-        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
-        email: tmpEmail,
-        password: req.user.id,
-        memberType: 'google'
-      };
-      const newUser = await User.create(tmp);
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
-      });
-      const params = new URLSearchParams({
-        token: token,
-        name: tmp.name,
-        email: tmp.email,
-        photo: tmp.photo,
-      });
-      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-    }
-    else {
-      //create
-      console.log('898999', user)
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
-      });
-      const params = new URLSearchParams({
-        token: token,
-        name: user.name,
-        email: user.email,
-        photo: user.photo,
-      });
-
-
-      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-
-    }
+    /*  if (!user) {
+       const tmp = {
+         oAuthID: tmpID,
+         name: req.user.displayName,
+         photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
+         email: tmpEmail,
+         password: req.user.id,
+         memberType: 'google'
+       };
+       const newUser = await User.create(tmp);
+       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+         expiresIn: process.env.JWT_EXPIRES_DAY
+       });
+       const params = new URLSearchParams({
+         token: token,
+         name: tmp.name,
+         email: tmp.email,
+         photo: tmp.photo,
+       });
+       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+     }
+     else {
+       //create
+       console.log('898999', user)
+       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+         expiresIn: process.env.JWT_EXPIRES_DAY
+       });
+       const params = new URLSearchParams({
+         token: token,
+         name: user.name,
+         email: user.email,
+         photo: user.photo,
+       });
+ 
+ 
+       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+ 
+     } */
 
   }))
 
