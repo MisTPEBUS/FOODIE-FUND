@@ -158,7 +158,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: tmp.email,
         photo: tmp.photo,
       });
-      res.redirect(`${process.env.BASE_URL}/redirect?${params.toString()}`);
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
       /*  res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
     }
     else {
@@ -175,7 +175,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
       });
 
 
-      res.redirect(`${process.env.BASE_URL}/redirect?${params.toString()}`);
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
       /* res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
 
     }
