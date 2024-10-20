@@ -158,7 +158,8 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: tmp.email,
         photo: tmp.photo,
       });
-      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+      res.redirect(`${process.env.BASE_URL}/redirect?${params.toString()}`);
+      /*  res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
     }
     else {
       //create
@@ -174,7 +175,8 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
       });
 
 
-      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+      res.redirect(`${process.env.BASE_URL}/redirect?${params.toString()}`);
+      /* res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
 
     }
 
