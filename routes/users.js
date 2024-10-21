@@ -32,7 +32,8 @@ passport.use(new GoogleStrategy({
 passport.use(new GitHubStrategy({
   clientID: process.env.GITHUB_CLIENT_ID,
   clientSecret: process.env.GITHUB_SECRET_KEY,
-  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback`
+  callbackURL: `https://foodiefund.onrender.com/v1/api/auth/github/callback`
+  /*   callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback` */
 
 
 },
