@@ -38,6 +38,7 @@ passport.use(new GitHubStrategy({
 
 },
   async (accessToken, refreshToken, profile, cb) => {
+    console.log('profile_666', profile);
     return cb(null, profile);
   }
 ));
