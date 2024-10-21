@@ -13,6 +13,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LineStrategy = require('passport-line').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
@@ -20,6 +21,17 @@ console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_AUTH_CLIENTID,
   clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback`
+
+
+},
+  async (accessToken, refreshToken, profile, cb) => {
+    return cb(null, profile);
+  }
+));
+passport.use(new GitHubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_SECRET_KEY,
   callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback`
 
 
@@ -132,6 +144,57 @@ router.get('/line/callback',
 router.get('/google', passport.authenticate('google', {
   scope: ['email', 'profile'],
 }));
+
+router.get('/github', passport.authenticate('github'));
+
+router.get('/github/callback', passport.authenticate('github', { session: false }),
+  handleErrorAsync(async (req, res, next) => {
+    const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : '';
+    const tmpID = req.user.id;
+    const user = await User.findOne({ oAuthID: tmpID, memberType: 'github' });
+    console.log('88', user);
+    if (!user) {
+      const tmp = {
+        oAuthID: tmpID,
+        name: req.user.displayName,
+        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
+        email: tmpEmail,
+        password: req.user.id,
+        memberType: 'github'
+      };
+      const newUser = await User.create(tmp);
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: tmp.name,
+        email: tmp.email,
+        photo: tmp.photo,
+      });
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
+      /*  res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
+    }
+    else {
+      //create
+      console.log('898999', user)
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: user.name,
+        email: user.email,
+        photo: user.photo,
+      });
+
+
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
+      /* res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
+
+    }
+
+  }))
 
 router.get('/google/callback', passport.authenticate('google', { session: false }),
   handleErrorAsync(async (req, res, next) => {
