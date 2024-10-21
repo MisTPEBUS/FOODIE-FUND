@@ -2,77 +2,206 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const validator = require("validator");
-const mongoose = require("mongoose");
 const User = require("../models/users.js");
+const jwt = require("jsonwebtoken");
 const {
-  Success,
-  NotFound,
   appError,
 } = require("../services/handleResponse.js");
 const { handleErrorAsync } = require("../services/handleResponse.js");
-const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/auth");
+const { isAuth, generateSendJWT } = require("../services/auth");
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const LineStrategy = require('passport-line').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
+const GitHubStrategy = require('passport-github').Strategy;
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
 /*   callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`  */
-/* passport.use(new GoogleStrategy({
+passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_AUTH_CLIENTID,
   clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-  callbackURL: "http://localhost:2330/v1/api/auth/google/callback"
- 
+  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback`
+
+
 },
   async (accessToken, refreshToken, profile, cb) => {
-
     return cb(null, profile);
   }
-)); */
-/* passport.use(new LineStrategy({
+));
+passport.use(new GitHubStrategy({
+  clientID: process.env.GITHUB_CLIENT_ID,
+  clientSecret: process.env.GITHUB_SECRET_KEY,
+  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback`
+
+
+},
+  async (accessToken, refreshToken, profile, cb) => {
+    return cb(null, profile);
+  }
+));
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_CLIENT_ID,
+  clientSecret: process.env.FACEBOOK_SECRET_KEY,
+  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/facebook/callback`
+},
+  async (accessToken, refreshToken, profile, cb) => {
+    console.log(profile);
+    const user = await User.findOne({
+      email: profile.id,
+      memberType: 'facebook',
+    });
+    if (!user) {
+      console.log('Adding new facebook user to DB..');
+      const user = new User({
+        accountId: profile.id,
+        name: profile.displayName,
+        provider: profile.provider,
+      });
+      //await user.save();
+      // console.log(user);
+      return cb(null, profile);
+    } else {
+      console.log('Facebook User already exist in DB..');
+      // console.log(profile);
+      return cb(null, profile);
+    }
+
+  }
+));
+router.get(
+  '/callback',
+  passport.authenticate('facebook', {
+    failureRedirect: '/auth/facebook/error',
+  }),
+  function (req, res) {
+    // Successful authentication, redirect to success screen.
+    res.redirect('/auth/facebook/success');
+  }
+);
+
+router.get('/success', async (req, res) => {
+  const userInfo = {
+    id: req.session.passport.user.id,
+    displayName: req.session.passport.user.displayName,
+    provider: req.session.passport.user.provider,
+  };
+  res.render('fb-github-success', { user: userInfo });
+});
+
+router.get('/error', (req, res) => res.send('Error logging in via Facebook..'));
+
+
+passport.use(new LineStrategy({
   channelID: '2006309432',
   channelSecret: 'a0b71be06ffdb0a5edab1a54707f5751',
-  callbackURL: "http://localhost:2330/v1/api/auth/line/callback"
+  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/line/callback`
 },
   async (accessToken, refreshToken, profile, done) => {
+    console.log('porfile', profile)
     return done(null, profile);
   }
-)); */
+));
 router.get('/line',
   passport.authenticate('line'));
 
-router.get('/line/callback', passport.authenticate('line', { session: false }), (req, res) => {
-  const code = req.query.code;
+router.get('/line/callback',
+  passport.authenticate('line', { session: false }), handleErrorAsync(async (req, res, next) => {
+    const tmpID = req.user.id;
+    const user = await User.findOne({ oAuthID: tmpID, memberType: 'LINE' });
+    console.log('666', user)
+    if (!user) {
+      const tmp = {
+        oAuthID: tmpID,
+        name: req.user.displayName,
+        phto: req.user.pictureUrl,
+        email: '',
+        password: req.user.id,
+        memberType: 'LINE'
+      };
+      const newUser = await User.create(tmp);
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: tmp.name,
+        email: tmp.email,
+        photo: tmp.photo,
+      });
+      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
 
-
-  console.log('Authorization code:', code);
-
-  res.redirect(`http://127.0.0.1:5500/success.html?token=${code}`);
-
-});
-
+    }
+    const params = new URLSearchParams({
+      token: 'token',
+      name: 'tmp.name',
+      email: 'tmp.email',
+      photo: tmp.photo,
+    });
+    res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+  }));
 
 router.get('/google', passport.authenticate('google', {
   scope: ['email', 'profile'],
 }));
 
+router.get('/github', passport.authenticate('github'));
+
+router.get('/github/callback', passport.authenticate('github', { session: false }),
+  handleErrorAsync(async (req, res, next) => {
+    const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : '';
+    const tmpID = req.user.id;
+    const user = await User.findOne({ oAuthID: tmpID, memberType: 'github' });
+    console.log('88', user);
+
+
+  }))
+
 router.get('/google/callback', passport.authenticate('google', { session: false }),
   handleErrorAsync(async (req, res, next) => {
-    //console.log(req.user._json)
-    // const { _json } = req.user;
-    /*  res.send({
-       status: true,
-       data: {
-         id: req.user.id,
-         name: req.user.displayName,
-         provider: req.user.provider,
-         email: _json?.email,
-         photo: _json?.picture
-       }
-     }); */
-    console.log(req.user)
+    const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : '';
+    const tmpID = req.user.id;
+    const user = await User.findOne({ oAuthID: tmpID, memberType: 'google' });
+    console.log('88', user);
+    if (!user) {
+      const tmp = {
+        oAuthID: tmpID,
+        name: req.user.displayName,
+        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
+        email: tmpEmail,
+        password: req.user.id,
+        memberType: 'google'
+      };
+      const newUser = await User.create(tmp);
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: tmp.name,
+        email: tmp.email,
+        photo: tmp.photo,
+      });
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
+      /*  res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
+    }
+    else {
+      //create
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: user.name,
+        email: user.email,
+        photo: user.photo,
+      });
 
-    res.redirect(`https://tomchen102.github.io/foodiefund/login?token=${req.user.id}`);
+
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
+      /* res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
+
+    }
 
   }))
 
@@ -106,7 +235,7 @@ router.post(
     }
     // find user
 
-    const isUser = await User.findOne({ email: email });
+    const isUser = await User.findOne({ email: email, memberType: 'system' });
 
     if (isUser) {
       return next(appError("使用者已經註冊", next, 409));
@@ -214,7 +343,7 @@ router.post(
       return next(appError("Password欄位不能為空值！", next));
     }
 
-    const user = await User.findOne({ email }).select("+password");
+    const user = await User.findOne({ email: email, memberType: 'system' }).select("+password");
     console.log(user)
     if (!user) {
       return next(appError("使用者未註冊!", next));
@@ -386,44 +515,6 @@ router.patch(
   }),
 );
 
-//JWT驗證
-router.post(
-  "/check", isAuth,
-  handleErrorAsync(async (req, res, next) => {
-    generateSendJWT(req.user, 200, res);
-    /*
-    #swagger.tags =  ['使用者登入驗證']
-    #swagger.path = '/v1/api/auth/check'
-    #swagger.method = 'post'
-    #swagger.summary='JWT驗證'
-    #swagger.description = 'JWT驗證'
-    #swagger.produces = ["application/json"] 
-     #swagger.security = [{
-        "bearerAuth": []
-    }]
-  */
-    /*
 
-  #swagger.responses[200] = { 
-    schema: {
-        "status": "true",
-        "data": {
-             "user": {
-                 "token": "eyJhbGciOiJ..........mDWPvJZSxu98W4",
-                 "name": "Lobinda",
-                 "photo":""
-             }
-        }
-      }
-    } 
-  #swagger.responses[400] = { 
-    schema: {
-        "status": false,
-        "message": "Error Msg",
-      }
-    } 
- */
-  }),
-);
 
 module.exports = router;
