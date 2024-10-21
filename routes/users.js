@@ -66,7 +66,6 @@ passport.use(new FacebookStrategy({
       // console.log(profile);
       return cb(null, profile);
     }
-
   }
 ));
 router.get(
@@ -145,18 +144,6 @@ router.get('/google', passport.authenticate('google', {
   scope: ['email', 'profile'],
 }));
 
-router.get('/github', passport.authenticate('github'));
-
-router.get('/github/callback', passport.authenticate('github', { session: false }),
-  handleErrorAsync(async (req, res, next) => {
-    const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : '';
-    const tmpID = req.user.id;
-    const user = await User.findOne({ oAuthID: tmpID, memberType: 'github' });
-    console.log('88', user);
-
-
-  }))
-
 router.get('/google/callback', passport.authenticate('google', { session: false }),
   handleErrorAsync(async (req, res, next) => {
     const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : '';
@@ -182,8 +169,8 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         email: tmp.email,
         photo: tmp.photo,
       });
-      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
-      /*  res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
+
+      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
     else {
       //create
@@ -197,9 +184,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         photo: user.photo,
       });
 
-
-      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
-      /* res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
+      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
 
     }
 
