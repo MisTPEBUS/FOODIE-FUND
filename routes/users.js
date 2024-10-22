@@ -105,7 +105,7 @@ router.get('/github/callback',
       const tmp = {
         oAuthID: tmpID,
         name: req.user.displayName,
-        phto: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
+        phto: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
         email: '',
         password: req.user.id,
         memberType: 'github'
@@ -118,7 +118,7 @@ router.get('/github/callback',
         token: token,
         name: tmp.name,
         email: tmp.email,
-        photo: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
+        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
       });
 
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
