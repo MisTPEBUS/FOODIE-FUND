@@ -57,8 +57,8 @@ router.get('/line/callback',
   passport.authenticate('line', { session: false }), handleErrorAsync(async (req, res, next) => {
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'line' });
-    console.log('666', user)
-    console.log('6667', req.user.pictureUrl)
+    console.log('666', user);
+    console.log('6667', req.user.pictureUrl);
     if (!user) {
       const tmp = {
         oAuthID: tmpID,
@@ -120,9 +120,9 @@ router.get('/github/callback',
         email: tmp.email,
         photo: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
       });
-      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
-      /*   res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-   */
+
+      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+
     }
     else {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
