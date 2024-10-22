@@ -40,56 +40,6 @@ passport.use(new GitHubStrategy({
     return cb(null, profile);
   }
 ));
-passport.use(new FacebookStrategy({
-  clientID: process.env.FACEBOOK_CLIENT_ID,
-  clientSecret: process.env.FACEBOOK_SECRET_KEY,
-  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/facebook/callback`
-},
-  async (accessToken, refreshToken, profile, cb) => {
-    console.log(profile);
-    const user = await User.findOne({
-      email: profile.id,
-      memberType: 'facebook',
-    });
-    if (!user) {
-      console.log('Adding new facebook user to DB..');
-      const user = new User({
-        accountId: profile.id,
-        name: profile.displayName,
-        provider: profile.provider,
-      });
-      //await user.save();
-      // console.log(user);
-      return cb(null, profile);
-    } else {
-      console.log('Facebook User already exist in DB..');
-      // console.log(profile);
-      return cb(null, profile);
-    }
-  }
-));
-router.get(
-  '/callback',
-  passport.authenticate('facebook', {
-    failureRedirect: '/auth/facebook/error',
-  }),
-  function (req, res) {
-    // Successful authentication, redirect to success screen.
-    res.redirect('/auth/facebook/success');
-  }
-);
-
-router.get('/success', async (req, res) => {
-  const userInfo = {
-    id: req.session.passport.user.id,
-    displayName: req.session.passport.user.displayName,
-    provider: req.session.passport.user.provider,
-  };
-  res.render('fb-github-success', { user: userInfo });
-});
-
-router.get('/error', (req, res) => res.send('Error logging in via Facebook..'));
-
 
 passport.use(new LineStrategy({
   channelID: '2006309432',
@@ -101,8 +51,7 @@ passport.use(new LineStrategy({
     return done(null, profile);
   }
 ));
-router.get('/line',
-  passport.authenticate('line'));
+
 
 router.get('/line/callback',
   passport.authenticate('line', { session: false }), handleErrorAsync(async (req, res, next) => {
@@ -140,7 +89,7 @@ router.get('/line/callback',
         token: token,
         name: user.name,
         email: user.email,
-        photo: 'https://profile.line-scdn.net/0m0e6e9ab47251e70ec42932278b7b626415b112fba646',
+        photo: req.user.pictureUrl,
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
@@ -185,16 +134,13 @@ router.get('/github/callback',
         email: user.email,
         photo: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
       });
-      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
-      /*   res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
+      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
   }));
 
-router.get('/google', passport.authenticate('google', {
+router.get('/google/callback', passport.authenticate('google', { session: false }, /* {
   scope: ['email', 'profile'],
-}));
-
-router.get('/google/callback', passport.authenticate('google', { session: false }),
+} */),
   handleErrorAsync(async (req, res, next) => {
     const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : '';
     const tmpID = req.user.id;
