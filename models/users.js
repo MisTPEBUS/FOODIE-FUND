@@ -75,6 +75,6 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   },
 );
-userSchema.index({ email: 1, memberType: 1 }, { unique: true });
+/* userSchema.index({ email: 1, memberType: 1 }, { unique: true }); */
 const User = mongoose.model("User", userSchema);
 module.exports = User;
