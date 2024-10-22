@@ -151,7 +151,7 @@ router.get('/github/callback',
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'github' });
     console.log('666', user)
-    console.log('6667', !user)
+    console.log('6667', req.user)
     /*   if (!user) {
         const tmp = {
           oAuthID: tmpID,
