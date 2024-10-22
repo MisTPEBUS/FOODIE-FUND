@@ -34,8 +34,6 @@ passport.use(new GitHubStrategy({
   clientSecret: process.env.GITHUB_SECRET_KEY,
   callbackURL: `https://foodiefund.onrender.com/v1/api/auth/github/callback`
   /*   callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback` */
-
-
 },
   async (accessToken, refreshToken, profile, cb) => {
     console.log('profile_666', profile);
@@ -111,40 +109,41 @@ router.get('/line/callback',
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'line' });
     console.log('666', user)
-    if (!user) {
-      const tmp = {
-        oAuthID: tmpID,
-        name: req.user.displayName,
-        phto: req.user.pictureUrl,
-        email: '',
-        password: req.user.id,
-        memberType: 'line'
-      };
-      const newUser = await User.create(tmp);
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
-      });
-      const params = new URLSearchParams({
-        token: token,
-        name: tmp.name,
-        email: tmp.email,
-        photo: tmp.photo,
-      });
-      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-
-    }
-    else {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
-      });
-      const params = new URLSearchParams({
-        token: token,
-        name: user.name,
-        email: tmp.email,
-        photo: tmp.photo,
-      });
-      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-    }
+    console.log('6667', !user)
+    /*   if (!user) {
+        const tmp = {
+          oAuthID: tmpID,
+          name: req.user.displayName,
+          phto: req.user.pictureUrl,
+          email: '',
+          password: req.user.id,
+          memberType: 'line'
+        };
+        const newUser = await User.create(tmp);
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRES_DAY
+        });
+        const params = new URLSearchParams({
+          token: token,
+          name: tmp.name,
+          email: tmp.email,
+          photo: tmp.photo,
+        });
+        res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+  
+      }
+      else {
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRES_DAY
+        });
+        const params = new URLSearchParams({
+          token: token,
+          name: user.name,
+          email: tmp.email,
+          photo: tmp.photo,
+        });
+        res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+      } */
   }));
 
 router.get('/github/callback',
@@ -152,40 +151,41 @@ router.get('/github/callback',
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'github' });
     console.log('666', user)
-    if (!user) {
-      const tmp = {
-        oAuthID: tmpID,
-        name: req.user.displayName,
-        phto: req.user.pictureUrl,
-        email: '',
-        password: req.user.id,
-        memberType: 'github'
-      };
-      const newUser = await User.create(tmp);
-      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
-      });
-      const params = new URLSearchParams({
-        token: token,
-        name: tmp.name,
-        email: tmp.email,
-        photo: tmp.photo,
-      });
-      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-
-    }
-    else {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
-      });
-      const params = new URLSearchParams({
-        token: token,
-        name: user.name,
-        email: tmp.email,
-        photo: tmp.photo,
-      });
-      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-    }
+    console.log('6667', !user)
+    /*   if (!user) {
+        const tmp = {
+          oAuthID: tmpID,
+          name: req.user.displayName,
+          phto: req.user.pictureUrl,
+          email: '',
+          password: req.user.id,
+          memberType: 'github'
+        };
+        const newUser = await User.create(tmp);
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRES_DAY
+        });
+        const params = new URLSearchParams({
+          token: token,
+          name: tmp.name,
+          email: tmp.email,
+          photo: tmp.photo,
+        });
+        res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+  
+      }
+      else {
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+          expiresIn: process.env.JWT_EXPIRES_DAY
+        });
+        const params = new URLSearchParams({
+          token: token,
+          name: user.name,
+          email: tmp.email,
+          photo: tmp.photo,
+        });
+        res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+      } */
   }));
 
 router.get('/google', passport.authenticate('google', {
