@@ -152,40 +152,42 @@ router.get('/github/callback',
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'github' });
     console.log('666', user)
     console.log('6667', req.user)
-    /*   if (!user) {
-        const tmp = {
-          oAuthID: tmpID,
-          name: req.user.displayName,
-          phto: (req.user.phodos.length>0)?req.user.phodos[0].value:'',
-          email: '',
-          password: req.user.id,
-          memberType: 'github'
-        };
-        const newUser = await User.create(tmp);
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRES_DAY
-        });
-        const params = new URLSearchParams({
-          token: token,
-          name: tmp.name,
-          email: tmp.email,
-          photo: tmp.photo,
-        });
-        res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-  
-      }
-      else {
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRES_DAY
-        });
-        const params = new URLSearchParams({
-          token: token,
-          name: user.name,
-          email: tmp.email,
-          photo: tmp.photo,
-        });
-        res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-      } */
+    if (!user) {
+      const tmp = {
+        oAuthID: tmpID,
+        name: req.user.displayName,
+        phto: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
+        email: '',
+        password: req.user.id,
+        memberType: 'github'
+      };
+      const newUser = await User.create(tmp);
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: tmp.name,
+        email: tmp.email,
+        photo: tmp.photo,
+      });
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
+      /*   res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+   */
+    }
+    else {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: user.name,
+        email: tmp.email,
+        photo: tmp.photo,
+      });
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
+      /*   res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
+    }
   }));
 
 router.get('/google', passport.authenticate('google', {
