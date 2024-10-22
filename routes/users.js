@@ -110,40 +110,40 @@ router.get('/line/callback',
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'line' });
     console.log('666', user)
     console.log('6667', req.user)
-    /*   if (!user) {
-        const tmp = {
-          oAuthID: tmpID,
-          name: req.user.displayName,
-          phto: req.user.pictureUrl,
-          email: '',
-          password: req.user.id,
-          memberType: 'line'
-        };
-        const newUser = await User.create(tmp);
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRES_DAY
-        });
-        const params = new URLSearchParams({
-          token: token,
-          name: tmp.name,
-          email: tmp.email,
-          photo: tmp.photo,
-        });
-        res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-  
-      }
-      else {
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRES_DAY
-        });
-        const params = new URLSearchParams({
-          token: token,
-          name: user.name,
-          email: tmp.email,
-          photo: tmp.photo,
-        });
-        res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-      } */
+    if (!user) {
+      const tmp = {
+        oAuthID: tmpID,
+        name: req.user.displayName,
+        phto: req.user.pictureUrl,
+        email: '',
+        password: req.user.id,
+        memberType: 'line'
+      };
+      const newUser = await User.create(tmp);
+      const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: tmp.name,
+        email: tmp.email,
+        photo: tmp.photo,
+      });
+      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+
+    }
+    else {
+      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRES_DAY
+      });
+      const params = new URLSearchParams({
+        token: token,
+        name: user.name,
+        email: tmp.email,
+        photo: tmp.photo,
+      });
+      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+    }
   }));
 
 router.get('/github/callback',
