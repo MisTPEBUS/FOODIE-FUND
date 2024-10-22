@@ -140,7 +140,7 @@ router.get('/line/callback',
         token: token,
         name: user.name,
         email: user.email,
-        photo: req.user.pictureUrl,
+        photo: 'https://profile.line-scdn.net/0m0e6e9ab47251e70ec42932278b7b626415b112fba646',
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
