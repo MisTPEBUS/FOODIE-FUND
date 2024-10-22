@@ -109,7 +109,7 @@ router.get('/line/callback',
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'line' });
     console.log('666', user)
-    console.log('6667', req.user)
+    console.log('6667', req.user.pictureUrl)
     if (!user) {
       const tmp = {
         oAuthID: tmpID,
@@ -127,7 +127,7 @@ router.get('/line/callback',
         token: token,
         name: tmp.name,
         email: tmp.email,
-        photo: tmp.photo,
+        photo: req.user.pictureUrl,
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
 
@@ -140,7 +140,7 @@ router.get('/line/callback',
         token: token,
         name: user.name,
         email: tmp.email,
-        photo: tmp.photo,
+        photo: req.user.pictureUrl,
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
@@ -169,7 +169,7 @@ router.get('/github/callback',
         token: token,
         name: tmp.name,
         email: tmp.email,
-        photo: tmp.photo,
+        photo: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
       });
       res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
       /*   res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
@@ -183,7 +183,7 @@ router.get('/github/callback',
         token: token,
         name: user.name,
         email: tmp.email,
-        photo: tmp.photo,
+        photo: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
       });
       res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
       /*   res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
