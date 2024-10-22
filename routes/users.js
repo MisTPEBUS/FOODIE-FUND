@@ -99,15 +99,14 @@ router.get('/github/callback',
   passport.authenticate('github', { session: false }), handleErrorAsync(async (req, res, next) => {
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'github' });
-    console.log('666', user)
-    console.log('6667', req.user)
+
     if (!user) {
       const tmp = {
         oAuthID: tmpID,
         name: req.user.displayName,
-        phto: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
+        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
         email: '',
-        password: req.user.id,
+        password: tmpID,
         memberType: 'github'
       };
       const newUser = await User.create(tmp);
@@ -118,11 +117,11 @@ router.get('/github/callback',
         token: token,
         name: tmp.name,
         email: tmp.email,
-        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
+        photo: tmp.photo,
       });
-
+      console.log('666', params)
+      console.log('6667', req.user)
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-
     }
     else {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
