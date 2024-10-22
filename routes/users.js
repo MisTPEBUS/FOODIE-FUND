@@ -156,7 +156,7 @@ router.get('/github/callback',
         const tmp = {
           oAuthID: tmpID,
           name: req.user.displayName,
-          phto: req.user.pictureUrl,
+          phto: (req.user.phodos.length>0)?req.user.phodos[0].value:'',
           email: '',
           password: req.user.id,
           memberType: 'github'
