@@ -139,7 +139,7 @@ router.get('/line/callback',
       const params = new URLSearchParams({
         token: token,
         name: user.name,
-        email: tmp.email,
+        email: user.email,
         photo: req.user.pictureUrl,
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
@@ -182,7 +182,7 @@ router.get('/github/callback',
       const params = new URLSearchParams({
         token: token,
         name: user.name,
-        email: tmp.email,
+        email: user.email,
         photo: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
       });
       res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
