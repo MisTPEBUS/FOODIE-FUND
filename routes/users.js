@@ -119,8 +119,7 @@ router.get('/github/callback',
         email: tmp.email,
         photo: tmp.photo,
       });
-      console.log('666', params)
-      console.log('6667', req.user)
+
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
     else {
@@ -144,7 +143,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
     const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : '';
     const tmpID = req.user.id;
     const user = await User.findOne({ oAuthID: tmpID, memberType: 'google' });
-    console.log('88', user);
+
     if (!user) {
       const tmp = {
         oAuthID: tmpID,
@@ -418,8 +417,8 @@ router.patch(
       return next(appError("confirmPassword不得為空值!", next));
     }
 
-    if (!validator.isLength(password, { min: 8 })) {
-      return next(appError("密碼至少8碼", next));
+    if (!validator.isLength(password, { min: 1 })) {
+      return next(appError("密碼不能是空值", next));
     }
 
     if (password !== confirmPassword) {
