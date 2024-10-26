@@ -131,7 +131,7 @@ router.get('/github/callback',
         token: token,
         name: user.name,
         email: user.email,
-        photo: (req.user.phodos.length > 0) ? req.user.phodos[0].value : '',
+        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
