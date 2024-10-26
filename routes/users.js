@@ -123,6 +123,7 @@ router.get('/github/callback',
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
     else {
+      console.log('user', user)
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRES_DAY
       });

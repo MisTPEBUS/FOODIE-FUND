@@ -44,11 +44,7 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
   if (!currentUser) {
     return next(appError('Token格式異常請重新登入！', next));
   }
-
-
-
   req.user = currentUser;
-
   next();
 });
 
@@ -57,15 +53,11 @@ const generateMailSendJWT = (user, statusCode, res, next) => {
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_MAIL_EXPIRES_DAY,
   });
-  const URL = `https://hexschool-mailgun.onrender.com/v1/api/auth/verify-email/${token}`;
+  const URL = `https://foodiefund.vercel.app/verify-email/${token}`;
   user.password = undefined;
   user.token = token;
   user.URL = URL;
-
   mailerSender(user, res, next);
-  //api +'/'+ token
-
-
 };
 
 /* const generateSendJWT = (user, statusCode, res) => {

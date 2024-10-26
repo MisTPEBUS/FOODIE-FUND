@@ -16,8 +16,6 @@ let transporter = nodemailer.createTransport({
 
 
 const mailerSender = (user, res, next) => {
-
-
     const data = {
         from: `lobinda123@gmail.com`,
         to: user.email,
@@ -31,7 +29,6 @@ const mailerSender = (user, res, next) => {
             console.log(error.message);
             return next(appError(error, next, 400));
         }
-
     });
     res.status(200).json({
         status: "true",
