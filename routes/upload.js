@@ -154,45 +154,48 @@ router.get('/list-files', handleErrorAsync(async (req, res, next) => {
    */
 }));
 //delete
-router.delete('/:id', handleErrorAsync(async (req, res, next) => {
+
+router.delete('/:name', handleErrorAsync(async (req, res, next) => {
   try {
-    let [files] = await bucket.getFiles();
 
-    files = files
-      .map(file => file.name)
-      .filter(name => !name.startsWith('sodu/')) // 過濾掉以 "sodu/" 開頭的檔案
-      .map(name => {
-        const [folder, idWithExtension] = name.split('/');
-        const [id] = idWithExtension.split('.'); // 去掉副檔名的 id
-        return {
-          folder,
-          id,
-          name: idWithExtension
-        };
-      });
+    const { name } = req.params;
+    console.log(name);
+    if (!name) {
+      return next(appError("name傳入格式異常!請查閱API文件", next));
+    }
 
-    Success(res, "", files, 200);
-    /*  res.status(200).json({
-       files: fileNames,
-       message: 'Successfully retrieved files'
-     }); */
+    if (!name.trim()) {
+      return next(appError("name欄位不能為空值！", next));
+    }
+
+    const file = bucket.file(`images/${name}`);
+    await file.delete(); // 刪除檔案
+    Success(res, `已資料刪除name:${name}`);
+
   } catch (error) {
-    console.error('Error listing files:', error);
+    console.error('Error deleting file:', error);
     res.status(500).json({
-      message: 'Error retrieving files',
-      error: error.message
+      message: 'Error deleting file',
+      error: error.message,
     });
   }
   /*
     #swagger.tags =  ['圖片上傳']
-    #swagger.path = '/v1/api/admin/upload/list-files'
-    #swagger.method = 'get'
+    #swagger.path = '/v1/api/admin/upload/{name}'
+    #swagger.method = 'delete'
     #swagger.summary='圖片清單'
     #swagger.description = '圖片清單'
     #swagger.security = [{
        "bearerAuth": []
    }]
    */
+  /*
+         #swagger.parameters['name'] = {
+                in: 'path',
+                description: '圖片name',
+                type: 'string'
+             } 
+    */
 }));
 
 module.exports = router;

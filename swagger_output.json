@@ -1639,9 +1639,36 @@
         "summary": "圖片清單",
         "description": "圖片清單",
         "responses": {
-          "200": {
-            "description": "OK"
-          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/v1/api/admin/upload/{name}": {
+      "delete": {
+        "tags": [
+          "圖片上傳"
+        ],
+        "summary": "圖片清單",
+        "description": "圖片清單",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "圖片name"
+          }
+        ],
+        "responses": {
           "500": {
             "description": "Internal Server Error"
           }
