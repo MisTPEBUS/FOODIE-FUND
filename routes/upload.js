@@ -103,13 +103,22 @@ router.post(
 //get
 router.get('/list-files', handleErrorAsync(async (req, res, next) => {
   try {
-    const [files] = await bucket.getFiles();
+    let [files] = await bucket.getFiles();
 
-    const fileNames = files
+    files = files
       .map(file => file.name)
-      .filter(name => !name.startsWith('sodu/'));
+      .filter(name => !name.startsWith('sodu/')) // 過濾掉以 "sodu/" 開頭的檔案
+      .map(name => {
+        const [folder, idWithExtension] = name.split('/');
+        const [id] = idWithExtension.split('.'); // 去掉副檔名的 id
+        return {
+          folder,
+          id,
+          name: idWithExtension
+        };
+      });
 
-    Success(res, "", fileNames, 200);
+    Success(res, "", files, 200);
     /*  res.status(200).json({
        files: fileNames,
        message: 'Successfully retrieved files'
