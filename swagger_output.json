@@ -1631,6 +1631,28 @@
         }
       }
     },
+    "/v1/api/admin/upload/list-files": {
+      "get": {
+        "tags": [
+          "圖片上傳"
+        ],
+        "summary": "圖片清單",
+        "description": "圖片清單",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
     "/v1/api/news": {
       "get": {
         "tags": [

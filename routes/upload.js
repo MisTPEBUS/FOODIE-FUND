@@ -1,7 +1,7 @@
 // routes/upload.js
 const express = require("express");
 const router = express.Router();
-const { appError, handleErrorAsync } = require("../services/handleResponse.js");
+const { appError, handleErrorAsync, Success } = require("../services/handleResponse.js");
 const uploadMiddleware = require("../services/image");
 const { v4: uuidv4 } = require("uuid");
 const firebaseAdmin = require("../services/firebase");
@@ -99,4 +99,40 @@ router.post(
 */
   }),
 );
+
+//get
+router.get('/list-files', handleErrorAsync(async (req, res, next) => {
+  try {
+    const [files] = await bucket.getFiles();
+
+    const fileNames = files
+      .map(file => file.name)
+      .filter(name => !name.startsWith('sodu/'));
+
+    Success(res, "", fileNames, 200);
+    /*  res.status(200).json({
+       files: fileNames,
+       message: 'Successfully retrieved files'
+     }); */
+  } catch (error) {
+    console.error('Error listing files:', error);
+    res.status(500).json({
+      message: 'Error retrieving files',
+      error: error.message
+    });
+  }
+  /*
+    #swagger.tags =  ['圖片上傳']
+    #swagger.path = '/v1/api/admin/upload/list-files'
+    #swagger.method = 'get'
+    #swagger.summary='圖片清單'
+    #swagger.description = '圖片清單'
+    #swagger.security = [{
+       "bearerAuth": []
+   }]
+   */
+}));
+//delete
+
+
 module.exports = router;
