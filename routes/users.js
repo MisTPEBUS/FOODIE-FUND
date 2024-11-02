@@ -215,11 +215,11 @@ router.post(
     }
     // find user
 
-    /* const isUser = await User.findOne({ email: email, memberType: 'system' });
+    const isUser = await User.findOne({ email: email, memberType: 'system' });
 
     if (isUser) {
       return next(appError("使用者已經註冊", next, 409));
-    } */
+    }
     // pwd salt
 
     password = bcrypt.hash(password, 12);
