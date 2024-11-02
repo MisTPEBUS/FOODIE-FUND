@@ -125,8 +125,7 @@ router.get('/list-files', handleErrorAsync(async (req, res, next) => {
           folder,
           id,
           name: idWithExtension,
-          URL: url,
-          updatedAt: file.metadata.updated // 新增更新時間欄位
+          URL: url
         };
       })
     );
