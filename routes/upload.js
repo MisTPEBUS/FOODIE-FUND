@@ -105,6 +105,9 @@ router.get('/list-files', handleErrorAsync(async (req, res, next) => {
   try {
     let [files] = await bucket.getFiles();
 
+    // 根據更新時間排序，將最近更新的文件排在前面
+    files.sort((a, b) => new Date(b.metadata.updated) - new Date(a.metadata.updated));
+
     let parsedFiles = await Promise.all(
       files.map(async (file) => {
         const filePath = file.name;
@@ -122,19 +125,18 @@ router.get('/list-files', handleErrorAsync(async (req, res, next) => {
           folder,
           id,
           name: idWithExtension,
-          URL: url
+          URL: url,
+          updatedAt: file.metadata.updated // 新增更新時間欄位
         };
       })
     );
 
-
+    // 過濾掉文件夾名稱以 "sodu" 開頭的文件
     parsedFiles = parsedFiles.filter(file => !file.folder.startsWith('sodu'));
 
+    // 成功回應
     Success(res, "", files = parsedFiles, 200);
-    /*  res.status(200).json({
-       files: fileNames,
-       message: 'Successfully retrieved files'
-     }); */
+
   } catch (error) {
     console.error('Error listing files:', error);
     res.status(500).json({
