@@ -13,7 +13,7 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(appError('請重新登入！', next, 401));
+    return next(appError('用戶未登入或授權無效，請重新登入！', next, 401, 3001));
   }
 
 
@@ -22,12 +22,12 @@ const isAuth = handleErrorAsync(async (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
 
       if (!payload) {
-        return next(appError('Token格式異常請重新登入！', next));
+        return next(appError('Token格式異常，未通過驗證，請重新登入！', next, 400, 2002));
       }
 
       if (err) {
         if (err.name === 'TokenExpiredError') {
-          return next(appError('Token 已過期，請重新登入！', next));
+          return next(appError('Token 已過期，請重新登入！', next, 400, 3001));
         } else {
           // 其他驗證錯誤處理
           reject(err)

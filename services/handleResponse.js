@@ -4,6 +4,7 @@ const Success = (res, message = "", data = "", status = 200) => {
     success: true,
     message,
     data,
+    code: 0
   });
 };
 
@@ -13,9 +14,13 @@ const SuccessList = (res, message = "", pagination, status = 200) => {
     success: true,
     message,
     data: res.data,
+    code: 0,
     pagination
   });
 };
+
+
+
 
 // NotFound Response
 const NotFound = (errMessage, next) => {
@@ -26,10 +31,11 @@ const NotFound = (errMessage, next) => {
 };
 
 // Error Response
-const appError = (errMessage, next, httpStatus = 400) => {
+const appError = (errMessage, next, httpStatus = 400, code = httpStatus) => {
   const error = new Error(errMessage);
   error.statusCode = httpStatus;
   error.isOperational = true;
+  error.code = code;
   next(error);
 };
 

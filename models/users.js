@@ -19,6 +19,18 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
+    followers: [
+      {
+        plan: {
+          type: mongoose.Schema.ObjectId,
+          ref: "Plan",
+        },
+        createdAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
     phone: {
       type: String,
       default: ""

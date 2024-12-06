@@ -14,6 +14,8 @@ const UploadRouter = require("./routes/upload");
 const newsRouter = require("./routes/news");
 const dotenv = require("dotenv");
 
+const plansRoute = require("./routes/plansRoute");
+
 
 dotenv.config({ path: "./config.env" });
 const mongoose = require("mongoose");
@@ -47,6 +49,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerFile));
 
 app.use("/v1/api/auth", usersRouter);
+app.use("/v1/api/plan", plansRoute);
 app.use("/v1/api/admin/account", AccountRouter);
 app.use("/v1/api/admin/upload", UploadRouter);
 app.use("/v1/api/news", newsRouter);
@@ -64,12 +67,18 @@ const resErrorProd = (err, res) => {
     res.status(err.statusCode).json({
       status: false,
       message: err.message,
+      success: false,
+      data: {},
+      code: err.code,
     });
   } else {
     console.error("出現重大錯誤", err);
     res.status(500).json({
-      status: "error",
-      message: "系統錯誤，請恰系統管理員",
+      status: false,
+      message: err.message,
+      success: false,
+      data: {},
+      code: err.code,
     });
   }
 };
