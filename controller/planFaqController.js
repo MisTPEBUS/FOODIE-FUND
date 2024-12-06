@@ -54,6 +54,8 @@ exports.getAllFaqs = handleErrorAsync(async (req, res, next) => {
         has_next: currentPage < totalPages
     };
 
+
+
     Success(res, "請求成功，回傳所需數據", { userQuestionsAndAnswer: acties, pagination: pagination });
     /*
      #swagger.tags = ['計畫管理-常見問題']
@@ -156,24 +158,65 @@ exports.getAllFaqs = handleErrorAsync(async (req, res, next) => {
 });
 
 exports.createFaq = async (req, res) => {
-    const { content, author, postId } = req.body;
-    const newComment = new Comment({
-        content,
-        author,
-        postId
+    const updateData = req.body;
+    const { plan_id } = req.params;
+
+    if (!plan_id) {
+        return next(appError("plan_id傳入格式異常!請查閱API文件", next, 400, 1002
+        ));
+    }
+
+    if (!plan_id.trim()) {
+        return next(appError("plan_id欄位不能為空值！", next, 400, 1002
+        ));
+    }
+    const allowedFields = ["questions",
+        "answers", "category", "order", "isActive"
+    ]; // 前端提供的欄位名稱
+    const filteredData = {};
+
+
+    Object.keys(updateData).forEach((key) => {
+
+        if (allowedFields.includes(key)) {
+            filteredData[key] = updateData[key];
+        }
+        if (key === "isActive") {
+
+            if (typeof updateData[key] !== 'boolean') {
+                return next(appError("isActive必須是boolean", next));
+            }
+        }
+        if (key === "questions" || key === "answers") {
+
+            if (typeof updateData[key] === 'undefined' || updateData[key] === "") {
+                return next(appError(`${key}不能是空值`, next, 400, 1002
+                ));
+            }
+        }
+
     });
 
-    try {
-        const savedComment = await newComment.save();
-        res.status(201).json(savedComment);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
+    const maxOrder = await PlanFaq.find({ plan_id: plan_id })
+        .sort({ order: -1 }) // 按 order 降序排列
+        .limit(1)
+        .then((docs) => (docs[0]?.order ?? 0));
+
+    // 创建新的文档并将 order 设置为 maxOrder + 1
+    filteredData.order = maxOrder + 1;
+    filteredData.plan_id = plan_id;
+    const newPlan = await PlanFaq.create(filteredData);
+
+    if (!newPlan) {
+        return next(appError("建立失敗!", next, 400, 1002));
     }
+    Success(res, "已建立貼文", newPlan, 201);
+
 };
 
 exports.updateFaqById = async (req, res) => {
     const { id, plan_id } = req.params;
-    console.log('id:', id)
+    const updateData = req.body;
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return next(appError("id格式無效!請使用系統加密過的_id參數", next, 400, 1002
         ));
@@ -187,10 +230,34 @@ exports.updateFaqById = async (req, res) => {
         return next(appError("id欄位不能為空值！", next, 400, 1002
         ));
     }
+    const allowedFields = ["questions",
+        "answers", "category", "order", "isActive"
+    ]; // 前端提供的欄位名稱
+    const filteredData = {};
 
+    Object.keys(updateData).forEach((key) => {
 
-    const resFaq = await PlanFaq.findByIdAndDelete(
-        id,
+        if (allowedFields.includes(key)) {
+            filteredData[key] = updateData[key];
+        }
+        if (key === "isActive") {
+
+            if (typeof updateData[key] !== 'boolean') {
+                return next(appError("isActive必須是boolean", next));
+            }
+        }
+        if (key === "questions" || key === "answers") {
+
+            if (typeof updateData[key] === 'undefined' || updateData[key] === "") {
+                return next(appError(`${key}不能是空值`, next, 400, 1002
+                ));
+            }
+        }
+
+    });
+    filteredData.plan_id = plan_id;
+    const resFaq = await PlanFaq.findByIdAndUpdate(
+        id, filteredData,
         { new: true, useFindAndModify: true }
     );
 
@@ -227,20 +294,20 @@ exports.deleteFaqById = handleErrorAsync(async (req, res, next) => {
         { new: true, useFindAndModify: true }
     );
 
-    console.log(resFaq)
+
     if (!resFaq) {
         return next(appError("找不到對應的常見問題資料，可能已被刪除或不存在！", next, 404, 1003
         ));
     }
+
     Success(res, `常見問題:${resFaq.questions}資料已刪除`);
 
-
     /*
-    #swagger.tags =  ['公告管理']
-    #swagger.path = '/v1/api/news/admin/{id}'
+    #swagger.tags =  ['計畫管理-常見問題']
+    #swagger.path = '/v1/api/plan/{plan_id}/questionsAndAnswers/{id}'
     #swagger.method = 'delete'
-    #swagger.summary='刪除單筆公告'
-    #swagger.description = '刪除單筆公告'
+    #swagger.summary='刪除單筆常見問題'
+    #swagger.description = '刪除單筆常見問題'
     #swagger.produces = ["application/json"] 
   */
     /*

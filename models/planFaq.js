@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const planFaqSchema = new mongoose.Schema(
     {
         plan_id: {
-            type: mongoose.Schema.ObjectId,
-            ref: "Plan",
+            type: String,
+            /*   ref: "Plan", */
             required: [true, "PlanID 未填寫"],
         },
 
@@ -27,6 +27,14 @@ const planFaqSchema = new mongoose.Schema(
         isActive: {
             type: Boolean,
             default: true,
+        },
+        createdAt: {
+            type: Date,
+            default: Date.now,
+        },
+        updateAt: {
+            type: Date,
+            default: Date.now,
         },
     },
     {
