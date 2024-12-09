@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const { appError, handleErrorAsync, Success } = require("../services/handleResponse.js");
-const uploadMiddleware = require("../services/image");
+const { uploadMiddleware } = require("../services/image");
 const { v4: uuidv4 } = require("uuid");
 const firebaseAdmin = require("../services/firebase");
 const bucket = firebaseAdmin.storage().bucket(); // 取出存儲桶內容

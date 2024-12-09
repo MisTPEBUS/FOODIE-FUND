@@ -7,7 +7,7 @@ const { appError, handleErrorAsync } = require("../services/handleResponse.js");
 const upload = multer({
   limits: {
     //限制檔案大小為3M
-    fileSize: 4 * 1024 * 1024,
+    fileSize: 3 * 1024 * 1024,
   },
   fileFilter(req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase();
@@ -20,10 +20,24 @@ const upload = multer({
 
 const uploadMiddleware = handleErrorAsync(async (req, res, next) => {
   upload(req, res, (err) => {
+
     if (err) {
-      // next send err msg
       return next(appError(err.message, next));
     }
+
+    if (req.method === "PUT") {
+      // PUT 請求可以不包含圖片
+      if (!req.file) {
+        return next(); // 沒有圖片，直接進入下一步
+      }
+    } else {
+      // 其他請求（如 POST），要求圖片必須存在
+      if (!req.file) {
+        return next(appError("必須提供圖片", next));
+      }
+    }
+
+
     if (!req.files || req.files.length === 0) {
       return next(appError("檔案不能為空值", next));
     }
@@ -33,4 +47,38 @@ const uploadMiddleware = handleErrorAsync(async (req, res, next) => {
     next();
   });
 });
-module.exports = uploadMiddleware;
+
+const uploadPlanNewsMiddleware = handleErrorAsync(async (req, res, next) => {
+  upload(req, res, (err) => {
+    req.updateData = req.body;
+    if (err) {
+      return next(appError(err.message, next));
+    }
+
+    if (req.method === "PUT") {
+      // PUT 請求可以不包含圖片
+      if (!req.file) {
+        return next(); // 沒有圖片，直接進入下一步
+      }
+    } else {
+      // 其他請求（如 POST），要求圖片必須存在
+      if (!req.file) {
+        return next();
+        // return next(appError("必須提供圖片", next));
+      }
+    }
+
+
+    if (!req.files || req.files.length === 0) {
+      return next(appError("檔案不能為空值", next));
+    }
+    if (req.files.length > 1) {
+      return next(appError("只能上傳一個文件", next));
+    }
+
+
+
+    next();
+  });
+});
+module.exports = { uploadMiddleware, uploadPlanNewsMiddleware };

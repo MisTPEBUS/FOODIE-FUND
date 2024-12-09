@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const planNewsSchema = new mongoose.Schema(
     {
         plan_id: {
-            type: mongoose.Schema.ObjectId,
-            ref: "Plan",
+            type: String,
+            select: false,
             required: [true, "PlanID 未填寫"],
         },
         title: {

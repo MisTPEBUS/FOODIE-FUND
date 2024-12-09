@@ -1,5 +1,33 @@
 const express = require('express');
+const { appError } = require("../services/handleResponse");
+const { uploadMiddleware, uploadPlanNewsMiddleware } = require("../services/image");
 const router = express.Router();
+const rateLimit = require("express-rate-limit");
+
+// 設置限流
+const apiLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 15 分鐘
+    max: 5, // 每個 IP 限制最多 100 次請求
+    message: {
+        message: "請求次數過多，請稍後再試。",
+    },
+    handler: (req, res, next, options) => {
+        // 自訂的錯誤處理
+        next(
+            appError(
+                "請求過多，請稍後再試。",
+                next,
+                429, // HTTP 狀態碼
+                4001 // 自定義錯誤代碼
+            )
+        );
+    },
+    standardHeaders: true, // 返回 RateLimit 相關資訊到 Headers
+    legacyHeaders: false, // 停用舊版 Headers
+});
+
+
+
 
 const planController = require('../controller/planController');
 const planNewsController = require('../controller/planNewsController');
@@ -16,20 +44,18 @@ const validatePlanId = (req, res, next) => {
     next();
 };
 
-
-
 //提案計畫
 //Admin
 router.get('/', isAuth, planController.getAllPlans);
-router.get('/:id', planController.getPlanById);
-router.post('/', planController.createPlan);
-router.put('/:id', planController.updatePlanById);
-router.delete('/:id', planController.deletePlanById);
+router.get('/:id', isAuth, planController.getPlanById);
+router.post('/', isAuth, planController.createPlan);
+router.put('/:id', isAuth, planController.updatePlanById);
+router.delete('/:id', isAuth, planController.deletePlanById);
 
 //最新消息
 router.get('/:plan_id/news', isAuth, planNewsController.getAllNews);
-router.post('/:plan_id/news', isAuth, planNewsController.createNews);
-router.put('/:plan_id/news/:id', isAuth, planNewsController.updateNewsById);
+router.post('/:plan_id/news', apiLimiter, isAuth, uploadPlanNewsMiddleware, planNewsController.createNews);
+router.put('/:plan_id/news/:id', apiLimiter, isAuth, uploadPlanNewsMiddleware, planNewsController.updateNewsById);
 router.delete('/:plan_id/news/:id', isAuth, planNewsController.deleteNewsById);
 //常見問題
 router.get('/:plan_id/faqs', isAuth, validatePlanId, planFaqController.getAllFaqs);

@@ -3,6 +3,8 @@ const Comment = require('../models/planCommentModel');
 
 
 exports.getAllPlans = async (req, res) => {
+
+    console.log(req.user);
     res.status(200);
 };
 
