@@ -57,22 +57,22 @@ const uploadPlanNewsMiddleware = handleErrorAsync(async (req, res, next) => {
 
     if (req.method === "PUT") {
       // PUT 請求可以不包含圖片
-      if (!req.file) {
+      if (!req.image) {
         return next(); // 沒有圖片，直接進入下一步
       }
     } else {
       // 其他請求（如 POST），要求圖片必須存在
-      if (!req.file) {
+      if (!req.image) {
         return next();
         // return next(appError("必須提供圖片", next));
       }
     }
 
 
-    if (!req.files || req.files.length === 0) {
-      return next(appError("檔案不能為空值", next));
-    }
-    if (req.files.length > 1) {
+    /*  if (!req.image || req.image.length === 0) {
+       return next(appError("檔案不能為空值", next));
+     } */
+    if (req.image.length > 1) {
       return next(appError("只能上傳一個文件", next));
     }
 
