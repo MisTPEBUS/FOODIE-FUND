@@ -141,10 +141,9 @@ exports.createNews = handleErrorAsync(async (req, res, next) => {
             filteredData[key] = updateData[key];
         }
     });
-
-
+    console.log(req.body);
     // 檢查是否有圖片
-    if (req.image && req.image.length > 0) {
+    /*  if (req.image && req.image.length > 0) {
         const file = req.image[0];
         const blob = bucket.file(
             `images/${uuidv4()}.${file.originalname.split(".").pop()}`,
@@ -199,6 +198,8 @@ exports.createNews = handleErrorAsync(async (req, res, next) => {
             next(error);
         }
     }
+}); */
+
 });
 
 
@@ -241,62 +242,49 @@ exports.updateNewsById = handleErrorAsync(async (req, res, next) => {
         }
     });
 
-    // 檢查是否有圖片
-    if (req.image && req.image.length > 0) {
-        const file = req.image[0];
-        const blob = bucket.file(
-            `images/${uuidv4()}.${file.originalname.split(".").pop()}`,
-        );
-        const blobStream = blob.createWriteStream();
-        blobStream.end(file.buffer);
-
-        blobStream.on("finish", async () => {
-            try {
-                const config = {
-                    action: "read",
-                    expires: "12-31-2500",
-                };
-
-                const [fileUrl] = await blob.getSignedUrl(config);
-
-                // 添加圖片 URL 和計畫 ID
-                filteredData.image = fileUrl;
-                filteredData.plan_id = plan_id;
-
-                // 儲存到 MongoDB
-                const newNews = await PlanNews.create({ ...filteredData, ...updateData });
-
-                if (!newNews) {
-                    throw appError("建立失敗!", next, 400);
-                }
-
-                Success(res, "已建立貼文", newNews, 201);
-            } catch (error) {
-                next(error);
-            }
-        });
-
-        blobStream.on("error", (err) => {
-            console.error(err);
-            return next(appError("上傳失敗", next, 500));
-        });
-    } else {
-        // 沒有圖片，直接儲存
-        filteredData.image = ''; // 空字串
-        filteredData.plan_id = plan_id;
-
+    const file = req.files[0];
+    const blob = bucket.file(
+        `images/${uuidv4()}.${file.originalname.split(".").pop()}`,
+    );
+    const blobStream = blob.createWriteStream();
+    blobStream.end(file.buffer);
+    blobStream.on("finish", async () => {
         try {
+            // 設定檔案的存取權限
+            const config = {
+                action: "read",
+                expires: "12-31-2500",
+            };
+
+            // 獲取檔案的公開 URL
+            const [fileUrl] = await blob.getSignedUrl(config);
+
+            const filteredData = {};
+
+
+
+            // 添加圖片 URL 和計畫 ID
+            filteredData.image = fileUrl;
+            filteredData.plan_id = plan_id;
+
+            // 存儲到 MongoDB
             const newNews = await PlanNews.create({ ...filteredData, ...updateData });
 
             if (!newNews) {
-                throw appError("建立失敗!", next, 400);
+                throw appError("更新失敗!", next, 400);
             }
 
-            Success(res, "已建立貼文", newNews, 201);
+            Success(res, "已更新最新消息", newNews, 201);
         } catch (error) {
             next(error);
         }
-    }
+    });
+
+    blobStream.on("error", (err) => {
+        console.error(err);
+        return next(appError("上傳失敗", next, 500));
+    });
+
 });
 
 exports.deleteNewsById = handleErrorAsync(async (req, res, next) => {

@@ -10,13 +10,14 @@ const upload = multer({
     fileSize: 3 * 1024 * 1024,
   },
   fileFilter(req, file, cb) {
+    console.log(file)
     const ext = path.extname(file.originalname).toLowerCase();
     if (ext !== ".jpg" && ext !== ".png" && ext !== ".jpeg") {
       cb(new Error("檔案格式錯誤，僅限上傳 jpg、jpeg 與 png 格式。"));
     }
     cb(null, true);
   },
-}).any();
+}).single("image");
 
 const uploadMiddleware = handleErrorAsync(async (req, res, next) => {
   upload(req, res, (err) => {
@@ -51,6 +52,7 @@ const uploadMiddleware = handleErrorAsync(async (req, res, next) => {
 const uploadPlanNewsMiddleware = handleErrorAsync(async (req, res, next) => {
   upload(req, res, (err) => {
     req.updateData = req.body;
+    console.log('req.files', req.file)
     if (err) {
       return next(appError(err.message, next));
     }
