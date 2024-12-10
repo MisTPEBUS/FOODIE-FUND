@@ -56,7 +56,7 @@ exports.getAllFaqs = handleErrorAsync(async (req, res, next) => {
 
 
 
-    Success(res, "請求成功，回傳所需數據", { userQuestionsAndAnswer: acties, pagination: pagination });
+    Success(res, "請求成功，回傳所需數據", { data: acties });
     /*
      #swagger.tags = ['計畫管理-常見問題']
      #swagger.path = '/v1/api/plan/{plan_id}/questionsAndAnswers'
