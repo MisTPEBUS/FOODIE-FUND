@@ -257,7 +257,10 @@ exports.updateNewsById = handleErrorAsync(async (req, res, next) => {
                 filteredData.plan_id = plan_id;
 
                 // 儲存到 MongoDB
-                const newNews = await PlanNews.create({ ...filteredData, ...updateData });
+                const newNews = await PlanNews.findByIdAndUpdate(
+                    id,
+                    { ...filteredData, ...updateData },
+                    { new: true, useFindAndModify: true });
 
                 if (!newNews) {
                     throw appError("建立失敗!", next, 400);
@@ -279,7 +282,10 @@ exports.updateNewsById = handleErrorAsync(async (req, res, next) => {
         filteredData.plan_id = plan_id;
 
         try {
-            const newNews = await PlanNews.create({ ...filteredData, ...updateData });
+            const newNews = await PlanNews.findByIdAndUpdate(
+                id,
+                { ...filteredData, ...updateData },
+                { new: true, useFindAndModify: true });
 
             if (!newNews) {
                 throw appError("建立失敗!", next, 400);
