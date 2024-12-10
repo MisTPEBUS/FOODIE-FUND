@@ -44,8 +44,7 @@ exports.getAllNews = handleErrorAsync(async (req, res, next) => {
     //  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
     let acties = await PlanNews.find(query)
-        .sort(tSort)
-        .skip((currentPage - 1) * itemsPerPage);
+        .sort(tSort);
 
     // 設定分頁信息
     /*   const pagination = {
@@ -55,11 +54,11 @@ exports.getAllNews = handleErrorAsync(async (req, res, next) => {
           has_pre: currentPage > 1,
           has_next: currentPage < totalPages
       }; */
-    res.data =
-    {
-        add: '',
-        pagination: pagination
-    }
+    /*   res.data =
+      {
+          add: '',
+          pagination: pagination
+      } */
     Success(res, "請求成功，回傳所需數據", { data: acties });
     /*
       #swagger.tags =  ['計畫管理']
