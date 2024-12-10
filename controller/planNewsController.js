@@ -45,8 +45,7 @@ exports.getAllNews = handleErrorAsync(async (req, res, next) => {
 
     let acties = await PlanNews.find(query)
         .sort(tSort)
-        .skip((currentPage - 1) * itemsPerPage)
-        .limit(itemsPerPage);
+        .skip((currentPage - 1) * itemsPerPage);
 
     // 設定分頁信息
     const pagination = {
