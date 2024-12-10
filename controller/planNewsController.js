@@ -13,7 +13,7 @@ const firebaseAdmin = require("../services/firebase.js");
 const bucket = firebaseAdmin.storage().bucket();
 
 exports.getAllNews = handleErrorAsync(async (req, res, next) => {
-    const { timeSort, keyWord, page = 1, limit = 10 } = req.query;
+    const { timeSort, keyWord, page = 1/* , limit = 10  */ } = req.query;
     const { plan_id } = req.params;
     const tSort = timeSort == "asc" ? "publicAt" : "-publicAt";
     let query = {};
@@ -36,25 +36,25 @@ exports.getAllNews = handleErrorAsync(async (req, res, next) => {
             { content: { $regex: regex } }
         ];
     }
-    const currentPage = Math.max(parseInt(page) || 1, 1); // 確保 page 是正整數
-    const itemsPerPage = Math.max(parseInt(limit) || 10, 1); // 確保 limit 是正整數
+    //  const currentPage = Math.max(parseInt(page) || 1, 1); // 確保 page 是正整數
+    //const itemsPerPage = Math.max(parseInt(limit) || 10, 1); // 確保 limit 是正整數
 
     const totalCount = await PlanNews.countDocuments(query);
 
-    const totalPages = Math.ceil(totalCount / itemsPerPage);
+    //  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
     let acties = await PlanNews.find(query)
         .sort(tSort)
         .skip((currentPage - 1) * itemsPerPage);
 
     // 設定分頁信息
-    const pagination = {
-        total: totalCount,
-        total_pages: totalPages,
-        current_page: currentPage,
-        has_pre: currentPage > 1,
-        has_next: currentPage < totalPages
-    };
+    /*   const pagination = {
+          total: totalCount,
+          total_pages: totalPages,
+          current_page: currentPage,
+          has_pre: currentPage > 1,
+          has_next: currentPage < totalPages
+      }; */
     res.data =
     {
         add: '',
