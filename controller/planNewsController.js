@@ -141,10 +141,10 @@ exports.createNews = handleErrorAsync(async (req, res, next) => {
             filteredData[key] = updateData[key];
         }
     });
-    console.log(req.body);
+    console.log(req.files);
     // 檢查是否有圖片
-    /*  if (req.image && req.image.length > 0) {
-        const file = req.image[0];
+    if (req.files && req.files.length > 0) {
+        const file = req.files[0];
         const blob = bucket.file(
             `images/${uuidv4()}.${file.originalname.split(".").pop()}`,
         );
@@ -198,9 +198,8 @@ exports.createNews = handleErrorAsync(async (req, res, next) => {
             next(error);
         }
     }
-}); */
-
 });
+
 
 
 
