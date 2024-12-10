@@ -13,7 +13,7 @@ const firebaseAdmin = require("../services/firebase.js");
 const bucket = firebaseAdmin.storage().bucket();
 
 exports.getAllNews = handleErrorAsync(async (req, res, next) => {
-    const { timeSort, keyWord, page = 1/* , limit = 10 */ } = req.query;
+    const { timeSort, keyWord, page = 1, limit = 10 } = req.query;
     const { plan_id } = req.params;
     const tSort = timeSort == "asc" ? "publicAt" : "-publicAt";
     let query = {};
