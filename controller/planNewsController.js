@@ -316,7 +316,7 @@ exports.deleteNewsById = handleErrorAsync(async (req, res, next) => {
         ));
     }
 
-    Success(res, `最新消息:${resFaq.questions}資料已刪除`);
+    Success(res, `最新消息:${resFNews.questions}資料已刪除`);
 
 });
 
