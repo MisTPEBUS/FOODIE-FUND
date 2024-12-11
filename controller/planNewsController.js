@@ -15,7 +15,7 @@ const bucket = firebaseAdmin.storage().bucket();
 exports.getAllNews = handleErrorAsync(async (req, res, next) => {
     const { timeSort, keyWord, page = 1/* , limit = 10  */ } = req.query;
     const { plan_id } = req.params;
-    const tSort = timeSort == "asc" ? "publicAt" : "-publicAt";
+    const tSort = "-publicAt";
     let query = {};
 
     if (!plan_id || plan_id.trim() === '') {
