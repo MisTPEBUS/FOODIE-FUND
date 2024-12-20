@@ -94,20 +94,91 @@
 													"type": "text"
 												},
 												{
-													"key": "files",
+													"key": "image",
 													"type": "file",
 													"src": "/C:/Users/User/Desktop/40f7b4272c4977c2beb538b7428aa75c.jpg"
 												}
 											]
 										},
 										"url": {
-											"raw": "https://foodiefund.onrender.com/v1/api/plan/675504b94b9ac71677792f1b/news",
+											"raw": "https://foodiefund.onrender.com/v1/api/plan/64c5ae5c6f2d3e001ccf9abc/news",
 											"protocol": "https",
 											"host": [
 												"foodiefund",
 												"onrender",
 												"com"
 											],
+											"path": [
+												"v1",
+												"api",
+												"plan",
+												"64c5ae5c6f2d3e001ccf9abc",
+												"news"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "PJT-NEWS-002計畫-新增最新消息 Copy",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTczMzI5NjUwNCwiZXhwIjoxNzQxOTM2NTA0fQ.-2eJ3bb96dUySweJQyZkv10WshqKl_5oniEJtZeK8WQ",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "title",
+													"value": "WTF is 蜜月期PAPA?沒圖沒真相\n\n",
+													"type": "text"
+												},
+												{
+													"key": "content",
+													"value": "我選錯方案了 請問可以修改贊助回饋項目嗎？",
+													"type": "text"
+												},
+												{
+													"key": "isActive",
+													"value": "true",
+													"type": "text"
+												},
+												{
+													"key": "isTop",
+													"value": "false",
+													"type": "text"
+												},
+												{
+													"key": "publicAt",
+													"value": "2024-12-12",
+													"type": "text"
+												},
+												{
+													"key": "image",
+													"type": "file",
+													"src": "/C:/Users/User/Desktop/40f7b4272c4977c2beb538b7428aa75c.jpg"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://127.0.0.1:2330/v1/api/plan/675504b94b9ac71677792f1b/news",
+											"protocol": "http",
+											"host": [
+												"127",
+												"0",
+												"0",
+												"1"
+											],
+											"port": "2330",
 											"path": [
 												"v1",
 												"api",
@@ -122,8 +193,71 @@
 								{
 									"name": "PJT-NEWS-003計畫修改最新消息",
 									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTczMzc0MjQ3MywiZXhwIjoxNzQyMzgyNDczfQ.tjPu2Fy8ERdeihNajwLEUxlF9gqs1Xy5rrfGL0wWKLw",
+													"type": "string"
+												}
+											]
+										},
 										"method": "PUT",
-										"header": []
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "title",
+													"value": "請問可以修改贊助回饋項目嗎？",
+													"type": "text"
+												},
+												{
+													"key": "content",
+													"value": "我選錯方案了 請問可以修改贊助回饋項目嗎？",
+													"type": "text"
+												},
+												{
+													"key": "isActive",
+													"value": "true",
+													"type": "text"
+												},
+												{
+													"key": "publicAt",
+													"value": "2024-12-12",
+													"type": "text"
+												},
+												{
+													"key": "isTop",
+													"value": "false",
+													"type": "text"
+												},
+												{
+													"key": "files",
+													"type": "file",
+													"src": [],
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "https://foodiefund.onrender.com/v1/api/plan/64c5ae5c6f2d3e001ccf9abc/news/67554d4a9e205467b8f6aaa3",
+											"protocol": "https",
+											"host": [
+												"foodiefund",
+												"onrender",
+												"com"
+											],
+											"path": [
+												"v1",
+												"api",
+												"plan",
+												"64c5ae5c6f2d3e001ccf9abc",
+												"news",
+												"67554d4a9e205467b8f6aaa3"
+											]
+										}
 									},
 									"response": []
 								},
@@ -143,7 +277,7 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "https://foodiefund.onrender.com/v1/api/plan/66d66fb3217ebbebc04b1d5b/news/66d66fb3217ebbebc04b1d5b",
+											"raw": "https://foodiefund.onrender.com/v1/api/plan/66d66fb3217ebbebc04b1d5b/news/64c5ae5c6f2d3e001ccf9abc",
 											"protocol": "https",
 											"host": [
 												"foodiefund",
@@ -156,7 +290,7 @@
 												"plan",
 												"66d66fb3217ebbebc04b1d5b",
 												"news",
-												"66d66fb3217ebbebc04b1d5b"
+												"64c5ae5c6f2d3e001ccf9abc"
 											]
 										}
 									},
@@ -183,7 +317,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://foodiefund.onrender.com/v1/api/plan/64c5ae5c6fd2d3e001ccf9abc/faqs",
+											"raw": "https://foodiefund.onrender.com/v1/api/plan/ALL/faqs",
 											"protocol": "https",
 											"host": [
 												"foodiefund",
@@ -194,7 +328,7 @@
 												"v1",
 												"api",
 												"plan",
-												"64c5ae5c6fd2d3e001ccf9abc",
+												"ALL",
 												"faqs"
 											]
 										}
@@ -218,7 +352,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n   \"questions\": \"test贊助後可以退款嗎？\",\r\n   \"answers\": \"贊助款項通常不予退款，但若遇到特殊情況，請聯繫客服詳細說明，我們將竭力協助您。\",\r\n   \"category\": [\r\n                    \"退款問題\"\r\n                ],\r\n    \"isActive\": true\r\n}",
+											"raw": "{\r\n   \"questions\": \"test贊助後可以退款嗎？\",\r\n   \"answers\": \"贊助款項通常不予退款，但若遇到特殊情況，請聯繫客服詳細說明，我們將竭力協助您。\",\r\n    \"isActive\": true\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -252,7 +386,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTczMzQ4NTMxNywiZXhwIjoxNzQyMTI1MzE3fQ.hSKoqyrPg_bBzFVUqwtheZ0Ufkoc5XyNbeiK291RiR8",
+													"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTczMzc0MjQ3MywiZXhwIjoxNzQyMzgyNDczfQ.tjPu2Fy8ERdeihNajwLEUxlF9gqs1Xy5rrfGL0wWKLw",
 													"type": "string"
 												}
 											]
@@ -437,6 +571,40 @@
 									"response": []
 								}
 							]
+						},
+						{
+							"name": "PJT-MAN-001_計畫-查詢計畫",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZDBjNzYyMjczNjI3ZTA1NmJlNTIzOCIsImlhdCI6MTczMzI5NjUwNCwiZXhwIjoxNzQxOTM2NTA0fQ.-2eJ3bb96dUySweJQyZkv10WshqKl_5oniEJtZeK8WQ",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://127.0.0.1:2330/v1/api/plan",
+									"protocol": "https",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"port": "2330",
+									"path": [
+										"v1",
+										"api",
+										"plan"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},

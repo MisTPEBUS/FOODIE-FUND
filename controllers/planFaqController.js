@@ -13,7 +13,7 @@ const { isAuth, generateSendJWT, generateMailSendJWT } = require("../services/au
 exports.getAllFaqs = handleErrorAsync(async (req, res, next) => {
     const { timeSort, keyWord, page = 1, limit = 10 } = req.query;
     const { plan_id } = req.params;
-    const tSort = timeSort == "asc" ? "publicAt" : "-publicAt";
+    const tSort = timeSort == "desc" ? "createdAt" : "-createdAt";
     let query = {};
 
 
@@ -41,9 +41,9 @@ exports.getAllFaqs = handleErrorAsync(async (req, res, next) => {
     const totalPages = Math.ceil(totalCount / itemsPerPage);
 
     let acties = await PlanFaq.find(query)
-        .sort(tSort)
-        .skip((currentPage - 1) * itemsPerPage)
-        .limit(itemsPerPage);
+        .sort(tSort)/* 
+        .skip((currentPage - 1) * itemsPerPage) 
+        .limit(itemsPerPage)*/;
 
     // 設定分頁信息
     const pagination = {
@@ -156,7 +156,139 @@ exports.getAllFaqs = handleErrorAsync(async (req, res, next) => {
     */
 
 });
+exports.getFaqsByID = handleErrorAsync(async (req, res, next) => {
 
+    const { plan_id, id } = req.params;
+
+    let query = {};
+
+
+    if (!plan_id || plan_id.trim() === '') {
+        return next(appError("id欄位不能為空值！", next, 400, 1002
+        ));
+    }
+    if (!id || id.trim() === '') {
+        return next(appError("id欄位不能為空值！", next, 400, 1002
+        ));
+    }
+    if (plan_id !== 'ALL') {
+        return next(appError("id欄位不能為ALL！", next, 400, 1002
+        ));
+    }
+
+
+    if (keyWord) {
+        const regex = new RegExp(keyWord, 'i');
+        query.$or = [
+            { title: { $regex: regex } },
+            { content: { $regex: regex } }
+        ];
+    }
+
+
+    let data = await PlanFaq.find(query);
+
+
+    Success(res, "請求成功，回傳所需數據", { data: data });
+    /*
+     #swagger.tags = ['計畫管理-常見問題']
+     #swagger.path = '/v1/api/plan/{plan_id}/questionsAndAnswers'
+     #swagger.method = 'get'
+     #swagger.summary = '查詢常見問題清單'
+     #swagger.description = '根據提供的參數，查詢常見問題清單，支援關鍵字模糊搜尋及公告時間排序。'
+     #swagger.produces = ['application/json']
+ */
+
+    /*
+        #swagger.parameters['plan_id'] = {
+            in: 'path',
+            required: true,
+            description: '計畫的唯一標識符 (Plan ID)',
+            type: 'string'
+        }
+    */
+
+    /*
+        #swagger.parameters['keyWord'] = {
+            in: 'query',
+            description: '關鍵字模糊搜尋 (針對標題和內容)，若為空則搜尋全部資料。',
+            type: 'string'
+        }
+    */
+
+    /*
+        #swagger.parameters['timeSort'] = {
+            in: 'query',
+            description: '公告時間排序方式。使用 "desc" 表示由遠到近，"asc" 表示由近到遠。',
+            enum: ['asc', 'desc'],
+            type: 'string'
+        }
+    */
+
+    /*
+        #swagger.parameters['limit'] = {
+            in: 'query',
+            description: '每頁顯示的資料筆數，預設值為 10。',
+            type: 'number',
+            default: 10
+        }
+    */
+
+    /*
+        #swagger.parameters['page'] = {
+            in: 'query',
+            description: '要顯示的頁數，預設值為 1。',
+            type: 'number',
+            default: 1
+        }
+    */
+
+    /*
+        #swagger.responses[200] = {
+            description: '成功查詢常見問題清單。',
+            schema: {
+                status: true,
+                message: '查詢成功',
+                data: {
+                    total: 100,
+                    items: [
+                        {
+                            id: '123',
+                            title: '常見問題標題',
+                            content: '常見問題內容',
+                            createdAt: '2024-11-30T10:00:00Z'
+                        }
+                    ]
+                }
+            }
+        }
+    */
+
+    /*
+        #swagger.responses[400] = {
+            description: '請求參數錯誤。',
+            schema: {
+                status: false,
+                message: '無效的參數。',
+                errors: {
+                    field: 'timeSort',
+                    message: '無效的排序方式，僅支援 asc 或 desc。'
+                }
+            }
+        }
+    */
+
+    /*
+        #swagger.responses[500] = {
+            description: '伺服器內部錯誤。',
+            schema: {
+                status: false,
+                message: '伺服器錯誤，請稍後再試。'
+            }
+        }
+    */
+
+});
 exports.createFaq = async (req, res) => {
     const updateData = req.body;
     const { plan_id } = req.params;
@@ -213,7 +345,6 @@ exports.createFaq = async (req, res) => {
     Success(res, "已建立貼文", newPlan, 201);
 
 };
-
 exports.updateFaqById = async (req, res) => {
     const { id, plan_id } = req.params;
     const updateData = req.body;
@@ -261,7 +392,6 @@ exports.updateFaqById = async (req, res) => {
         { new: true, useFindAndModify: true }
     );
 
-
     if (!resFaq) {
         return next(appError("找不到對應的常見問題資料，可能已被刪除或不存在！", next, 404, 1003
         ));
@@ -269,8 +399,6 @@ exports.updateFaqById = async (req, res) => {
     Success(res, `常見問題:${resFaq.questions}資料已更新`);
 
 };
-
-
 exports.deleteFaqById = handleErrorAsync(async (req, res, next) => {
     const { id, plan_id } = req.params;
     console.log('id:', id)

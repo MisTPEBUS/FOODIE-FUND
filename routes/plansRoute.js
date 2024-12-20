@@ -26,14 +26,11 @@ const apiLimiter = rateLimit({
     legacyHeaders: false, // 停用舊版 Headers
 });
 
-
-
-
-const planController = require('../controller/planController');
-const planNewsController = require('../controller/planNewsController');
-const planFaqController = require('../controller/planFaqController');
-const planCommentController = require('../controller/planCommentController');
-const planCommentReplyController = require('../controller/planCommentReplyControlle');
+const planController = require('../controllers/planController');
+const planNewsController = require('../controllers/planNewsController');
+const planFaqController = require('../controllers/planFaqController');
+const planCommentController = require('../controllers/planCommentController');
+const planCommentReplyController = require('../controllers/planCommentController');
 const { isAuth } = require('../services/auth');
 
 const validatePlanId = (req, res, next) => {
@@ -46,14 +43,22 @@ const validatePlanId = (req, res, next) => {
 
 //提案計畫
 //Admin
+router.get('/admin/planList', isAuth, planController.getPlanList);
 router.get('/', isAuth, planController.getAllPlans);
+
 router.get('/:id', isAuth, planController.getPlanById);
 router.post('/', isAuth, planController.createPlan);
 router.put('/:id', isAuth, planController.updatePlanById);
 router.delete('/:id', isAuth, planController.deletePlanById);
 
+//蒐藏
+
+
+//案讚
+
 //最新消息
 router.get('/:plan_id/news', isAuth, planNewsController.getAllNews);
+router.get('/:plan_id/:id', isAuth, planNewsController.getNewsByID);
 router.post('/:plan_id/news', apiLimiter, isAuth, uploadPlanNewsMiddleware, planNewsController.createNews);
 router.put('/:plan_id/news/:id', apiLimiter, isAuth, uploadPlanNewsMiddleware, planNewsController.updateNewsById);
 router.delete('/:plan_id/news/:id', isAuth, planNewsController.deleteNewsById);
@@ -67,7 +72,7 @@ router.delete('/:plan_id/faqs/:id', isAuth, planFaqController.deleteFaqById);
 router.get('/:plan_id/comment', isAuth, planCommentController.createComment);
 router.post('/:plan_id/comment', isAuth, planCommentController.deleteComment);
 //回復
-router.get('/:plan_id/commentReply', isAuth, planCommentReplyController.createComment);
+router.get('/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.createComment);
 router.post('/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.deleteComment);
 
 
