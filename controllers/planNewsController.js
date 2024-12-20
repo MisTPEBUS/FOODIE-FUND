@@ -118,7 +118,7 @@ exports.getNewsByID = handleErrorAsync(async (req, res, next) => {
 
 
 
-    let acties = await PlanNews.find(query);
+    let acties = await PlanNews.findById(id);
 
     // 設定分頁信息
 

@@ -179,7 +179,7 @@ exports.getFaqsByID = handleErrorAsync(async (req, res, next) => {
 
 
 
-    let data = await PlanFaq.find(query);
+    let data = await PlanFaq.findById(id);
 
 
     Success(res, "請求成功，回傳所需數據", { data: data });
