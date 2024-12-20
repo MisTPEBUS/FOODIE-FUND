@@ -108,8 +108,8 @@ exports.getNewsByID = handleErrorAsync(async (req, res, next) => {
     }
 
 
-    if (plan_id !== 'ALL') {
-        return next(appError("id欄位不能為ALL！", next, 400, 1002
+    if (plan_id == 'ALL') {
+        return next(appError("id欄位不能為ALL！", next, 400, 1003
         ));
     }
 
@@ -118,8 +118,7 @@ exports.getNewsByID = handleErrorAsync(async (req, res, next) => {
 
 
 
-    let acties = await PlanNews.find(query)
-        .sort(tSort);
+    let acties = await PlanNews.find(query);
 
     // 設定分頁信息
 

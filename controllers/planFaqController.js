@@ -171,19 +171,12 @@ exports.getFaqsByID = handleErrorAsync(async (req, res, next) => {
         return next(appError("id欄位不能為空值！", next, 400, 1002
         ));
     }
-    if (plan_id !== 'ALL') {
-        return next(appError("id欄位不能為ALL！", next, 400, 1002
+    if (plan_id == 'ALL') {
+        return next(appError("id欄位不能為ALL！", next, 400, 1003
         ));
     }
 
 
-    if (keyWord) {
-        const regex = new RegExp(keyWord, 'i');
-        query.$or = [
-            { title: { $regex: regex } },
-            { content: { $regex: regex } }
-        ];
-    }
 
 
     let data = await PlanFaq.find(query);
