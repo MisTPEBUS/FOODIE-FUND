@@ -341,7 +341,7 @@ exports.updateNewsById = handleErrorAsync(async (req, res, next) => {
         });
     } else {
         // 沒有圖片，直接儲存
-        filteredData.image = ''; // 空字串
+
         filteredData.plan_id = plan_id;
         console.log(filteredData)
         try {
