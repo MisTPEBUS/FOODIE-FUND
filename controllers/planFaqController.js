@@ -379,9 +379,9 @@ exports.updateFaqById = async (req, res) => {
         }
 
     });
-    filteredData.plan_id = plan_id;
+
     const resFaq = await PlanFaq.findByIdAndUpdate(
-        id, filteredData,
+        id, { $set: filteredData },
         { new: true, useFindAndModify: true }
     );
 

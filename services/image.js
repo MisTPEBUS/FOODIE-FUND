@@ -51,6 +51,7 @@ const uploadMiddleware = handleErrorAsync(async (req, res, next) => {
 const uploadPlanNewsMiddleware = handleErrorAsync(async (req, res, next) => {
   upload(req, res, (err) => {
     req.updateData = req.body;
+
     if (err) {
       return next(appError(err.message, next));
     }
