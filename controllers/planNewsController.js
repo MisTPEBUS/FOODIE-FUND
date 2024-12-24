@@ -343,7 +343,7 @@ exports.updateNewsById = handleErrorAsync(async (req, res, next) => {
         // 沒有圖片，直接儲存
 
         filteredData.plan_id = plan_id;
-        console.log(filteredData)
+        console.log('filteredData', filteredData)
         try {
             const newNews = await PlanNews.findByIdAndUpdate(
                 id,
