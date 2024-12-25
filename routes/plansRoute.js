@@ -57,24 +57,30 @@ router.delete('/:id', isAuth, planController.deletePlanById);
 //案讚
 
 //最新消息
-router.get('/:plan_id/news', isAuth, planNewsController.getAllNews);
-router.get('/:plan_id/news/:id', isAuth, planNewsController.getNewsByID);
-router.post('/:plan_id/news', isAuth, uploadPlanNewsMiddleware, planNewsController.createNews);
-router.put('/:plan_id/news/:id', isAuth, uploadPlanNewsMiddleware, planNewsController.updateNewsById);
-router.delete('/:plan_id/news/:id', isAuth, planNewsController.deleteNewsById);
+router.get(':plan_id/news/:id', isAuth, planNewsController.getNewsByID);
+
+router.get('dashboard/:plan_id/news', isAuth, planNewsController.getAllNews);
+router.get('dashboard/:plan_id/news/:id', isAuth, planNewsController.getNewsByID);
+router.post('dashboard/:plan_id/news', isAuth, uploadPlanNewsMiddleware, planNewsController.createNews);
+router.put('dashboard/:plan_id/news/:id', isAuth, uploadPlanNewsMiddleware, planNewsController.updateNewsById);
+router.delete('dashboard/:plan_id/news/:id', isAuth, planNewsController.deleteNewsById);
 //常見問題
-router.get('/:plan_id/faqs', isAuth, validatePlanId, planFaqController.getAllFaqs);
-router.get('/:plan_id/faqs/:id', isAuth, validatePlanId, planFaqController.getFaqsByID);
-router.post('/:plan_id/faqs', isAuth, planFaqController.createFaq);
-router.put('/:plan_id/faqs/:id', isAuth, planFaqController.updateFaqById);
-router.delete('/:plan_id/faqs/:id', isAuth, planFaqController.deleteFaqById);
+router.get(':plan_id/faqs', isAuth, validatePlanId, planFaqController.getAllFaqs);
+router.get('dashboard/:plan_id/faqs', isAuth, validatePlanId, planFaqController.getAllFaqs);
+router.get('dashboard/:plan_id/faqs/:id', isAuth, validatePlanId, planFaqController.getFaqsByID);
+router.post('dashboard/:plan_id/faqs', isAuth, planFaqController.createFaq);
+router.put('dashboard/:plan_id/faqs/:id', isAuth, planFaqController.updateFaqById);
+router.delete('dashboard/:plan_id/faqs/:id', isAuth, planFaqController.deleteFaqById);
 
 //留言
-router.get('/:plan_id/comment', isAuth, planCommentController.createComment);
-router.post('/:plan_id/comment', isAuth, planCommentController.deleteComment);
+router.get('dashboard/:plan_id/comment', isAuth, planCommentController.createComment);
+router.get(':plan_id/comment', isAuth, planCommentController.createComment);
+router.post(':plan_id/comment', isAuth, planCommentController.deleteComment);
 //回復
-router.get('/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.createComment);
-router.post('/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.deleteComment);
+router.get(':plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.createComment);
+router.post(':plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.deleteComment);
+router.get('dashboard/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.createComment);
+router.post('dashboard/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.deleteComment);
 
 
 module.exports = router;
