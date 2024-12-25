@@ -7,7 +7,7 @@ const cors = require("cors");
 const swaggerUI = require("swagger-ui-express");
 const swaggerFile = require("./swagger_output.json");
 
-
+const dashboardRouter = require("./routes/_dashboard");
 const usersRouter = require("./routes/users");
 const AccountRouter = require("./routes/Account");
 const UploadRouter = require("./routes/upload");
@@ -49,10 +49,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerFile));
 
 app.use("/v1/api/auth", usersRouter);
-app.use("/v1/api/plan", plansRoute);
+
 app.use("/v1/api/admin/account", AccountRouter);
 app.use("/v1/api/admin/upload", UploadRouter);
 app.use("/v1/api/news", newsRouter);
+app.use("/v1/api/plan", plansRoute);
+app.use("/v1/api/dashboard", dashboardRouter);
 
 // 404 錯誤
 app.use(function (req, res, next) {
