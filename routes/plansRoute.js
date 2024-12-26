@@ -59,14 +59,14 @@ router.delete('/:id', isAuth, planController.deletePlanById);
 //最新消息
 
 
-router.get('/:plan_id/news/:id', isAuth, planNewsController.getNewsByID);
-router.get('/:plan_id/news', isAuth, planNewsController.getAllNews);
+router.get('/:plan_id/news/:id', planNewsController.getNewsByID);
+router.get('/:plan_id/news', planNewsController.getAllNews);
 /* router.post('/:plan_id/news', isAuth, uploadPlanNewsMiddleware, planNewsController.createNews);
 router.put('/:plan_id/news/:id', isAuth, uploadPlanNewsMiddleware, planNewsController.updateNewsById);
 router.delete('/:plan_id/news/:id', isAuth, planNewsController.deleteNewsById); */
 //常見問題
-router.get('/:plan_id/faqs', isAuth, validatePlanId, planFaqController.getAllFaqs);
-router.get('/:plan_id/faqs/:id', isAuth, validatePlanId, planFaqController.getFaqsByID);
+router.get('/:plan_id/faqs', validatePlanId, planFaqController.getAllFaqs);
+router.get('/:plan_id/faqs/:id', validatePlanId, planFaqController.getFaqsByID);
 /* router.post('/:plan_id/faqs', isAuth, planFaqController.createFaq);
 router.put('/:plan_id/faqs/:id', isAuth, planFaqController.updateFaqById);
 router.delete('/:plan_id/faqs/:id', isAuth, planFaqController.deleteFaqById); */
