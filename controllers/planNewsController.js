@@ -155,6 +155,69 @@ exports.getNewsByID = handleErrorAsync(async (req, res, next) => {
          } 
     */
 });
+exports.getNewsByID = handleErrorAsync(async (req, res, next) => {
+
+    const { plan_id, id } = req.params;
+
+    let query = {};
+
+    if (!plan_id || plan_id.trim() === '') {
+        return next(appError("id欄位不能為空值！", next, 400, 1002
+        ));
+    }
+    if (!id || id.trim() === '') {
+        return next(appError("id欄位不能為空值！", next, 400, 1002
+        ));
+    }
+
+
+    if (plan_id == 'ALL') {
+        return next(appError("id欄位不能為ALL！", next, 400, 1003
+        ));
+    }
+
+
+    const totalCount = await PlanNews.countDocuments(query);
+
+
+
+    let acties = await PlanNews.findOne({ _id: id, isActive: true });
+
+    // 設定分頁信息
+
+    Success(res, "請求成功，回傳所需數據", { data: acties });
+    /*
+      #swagger.tags =  ['計畫管理']
+      #swagger.path = '/v1/api/news'
+      #swagger.method = 'get'
+      #swagger.summary='計畫留言清單查詢'
+      #swagger.description = '計畫留言清單查詢'
+      #swagger.produces = ["application/json"] 
+    */
+    /* 
+        #swagger.parameters['keyWord'] = {
+            in: 'query',
+            description: '關鍵字fuzzy[tittle,content], 預設空直為搜尋全部',
+            type: 'string'
+         } 
+         #swagger.parameters['timeSort'] = {
+            in: 'query',
+           description: '公告時間排序遠到近desc,asc進到遠',
+           enum: ['asc', 'desc'],
+            type: 'string'
+         } 
+        #swagger.parameters['limit'] = {
+            in: 'query',
+            description: '清單顯示比數,default=10',
+            type: 'number'
+         } 
+        #swagger.parameters['page'] = {
+            in: 'query',
+            description: '顯示第幾頁資料default=1',
+            type: 'number'
+         } 
+    */
+});
 const convertToBoolean = (value) => {
     if (value === "true") return true;
     if (value === "false") return false;
