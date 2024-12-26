@@ -155,7 +155,7 @@ exports.getNewsByID = handleErrorAsync(async (req, res, next) => {
          } 
     */
 });
-exports.getNewsByID = handleErrorAsync(async (req, res, next) => {
+exports.getNewsClientByID = handleErrorAsync(async (req, res, next) => {
 
     const { plan_id, id } = req.params;
 
