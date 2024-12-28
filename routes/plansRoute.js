@@ -59,7 +59,7 @@ router.delete('/:id', isAuth, planController.deletePlanById);
 //最新消息
 
 
-router.get('/:plan_id/news/:id', planNewsController.getNewsByID);
+router.get('/:plan_id/news/:id', planNewsController.getNewsClientByID);
 router.get('/:plan_id/news', planNewsController.getAllNews);
 /* router.post('/:plan_id/news', isAuth, uploadPlanNewsMiddleware, planNewsController.createNews);
 router.put('/:plan_id/news/:id', isAuth, uploadPlanNewsMiddleware, planNewsController.updateNewsById);
