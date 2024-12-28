@@ -6,6 +6,11 @@ const planNewsSchema = new mongoose.Schema(
             select: false,
             required: [true, "PlanID 未填寫"],
         },
+        intro: {
+            type: String,
+            default: '',
+        },
+
         title: {
             type: String,
             required: true,
