@@ -43,7 +43,7 @@ exports.getAllNews = handleErrorAsync(async (req, res, next) => {
 
     //  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
-    let acties = await PlanNews.find(query)
+    let resPlanNews = await PlanNews.find(query).select('-content')
         .sort(tSort);
 
     // 設定分頁信息
@@ -59,7 +59,7 @@ exports.getAllNews = handleErrorAsync(async (req, res, next) => {
           add: '',
           pagination: pagination
       } */
-    Success(res, "請求成功，回傳所需數據", { data: acties });
+    Success(res, "請求成功，回傳所需數據", { data: resPlanNews });
     /*
       #swagger.tags =  ['計畫管理']
       #swagger.path = '/v1/api/news'
