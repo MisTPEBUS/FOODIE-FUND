@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { convertDayToUTC8, convertToUTC8 } = require("../utils/dateUtils");
 const planNewsSchema = new mongoose.Schema(
     {
         plan_id: {
@@ -42,7 +43,22 @@ const planNewsSchema = new mongoose.Schema(
     },
     {
         versionKey: false,
-        toJSON: { virtuals: true },
+        toJSON: {
+            virtuals: true,
+            transform: (doc, ret) => {
+                // 格式化 publicAt 為 UTC+8
+                if (ret.publicAt) {
+                    ret.publicAt = convertDayToUTC8(ret.publicAt);
+                }
+                // 格式化 updateAt 為 UTC+8
+                if (ret.updateAt) {
+                    ret.updateAt = convertToUTC8(ret.updateAt);
+                }
+                delete ret._id;
+
+                return ret;
+            },
+        },
         toObject: { virtuals: true },
     },
 );

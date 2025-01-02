@@ -92,6 +92,82 @@ exports.getAllNews = handleErrorAsync(async (req, res, next) => {
          } 
     */
 });
+exports.getNews = handleErrorAsync(async (req, res, next) => {
+    const { timeSort, keyWord, page = 1/* , limit = 10  */ } = req.query;
+    const { plan_id } = req.params;
+    const tSort = "-publicAt";
+    let query = {};
+
+    if (!plan_id || plan_id.trim() === '') {
+        return next(appError("id欄位不能為空值！", next, 400, 1002));
+    }
+
+    if (plan_id !== 'ALL') {
+        query.plan_id = plan_id.trim();
+    }
+
+    if (keyWord) {
+        const regex = new RegExp(keyWord, 'i');
+        query.$or = [
+            { title: { $regex: regex } },
+            { content: { $regex: regex } }
+        ];
+    }
+    //  const currentPage = Math.max(parseInt(page) || 1, 1); // 確保 page 是正整數
+    //const itemsPerPage = Math.max(parseInt(limit) || 10, 1); // 確保 limit 是正整數
+
+    // const totalCount = await PlanNews.countDocuments(query);
+
+    //  const totalPages = Math.ceil(totalCount / itemsPerPage);
+    query.isActive = true;
+    let resPlanNews = await PlanNews.find(query).select('-content').sort(tSort);
+
+    // 設定分頁信息
+    /*   const pagination = {
+          total: totalCount,
+          total_pages: totalPages,
+          current_page: currentPage,
+          has_pre: currentPage > 1,
+          has_next: currentPage < totalPages
+      }; */
+    /*   res.data =
+      {
+          add: '',
+          pagination: pagination
+      } */
+    Success(res, "請求成功，回傳所需數據", { data: resPlanNews });
+    /*
+      #swagger.tags =  ['計畫管理']
+      #swagger.path = '/v1/api/news'
+      #swagger.method = 'get'
+      #swagger.summary='計畫留言清單查詢'
+      #swagger.description = '計畫留言清單查詢'
+      #swagger.produces = ["application/json"] 
+    */
+    /* 
+        #swagger.parameters['keyWord'] = {
+            in: 'query',
+            description: '關鍵字fuzzy[tittle,content], 預設空直為搜尋全部',
+            type: 'string'
+         } 
+         #swagger.parameters['timeSort'] = {
+            in: 'query',
+           description: '公告時間排序遠到近desc,asc進到遠',
+           enum: ['asc', 'desc'],
+            type: 'string'
+         } 
+        #swagger.parameters['limit'] = {
+            in: 'query',
+            description: '清單顯示比數,default=10',
+            type: 'number'
+         } 
+        #swagger.parameters['page'] = {
+            in: 'query',
+            description: '顯示第幾頁資料default=1',
+            type: 'number'
+         } 
+    */
+});
 exports.getNewsByID = handleErrorAsync(async (req, res, next) => {
 
     const { plan_id, id } = req.params;
@@ -170,14 +246,10 @@ exports.getNewsClientByID = handleErrorAsync(async (req, res, next) => {
         ));
     }
 
-
     if (plan_id == 'ALL') {
         return next(appError("id欄位不能為ALL！", next, 400, 1003
         ));
     }
-
-
-    const totalCount = await PlanNews.countDocuments(query);
 
 
 

@@ -31,6 +31,7 @@ const planNewsController = require('../controllers/planNewsController');
 const planFaqController = require('../controllers/planFaqController');
 const planCommentController = require('../controllers/planCommentController');
 const planCommentReplyController = require('../controllers/planCommentController');
+const planRewardsController = require('../controllers/planRewardsController');
 const { isAuth } = require('../services/auth');
 
 const validatePlanId = (req, res, next) => {
@@ -56,20 +57,17 @@ router.delete('/:id', isAuth, planController.deletePlanById);
 
 //案讚
 
+//計畫回饋
+router.get('/:plan_id/rewards', planRewardsController.getRewards);
 //最新消息
 
-
 router.get('/:plan_id/news/:id', planNewsController.getNewsClientByID);
-router.get('/:plan_id/news', planNewsController.getAllNews);
-/* router.post('/:plan_id/news', isAuth, uploadPlanNewsMiddleware, planNewsController.createNews);
-router.put('/:plan_id/news/:id', isAuth, uploadPlanNewsMiddleware, planNewsController.updateNewsById);
-router.delete('/:plan_id/news/:id', isAuth, planNewsController.deleteNewsById); */
+router.get('/:plan_id/news', planNewsController.getNews);
+
 //常見問題
 router.get('/:plan_id/faqs', validatePlanId, planFaqController.getAllFaqs);
 router.get('/:plan_id/faqs/:id', validatePlanId, planFaqController.getFaqsByID);
-/* router.post('/:plan_id/faqs', isAuth, planFaqController.createFaq);
-router.put('/:plan_id/faqs/:id', isAuth, planFaqController.updateFaqById);
-router.delete('/:plan_id/faqs/:id', isAuth, planFaqController.deleteFaqById); */
+
 
 //留言
 router.get('/:plan_id/comment', isAuth, planCommentController.createComment);

@@ -1,5 +1,6 @@
 const express = require('express');
 const { appError } = require("../services/handleResponse");
+const planRewardsController = require("../controllers/planRewardsController");
 const { uploadMiddleware, uploadPlanNewsMiddleware } = require("../services/image");
 const router = express.Router();
 const rateLimit = require("express-rate-limit");
@@ -41,7 +42,13 @@ const validatePlanId = (req, res, next) => {
     next();
 };
 
-//提案計畫
+//計畫回饋
+router.get('/:plan_id/rewards', planRewardsController.getAllRewards);
+router.get('/:plan_id/rewards/:id', planRewardsController.getReward);
+router.post('/:plan_id/rewards', planRewardsController.createReward);
+router.put('/:plan_id/rewards', planRewardsController.updateRewardByID);
+router.delete('/:plan_id/rewards', planRewardsController.deleteRewardByID);
+
 //Admin
 router.get('/admin/planList', isAuth, planController.getPlanList);
 router.get('/', isAuth, planController.getAllPlans);
