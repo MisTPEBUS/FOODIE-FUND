@@ -44,13 +44,18 @@ const validatePlanId = (req, res, next) => {
 
 //提案計畫
 //Admin
-router.get('/admin/planList', isAuth, planController.getPlanList);
+/* router.get('/admin/planList', isAuth, planController.getPlanList);
 router.get('/', isAuth, planController.getAllPlans);
 
 router.get('/:id', isAuth, planController.getPlanById);
 router.post('/', isAuth, planController.createPlan);
 router.put('/:id', isAuth, planController.updatePlanById);
-router.delete('/:id', isAuth, planController.deletePlanById);
+router.delete('/:id', isAuth, planController.deletePlanById); */
+
+//讀取計畫
+router.get('/', planController.getPlans);
+router.get('/:plan_id', planController.getPlanById);
+
 
 //蒐藏
 
@@ -65,8 +70,8 @@ router.get('/:plan_id/news/:id', planNewsController.getNewsClientByID);
 router.get('/:plan_id/news', planNewsController.getNews);
 
 //常見問題
-router.get('/:plan_id/faqs', validatePlanId, planFaqController.getAllFaqs);
-router.get('/:plan_id/faqs/:id', validatePlanId, planFaqController.getFaqsByID);
+router.get('/:plan_id/faqs', planFaqController.getFaqs);
+router.get('/:plan_id/faqs/:id', planFaqController.getClientFaqsByID);
 
 
 //留言
