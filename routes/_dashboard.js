@@ -43,20 +43,20 @@ const validatePlanId = (req, res, next) => {
 };
 
 //計畫回饋
-router.get('/:plan_id/rewards', planRewardsController.getAllRewards);
-router.get('/:plan_id/rewards/:id', planRewardsController.getReward);
-router.post('/:plan_id/rewards', planRewardsController.createReward);
-router.put('/:plan_id/rewards', planRewardsController.updateRewardByID);
-router.delete('/:plan_id/rewards', planRewardsController.deleteRewardByID);
+router.get('/plan/:plan_id/rewards', planRewardsController.getAllRewards);
+router.get('/plan/:plan_id/rewards/:id', planRewardsController.getRewardByID);
+router.post('/plan/:plan_id/rewards', uploadPlanNewsMiddleware, planRewardsController.createReward);
+router.put('/plan/:plan_id/rewards/:id', uploadPlanNewsMiddleware, planRewardsController.updateRewardByID);
+router.delete('/plan/:plan_id/rewards/:id', planRewardsController.deleteRewardByID);
 
 //Admin
-router.get('/admin/planList', isAuth, planController.getPlanList);
+/* router.get('/admin/planList', isAuth, planController.getPlanList);
 router.get('/', isAuth, planController.getAllPlans);
 
 router.get('/:id', isAuth, planController.getPlanById);
 router.post('/', isAuth, planController.createPlan);
 router.put('/:id', isAuth, planController.updatePlanById);
-router.delete('/:id', isAuth, planController.deletePlanById);
+router.delete('/:id', isAuth, planController.deletePlanById); */
 
 //蒐藏
 
@@ -72,8 +72,9 @@ router.post('/plan/:plan_id/news', isAuth, uploadPlanNewsMiddleware, planNewsCon
 router.put('/plan/:plan_id/news/:id', isAuth, uploadPlanNewsMiddleware, planNewsController.updateNewsById);
 router.delete('/plan/:plan_id/news/:id', isAuth, planNewsController.deleteNewsById);
 //常見問題
-router.get('/plan/:plan_id/faqs', isAuth, validatePlanId, planFaqController.getAllFaqs);
-router.get('/plan/:plan_id/faqs/:id', isAuth, validatePlanId, planFaqController.getFaqsByID);
+
+router.get('/plan/:plan_id/faqs', isAuth, planFaqController.getAllFaqs);
+router.get('/plan/:plan_id/faqs/:id', isAuth, planFaqController.getFaqsByID);
 router.post('/plan/:plan_id/faqs', isAuth, planFaqController.createFaq);
 router.put('/plan/:plan_id/faqs/:id', isAuth, planFaqController.updateFaqById);
 router.delete('/plan/:plan_id/faqs/:id', isAuth, planFaqController.deleteFaqById);
