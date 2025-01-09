@@ -213,11 +213,12 @@ exports.createReward = handleErrorAsync(async (req, res, next) => {
     }
 
 
-    const allowedFields = ["title", "content", "isActive", "qty", "isTop", "publicAt", "image", "unit", "price"];
+    const allowedFields = ["title", "content", "isActive", "qty", "isTop", "endAt", "startedAt", "image", "unit", "price"];
     const filteredData = {};
     if (typeof updateData.isTop !== 'undefined') updateData.isTop = convertToBoolean(updateData.isTop);
     if (typeof updateData.isActive !== 'undefined') updateData.isActive = convertToBoolean(updateData.isActive);
-    if (typeof updateData.publicAt !== 'undefined') updateData.publicAt = convertToDate(updateData.publicAt);
+    if (typeof updateData.startedAt !== 'undefined') updateData.startedAt = convertToDate(updateData.startedAt);
+    if (typeof updateData.endAt !== 'undefined') updateData.endAt = convertToDate(updateData.endAt);
     if (typeof updateData.price !== 'undefined') updateData.price = Number(updateData.price);
     if (typeof updateData.qty !== 'undefined') updateData.qty = Number(updateData.qty);
 
@@ -239,7 +240,11 @@ exports.createReward = handleErrorAsync(async (req, res, next) => {
         if ((key === "title") && !updateData[key].trim()) {
             return next(appError(`title 欄位不能為空值！`, next, 400, 1002));
         }
-        if (key === "publicAt" && isNaN(Date.parse(updateData[key]))) {
+        if (key === "startedAt" && isNaN(Date.parse(updateData[key]))) {
+            return next(appError(`publicAt 必須是日期格式！`, next, 400, 1002));
+
+        }
+        if (key === "endAt" && isNaN(Date.parse(updateData[key]))) {
             return next(appError(`publicAt 必須是日期格式！`, next, 400, 1002));
 
         }
@@ -323,11 +328,12 @@ exports.updateRewardByID = handleErrorAsync(async (req, res, next) => {
         return next(appError("id欄位不能為空值！", next, 400, 1002));
     }
 
-    const allowedFields = ["title", "content", "isActive", "qty", "isTop", "publicAt", "image", "unit", "price"];
+    const allowedFields = ["title", "content", "isActive", "qty", "isTop", "endAt", "startedAt", "image", "unit", "price"];
     const filteredData = {};
     if (typeof updateData.isTop !== 'undefined') updateData.isTop = convertToBoolean(updateData.isTop);
     if (typeof updateData.isActive !== 'undefined') updateData.isActive = convertToBoolean(updateData.isActive);
-    if (typeof updateData.publicAt !== 'undefined') updateData.publicAt = convertToDate(updateData.publicAt);
+    if (typeof updateData.startedAt !== 'undefined') updateData.startedAt = convertToDate(updateData.startedAt);
+    if (typeof updateData.endAt !== 'undefined') updateData.endAt = convertToDate(updateData.endAt);
     if (typeof updateData.price !== 'undefined') updateData.price = Number(updateData.price);
     if (typeof updateData.qty !== 'undefined') updateData.qty = Number(updateData.qty);
 
@@ -349,7 +355,11 @@ exports.updateRewardByID = handleErrorAsync(async (req, res, next) => {
         if ((key === "title") && !updateData[key].trim()) {
             return next(appError(`title 欄位不能為空值！`, next, 400, 1002));
         }
-        if (key === "publicAt" && isNaN(Date.parse(updateData[key]))) {
+        if (key === "startedAt" && isNaN(Date.parse(updateData[key]))) {
+            return next(appError(`publicAt 必須是日期格式！`, next, 400, 1002));
+
+        }
+        if (key === "endAt" && isNaN(Date.parse(updateData[key]))) {
             return next(appError(`publicAt 必須是日期格式！`, next, 400, 1002));
 
         }

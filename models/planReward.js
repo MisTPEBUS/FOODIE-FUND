@@ -42,10 +42,16 @@ const planRewardSchema = new mongoose.Schema(
             default: 0,
         },
 
-        publicAt: {
+
+        startedAt: {
             type: Date,
             default: Date.now,
         },
+        endAt: {
+            type: Date,
+            default: Date.now,
+        },
+
         updateAt: {
             type: Date,
             default: Date.now,
