@@ -120,7 +120,7 @@ exports.getNews = handleErrorAsync(async (req, res, next) => {
 
     //  const totalPages = Math.ceil(totalCount / itemsPerPage);
     query.isActive = true;
-    let resPlanNews = await PlanNews.find(query).select('-content').sort(tSort);
+    let resPlanNews = await PlanNews.find(query).select('-content -updateAt').sort(tSort);
 
     // 設定分頁信息
     /*   const pagination = {
