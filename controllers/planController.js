@@ -58,7 +58,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
 
     ];
 
-    if (req.user.name == "lulume") {
+    if (req.user.name != "lulume") {
         projects = [];
         return Success(res, "請求成功，回傳所需數據", { projects, steps, plan, orders, comments });
 
