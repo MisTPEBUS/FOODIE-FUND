@@ -64,6 +64,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
 
     }
     else if (plan_id == "66d66fb3217ebbebc04b1d50") {
+        console.log(777);
         steps = [
             { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
             { label: "設定金流", status: "completed" }, // 🟢 進行中
