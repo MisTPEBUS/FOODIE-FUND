@@ -11,7 +11,8 @@ const {
 exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
     const { plan_id } = req.params;
-    const projects = [{
+    console.log(plan_id);
+    let projects = [{
         "id": "66d66fb3217ebbebc04b1d50",
         "name": "貓貓咖啡廳",
         "status": "pending"
@@ -26,20 +27,23 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         "name": "Test",
         "status": "reject"
     }]
-    const steps = [
+    let steps = [
         { label: "填寫提案內容", status: "pending" }, // ✅ 已完成
         { label: "設定金流", status: "pending" }, // 🟢 進行中
         { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
         { label: "提交送審", status: "pending" }, // ⚪ 未完成
         { label: "開始募資", status: "pending" }, // ⚪ 未完成
     ];
-    const comments = [];
+    let comments = [];
+    let plan = {};
+    let orders = [
 
+    ];
     if (plan_id == 'default') {
 
 
     }
-    else if (plan_id == '66d66fb3217ebbebc04b1d50') {
+    else if (plan_id == "66d66fb3217ebbebc04b1d50") {
         steps = [
             { label: "填寫提案內容", status: "pending" }, // ✅ 已完成
             { label: "設定金流", status: "pending" }, // 🟢 進行中
@@ -58,9 +62,43 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 status: "pending", name: "lobinda@gmail.com", content: "沒有圖片會有錯誤嗎?", createdAt: "2025-02-26 23:55"
             },
         ]
+        orders = [
+            {
+                "id": "9f87b6e9d7ce4b1283c9fda1d5ef4a92",
+                "order_no": "ORD202502260001",
+                "order_date": "2025-02-26T03:20:00+08:00",
+                "discount": 100,
+                "donate": 0,
+                "subtotal": 6666,
+                "shipping_fee": 150,
+                "total_amount": 6716,
+                "currency": "NT$",
+                "payment_method": "credit_card",
+                "status": "resolve",
+                "customer": {
+                    "name": "火腿",
+                },
+            },
+            {
+                "id": "9f87b6e9d7ce4b1283c9fda1d5ef4a92",
+                "order_no": "ORD202502260001",
+                "order_date": "2025-02-26T03:20:00+08:00",
+                "discount": 100,
+                "donate": 5000,
+                "subtotal": 11666,
+                "shipping_fee": 150,
+                "total_amount": 6716,
+                "currency": "NT$",
+                "payment_method": "credit_card",
+                "status": "resolve",
+                "customer": {
+                    "name": "兔子",
+                },
+            }
+        ]
 
     }
-    else if (plan_id == '66fb66d32bebc04b1d517eb0') {
+    else if (plan_id == "66fb66d32bebc04b1d517eb0") {
         steps = [
             { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
             { label: "設定金流", status: "completed" }, // 🟢 進行中
@@ -77,7 +115,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
 
         ]
     }
-    else if (plan_id == 'zcfd369d2bebc04b1d517eb0') {
+    else if (plan_id == "zcfd369d2bebc04b1d517eb0") {
         steps = [
             { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
             { label: "設定金流", status: "completed" }, // 🟢 進行中
@@ -87,7 +125,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         ];
 
     }
-    Success(res, "請求成功，回傳所需數據", { projects, steps, comments })
+    Success(res, "請求成功，回傳所需數據", { projects, steps, plan, orders, comments })
 
     // Success(res, "請求成功，回傳所需數據")
 });
