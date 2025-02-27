@@ -53,8 +53,8 @@ router.put('/:id', isAuth, planController.updatePlanById);
 router.delete('/:id', isAuth, planController.deletePlanById); */
 
 //讀取計畫
-router.get('/', planController.getPlans);
-router.get('/:plan_id', planController.getPlanById);
+/* router.get('/', planController.getPlans);
+router.get('/:plan_id', planController.getPlanById); */
 
 
 //蒐藏

@@ -5,27 +5,7 @@ const { uploadMiddleware, uploadPlanNewsMiddleware } = require("../services/imag
 const router = express.Router();
 const rateLimit = require("express-rate-limit");
 
-// 設置限流
-const apiLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 15 分鐘
-    max: 5, // 每個 IP 限制最多 100 次請求
-    message: {
-        message: "請求次數過多，請稍後再試。",
-    },
-    handler: (req, res, next, options) => {
-        // 自訂的錯誤處理
-        next(
-            appError(
-                "請求過多，請稍後再試。",
-                next,
-                429, // HTTP 狀態碼
-                4001 // 自定義錯誤代碼
-            )
-        );
-    },
-    standardHeaders: true, // 返回 RateLimit 相關資訊到 Headers
-    legacyHeaders: false, // 停用舊版 Headers
-});
+
 
 const planController = require('../controllers/planController');
 const planNewsController = require('../controllers/planNewsController');
@@ -41,6 +21,8 @@ const validatePlanId = (req, res, next) => {
     }
     next();
 };
+
+router.get('/plan/:plan_id', isAuth, planController.getPlanAdmin);
 
 //計畫回饋
 router.get('/plan/:plan_id/rewards', planRewardsController.getAllRewards);

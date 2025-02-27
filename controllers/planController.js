@@ -8,36 +8,88 @@ const {
     appError,
 } = require("../services/handleResponse.js");
 
-exports.getPlans = handleErrorAsync(async (req, res, next) => {
+exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
     const { plan_id } = req.params;
-    const tSort = "-publicAt";
+    const projects = [{
+        "id": "66d66fb3217ebbebc04b1d50",
+        "name": "貓貓咖啡廳",
+        "status": "pending"
+    },
+    {
+        "id": "66fb66d32bebc04b1d517eb0",
+        "name": "金華火腿",
+        "status": "resolve"
+    },
+    {
+        "id": "zcfd369d2bebc04b1d517eb0",
+        "name": "Test",
+        "status": "reject"
+    }]
+    const steps = [
+        { label: "填寫提案內容", status: "pending" }, // ✅ 已完成
+        { label: "設定金流", status: "pending" }, // 🟢 進行中
+        { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
+        { label: "提交送審", status: "pending" }, // ⚪ 未完成
+        { label: "開始募資", status: "pending" }, // ⚪ 未完成
+    ];
+    const comments = [];
 
-    const resPlan = plan;
-    let filteredPlans = plan;
-    if (keyWord) {
-        filteredPlans = plan.filter(item =>
-            item.title.includes(keyWord) || item.description.includes(keyWord)
-        );
+    if (plan_id == 'default') {
+
+
     }
-    const totalCount = filteredPlans.length; // 總數據數量
-    const totalPages = Math.ceil(totalCount / limit); // 總頁數
-    const currentPage = parseInt(page, 10); // 當前頁碼
-    const startIndex = (currentPage - 1) * limit; // 起始索引
-    const endIndex = currentPage * limit; // 結束索引
+    else if (plan_id == '66d66fb3217ebbebc04b1d50') {
+        steps = [
+            { label: "填寫提案內容", status: "pending" }, // ✅ 已完成
+            { label: "設定金流", status: "pending" }, // 🟢 進行中
+            { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
+            { label: "提交送審", status: "pending" }, // ⚪ 未完成
+            { label: "開始募資", status: "pending" }, // ⚪ 未完成
+        ];
+        comments = [
+            {
+                id: "d6b7fa3c9c174c4f8c369c91c1e2aee0",
+                avatar: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
+                status: "pending", name: "兔子", content: "你們的餐廳會開在哪裡?", createdAt: "2025-02-26 23:50"
+            },
+            {
+                id: "ycb7fa3cvb174c4f8c369c91c1e2aehg", avatar: "",
+                status: "pending", name: "lobinda@gmail.com", content: "沒有圖片會有錯誤嗎?", createdAt: "2025-02-26 23:55"
+            },
+        ]
 
-    // 分頁數據
-    const paginatedPlans = filteredPlans.slice(startIndex, endIndex);
+    }
+    else if (plan_id == '66fb66d32bebc04b1d517eb0') {
+        steps = [
+            { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
+            { label: "設定金流", status: "completed" }, // 🟢 進行中
+            { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
+            { label: "提交送審", status: "pending" }, // ⚪ 未完成
+            { label: "開始募資", status: "pending" }, // ⚪ 未完成
+        ];
+        comments = [
+            {
+                id: "d9ob7fa3c9c174c4f8c369c91c1e2ae55",
+                avatar: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
+                status: "resolve", name: "兔子", content: "來個女生?", createdAt: "2025-02-26 23:50"
+            },
 
-    // 分頁資訊
-    const pagination = {
-        total: totalCount,
-        total_pages: totalPages,
-        current_page: currentPage,
-        has_pre: currentPage > 1,
-        has_next: currentPage < totalPages
-    };
-    Success(res, "請求成功，回傳所需數據", { data: resPlan, pagination })
+        ]
+    }
+    else if (plan_id == 'zcfd369d2bebc04b1d517eb0') {
+        steps = [
+            { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
+            { label: "設定金流", status: "completed" }, // 🟢 進行中
+            { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
+            { label: "提交送審", status: "pending" }, // ⚪ 未完成
+            { label: "開始募資", status: "pending" }, // ⚪ 未完成
+        ];
+
+    }
+    Success(res, "請求成功，回傳所需數據", { projects, steps, comments })
+
+    // Success(res, "請求成功，回傳所需數據")
 });
 exports.getPlanById = handleErrorAsync(async (req, res, next) => {
     const { plan_id } = req.params;
@@ -51,30 +103,22 @@ exports.getPlanById = handleErrorAsync(async (req, res, next) => {
     Success(res, "請求成功，回傳所需數據", { data: resPlan });
 });
 
+exports.createPlan = handleErrorAsync(async (req, res, next) => {
+    try {
+        //檢查欄位
 
-/* 
-exports.getAllPlans = async (req, res) => {
+        //新增
+        Success(res, 新增成功, {}, 201);
+    } catch (error) {
+        appError(error.message, next, 400, 400);
+    }
+});
 
-    console.log(req.user);
-    res.status(200);
-};
+exports.deletePlanByID = handleErrorAsync(async (req, res, next) => {
 
+});
+exports.updatePlan = handleErrorAsync(async (req, res, next) => {
 
-exports.createPlan = async (req, res) => {
-    res.status(200);
-};
-
-
-exports.getPlanById = async (req, res) => {
-    res.status(200);
-};
-
-
-exports.updatePlanById = async (req, res) => {
-    res.status(200);
-};
+});
 
 
-exports.deletePlanById = async (req, res) => {
-    res.status(200);
-}; */

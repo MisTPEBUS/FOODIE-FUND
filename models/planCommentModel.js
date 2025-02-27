@@ -32,6 +32,7 @@ const PlanCommentsSchema = new mongoose.Schema(
             ref: "Plan",
             required: [true, "PlanID 未填寫"],
         },
+        status: { type: String, required: true },
         commentRule: { type: String, required: true },
         avatar: {
             type: String,

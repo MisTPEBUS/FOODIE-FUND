@@ -1,17 +1,48 @@
 const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    title: {
       type: String,
-      required: [true, "名字 未填寫"],
+      required: true,
     },
-
+    intro: {
+      type: String,
+      default: '',
+    },
+    isActive: {
+      type: Boolean,
+      default: false,
+    },
+    image: {
+      type: String,
+      default: '',
+    },
+    startedAt: {
+      type: Date,
+      default: Date.now,
+    },
+    endAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updateAt: {
+      type: Date,
+      default: Date.now,
+    },
+    users_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required },
+    publicAt: {
+      type: Date,
+      default: Date.now,
+    },
+    updateAt: {
+      type: Date,
+      default: Date.now,
+    },
     createdAt: {
       type: Date,
       default: Date.now,
       select: false,
     },
-
   },
   {
     versionKey: false,
