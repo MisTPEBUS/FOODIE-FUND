@@ -14,6 +14,7 @@ const planCommentController = require('../controllers/planCommentController');
 const planCommentReplyController = require('../controllers/planCommentController');
 const { isAuth } = require('../services/auth');
 
+
 const validatePlanId = (req, res, next) => {
     console.log(req.params.plan_id)
     if (!req.params.plan_id) {
