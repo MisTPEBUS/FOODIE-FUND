@@ -14,6 +14,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
     const { plan_id } = req.params;
     console.log(plan_id);
+    console.log(`sadf`, req.user);
     let projects = [{
         "id": "66d66fb3217ebbebc04b1d50",
         "name": "貓貓咖啡廳",
@@ -56,8 +57,10 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     let orders = [
 
     ];
-    if (plan_id == 'default') {
 
+    if (req.user.name == "Lobinda") {
+        projects = [];
+        return Success(res, "請求成功，回傳所需數據", { projects, steps, plan, orders, comments });
 
     }
     else if (plan_id == "66d66fb3217ebbebc04b1d50") {
