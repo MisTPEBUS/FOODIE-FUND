@@ -33,7 +33,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     let steps = [
         { label: "填寫提案內容", status: "pending" }, // ✅ 已完成
         { label: "設定金流", status: "pending" }, // 🟢 進行中
-        { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
+        { label: "完善計畫回饋", status: "current" }, // ✅ 已完成
         { label: "提交送審", status: "pending" }, // ⚪ 未完成
         { label: "開始募資", status: "pending" }, // ⚪ 未完成
     ];
@@ -69,7 +69,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         steps = [
             { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
             { label: "設定金流", status: "completed" }, // 🟢 進行中
-            { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
+            { label: "完善計畫回饋", status: "current" }, // ✅ 已完成
             { label: "提交送審", status: "pending" }, // ⚪ 未完成
             { label: "開始募資", status: "pending" }, // ⚪ 未完成
         ];
@@ -77,11 +77,11 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             {
                 id: "d6b7fa3c9c174c4f8c369c91c1e2aee0",
                 avatar: "https://flowbite.com/docs/images/people/profile-picture-3.jpg",
-                status: "pending", name: "兔子", content: "你們的餐廳會開在哪裡?", createdAt: "2025-02-26 23:50"
+                status: "pending", name: "兔子", content: "你們的餐廳會開在哪裡?", createdAt: "2025-02-26 "
             },
             {
                 id: "ycb7fa3cvb174c4f8c369c91c1e2aehg", avatar: "",
-                status: "pending", name: "lobinda@gmail.com", content: "沒有圖片會有錯誤嗎?", createdAt: "2025-02-26 23:55"
+                status: "pending", name: "lobinda@gmail.com", content: "沒有圖片會有錯誤嗎?", createdAt: "2025-02-26 "
             },
         ];
         orders = [
@@ -152,28 +152,28 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 status: "pending",
                 name: "陳先生",
                 content: "您好可以提供有什麼火腿精緻菜單料理嗎",
-                createdAt: "2025-02-26 23:50"
+                createdAt: "2025-02-26"
             },
             {
                 id: "eqaz7fa3c9c174c4f8c369c91c1e2azdv",
                 status: "pending",
                 name: "N7",
                 content: "您好，我最近了解到你們餐廳正在進行募資，對於你們的理念和未來的計畫感到非常興趣。我想進一步了解一下，如果餐廳順利",
-                createdAt: "2025-02-26 23:50"
+                createdAt: "2025-02-26 "
             },
             {
                 id: "d9ob7fa3c9c174c9961369c91c1e2ae55",
                 status: "resolve",
                 name: "兔子",
                 content: "什麼時候可以開幕，我要吃火腿",
-                createdAt: "2025-02-26 23:50"
+                createdAt: "2025-02-26 "
             },
             {
                 id: "550e8400e29b41d4a716446655440000",
                 status: "resolve",
                 name: "Lobinda",
                 content: "您好，我最近了解到你們餐廳正在進行募資，對於你們的理念和未來的計畫感到非常興趣。我想進一步了解一下，如果餐廳順利",
-                createdAt: "2025-02-27 00:12"
+                createdAt: "2025-02-27 "
             },
 
         ];
@@ -321,7 +321,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     else if (plan_id == "zcfd369d2bebc04b1d517eb0") {
         steps = [
             { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
-            { label: "設定金流", status: "pending" }, // 🟢 進行中
+            { label: "設定金流", status: "current" }, // 🟢 進行中
             { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
             { label: "提交送審", status: "pending" }, // ⚪ 未完成
             { label: "開始募資", status: "pending" }, // ⚪ 未完成
