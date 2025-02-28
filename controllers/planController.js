@@ -47,7 +47,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         "activeTime": "",
         "repurchaseRate": 0,
         "address": "",
-        "updated_at": "",
+        "end_at": "",
         "coverage": 0,
         "avgAmount": 0,
         "targetAmount": 0,
