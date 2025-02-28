@@ -31,9 +31,9 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         "status": "reject"
     }]
     let steps = [
-        { label: "填寫提案內容", status: "pending" }, // ✅ 已完成
+        { label: "提案內容", status: "pending" }, // ✅ 已完成
         { label: "設定金流", status: "pending" }, // 🟢 進行中
-        { label: "完善計畫回饋", status: "current" }, // ✅ 已完成
+        { label: "計畫回饋", status: "current" }, // ✅ 已完成
         { label: "提交送審", status: "pending" }, // ⚪ 未完成
         { label: "開始募資", status: "pending" }, // ⚪ 未完成
     ];
@@ -67,9 +67,9 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     else if (plan_id == "66d66fb3217ebbebc04b1d50") {
 
         steps = [
-            { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
+            { label: "提案內容", status: "completed" }, // ✅ 已完成
             { label: "設定金流", status: "completed" }, // 🟢 進行中
-            { label: "完善計畫回饋", status: "current" }, // ✅ 已完成
+            { label: "計畫回饋", status: "current" }, // ✅ 已完成
             { label: "提交送審", status: "pending" }, // ⚪ 未完成
             { label: "開始募資", status: "pending" }, // ⚪ 未完成
         ];
@@ -140,9 +140,9 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     }
     else if (plan_id == "66fb66d32bebc04b1d517eb0") {
         steps = [
-            { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
+            { label: "提案內容", status: "completed" }, // ✅ 已完成
             { label: "設定金流", status: "completed" }, // 🟢 進行中
-            { label: "完善計畫回饋", status: "completed" }, // ✅ 已完成
+            { label: "計畫回饋", status: "completed" }, // ✅ 已完成
             { label: "提交送審", status: "completed" }, // ⚪ 未完成
             { label: "開始募資", status: "completed" }, // ⚪ 未完成
         ];
@@ -320,9 +320,9 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     }
     else if (plan_id == "zcfd369d2bebc04b1d517eb0") {
         steps = [
-            { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
+            { label: "提案內容", status: "completed" }, // ✅ 已完成
             { label: "設定金流", status: "current" }, // 🟢 進行中
-            { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
+            { label: "計畫回饋", status: "pending" }, // ✅ 已完成
             { label: "提交送審", status: "pending" }, // ⚪ 未完成
             { label: "開始募資", status: "pending" }, // ⚪ 未完成
         ];
