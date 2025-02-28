@@ -31,7 +31,7 @@ function getAvgDonation(orders) {
     const avgDonation = totalDonation / orders.length;
 
     // 若需要將結果格式化為小數點後 2 位（並轉換回數字）
-    const avgDonationRounded = parseFloat(avgDonation.toFixed(2));
+    const avgDonationRounded = parseFloat(avgDonation.toFixed(0));
 
     return avgDonationRounded;
 }
@@ -49,7 +49,7 @@ function getAvgAmount(orders) {
     const avgAmount = totalAmount / orders.length;
 
     // 取小數點後 2 位
-    return parseFloat(avgAmount.toFixed(2));
+    return parseFloat(avgAmount.toFixed(0));
 }
 
 function getRepurchaseRate(orders) {
@@ -69,7 +69,7 @@ function getRepurchaseRate(orders) {
     const repurchaseRate = totalCustomers ? (repeatCustomers / totalCustomers) * 100 : 0;
 
     // 取小數點後 2 位
-    return parseFloat(repurchaseRate.toFixed(2));
+    return parseFloat(repurchaseRate.toFixed(1));
 }
 
 
