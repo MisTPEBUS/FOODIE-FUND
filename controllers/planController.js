@@ -39,7 +39,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     ];
     let comments = [];
     let plan = {
-        "tittle": "",
+        "title": "",
         "info": "",
         "email": "",
         "phone": "",
@@ -119,7 +119,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             }
         ];
         plan = {
-            "tittle": "喵喵咖啡館",
+            "title": "喵喵咖啡館",
             "info": "喵喵咖啡館在於創辦人在台北時創立,我們的理念很簡單-提供優質的食物和咖啡,咖啡具有使人們停下來和彼此互動的能力。",
             "email": "ttppoo12144@gmail.com",
             "phone": "123456789",
@@ -290,7 +290,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             }
         ];
         plan = {
-            "tittle": "FOODIE 主題火腿餐廳",
+            "title": "FOODIE 主題火腿餐廳",
             "info": `火腿主題餐廳是一家專注於各種火腿美食的特色餐廳，旨在為顧客提供豐富多樣的火腿料理體驗。餐廳的菜單圍繞著不同類型和風味的火腿設計，如西班牙伊比利亞火腿、意大利帕爾馬火腿和德國黑森林火腿等，搭配創意小吃、沙拉、三明治和主菜，滿足不同口味的需求。
             餐廳的氛圍通常會反映火腿的傳統和文化背景，例如使用木質元素、復古的裝飾品和暖色調的燈光來營造溫馨舒適的用餐環境。同時，餐廳可能還會設有開放式廚房或展示區，讓顧客可以觀賞到專業切割火腿的過程，增加互動性和趣味性。
             除了火腿料理，餐廳還提供多種搭配的葡萄酒和特色飲品，以提升整體用餐體驗。這類餐廳不僅適合火腿愛好者，也是尋求獨特美食體驗的顧客的理想選擇。`,
@@ -318,7 +318,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             { label: "開始募資", status: "pending" }, // ⚪ 未完成
         ];
         plan = {
-            "tittle": "Test",
+            "title": "Test",
             "info": `TEST。`,
             "email": "abcd@gmail.com",
             "phone": "123456789",
