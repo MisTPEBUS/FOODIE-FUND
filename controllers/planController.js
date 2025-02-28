@@ -81,7 +81,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             },
             {
                 id: "ycb7fa3cvb174c4f8c369c91c1e2aehg", avatar: "",
-                status: "pending", name: "lobinda@gmail.com", content: "沒有圖片會有錯誤嗎?", createdAt: "2025-02-26"
+                status: "pending", name: "Lobinda", content: "沒有圖片會有錯誤嗎?", createdAt: "2025-02-26"
             },
         ];
         orders = [
