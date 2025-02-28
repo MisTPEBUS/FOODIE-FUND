@@ -39,6 +39,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     ];
     let comments = [];
     let plan = {
+        "tittle": "",
         "info": "",
         "email": "",
         "phone": "",
