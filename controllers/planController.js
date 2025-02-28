@@ -18,7 +18,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     let projects = [{
         "id": "66d66fb3217ebbebc04b1d50",
         "name": "貓貓咖啡廳",
-        "status": "pending"
+        "status": "resolve"
     },
     {
         "id": "66fb66d32bebc04b1d517eb0",
@@ -65,13 +65,13 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
 
     }
     else if (plan_id == "66d66fb3217ebbebc04b1d50") {
-        console.log(777);
+
         steps = [
             { label: "填寫提案內容", status: "completed" }, // ✅ 已完成
             { label: "設定金流", status: "completed" }, // 🟢 進行中
-            { label: "完善計畫回饋", status: "completed" }, // ✅ 已完成
-            { label: "提交送審", status: "completed" }, // ⚪ 未完成
-            { label: "開始募資", status: "completed" }, // ⚪ 未完成
+            { label: "完善計畫回饋", status: "pending" }, // ✅ 已完成
+            { label: "提交送審", status: "pending" }, // ⚪ 未完成
+            { label: "開始募資", status: "pending" }, // ⚪ 未完成
         ];
         comments = [
             {
