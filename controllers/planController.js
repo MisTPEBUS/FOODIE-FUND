@@ -7,7 +7,7 @@ const {
     SuccessList,
     appError,
 } = require("../services/handleResponse.js");
-const { convertActiveTime, convertDayToUTC8 } = require('../utils/dateUtils.js');
+const { convertActiveTime, convertDayToUTC8, convertToUTC8 } = require('../utils/dateUtils.js');
 const { getCoverage, getTotalOrders, getTotalRefunds, getAvgDonation, getAvgAmount, getRepurchaseRate } = require('../utils/calUtils.js');
 
 exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
