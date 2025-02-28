@@ -7,7 +7,7 @@ const {
     SuccessList,
     appError,
 } = require("../services/handleResponse.js");
-const { convertActiveTime } = require('../utils/dateUtils.js');
+const { convertActiveTime, convertDayToUTC8 } = require('../utils/dateUtils.js');
 const { getCoverage, getTotalOrders, getTotalRefunds, getAvgDonation, getAvgAmount, getRepurchaseRate } = require('../utils/calUtils.js');
 
 exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
@@ -88,7 +88,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             {
                 "id": "9f87b6e9d7ce4b1283c9fda1d5ef4a92",
                 "order_no": "ORD202502260001",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 100,
                 "donate": 0,
                 "subtotal": 6666,
@@ -99,12 +99,13 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "status": "resolve",
                 "customer": {
                     "name": "火腿",
+                    "photo": "https://lh3.googleusercontent.com/a/ACg8ocLdXZ3oI-zAaV8TwfewBa7lK96h7YgemhOChkWRmOMwjm29DwI=s96-c"
                 },
             },
             {
-                "id": "9f87b6e9d7ce4b1283c9fda1d5ef4a92",
+                "id": "4b1283c9fd9f87b6e9d7cea1d5ef4a92",
                 "order_no": "ORD202502260002",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 100,
                 "donate": 5000,
                 "subtotal": 11666,
@@ -115,6 +116,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "status": "resolve",
                 "customer": {
                     "name": "兔子",
+                    "photo": ""
                 },
             }
         ];
@@ -179,7 +181,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             {
                 "id": "9f87b6e9d7ce4b1283c9fda1d5ef4a92",
                 "order_no": "ORD202502000101",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 0,
                 "donate": 10000,
                 "subtotal": 2000,
@@ -190,12 +192,13 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "status": "resolve",
                 "customer": {
                     "name": "陳先生",
+                    "photo": ""
                 },
             },
             {
                 "id": "7c9f87b6e9de4b1283c9fda1d5ef4a92",
                 "order_no": "ORD202502000102",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 100,
                 "donate": 5000,
                 "subtotal": 11666,
@@ -206,12 +209,13 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "status": "reject",
                 "customer": {
                     "name": "兔子",
+                    "photo": ""
                 },
             },
             {
-                "id": "7c9f87b6e9de4b1283c9fda1d5ef4a92",
+                "id": "e9d7e4b1283c9fda1d5ef4ac9f87b692",
                 "order_no": "ORD202502000108",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 0,
                 "donate": 5000,
                 "subtotal": 101000,
@@ -222,12 +226,13 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "status": "resolve",
                 "customer": {
                     "name": "火腿",
+                    "photo": "https://lh3.googleusercontent.com/a/ACg8ocLdXZ3oI-zAaV8TwfewBa7lK96h7YgemhOChkWRmOMwjm29DwI=s96-c"
                 },
             },
             {
                 "id": "1d73cc9f87b6e9de4b1289fda5ef4a92",
                 "order_no": "ORD202502000103",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 0,
                 "donate": 50000,
                 "subtotal": 316660,
@@ -238,12 +243,13 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "status": "resolve",
                 "customer": {
                     "name": "兔子",
+                    "photo": ""
                 },
             },
             {
                 "id": "283c9fd7c9f87b6e9de4b1a1f4a92d5e",
                 "order_no": "ORD202502000104",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 0,
                 "donate": 50000,
                 "subtotal": 120000,
@@ -254,12 +260,13 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "status": "resolve",
                 "customer": {
                     "name": "N7",
+                    "photo": ""
                 },
             },
             {
                 "id": "de4b127c9f87b1d5ef4a926e983c9fda",
                 "order_no": "ORD202502000105",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 0,
                 "donate": 1000,
                 "subtotal": 300000,
@@ -269,13 +276,14 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "payment_method": "credit_card",
                 "status": "resolve",
                 "customer": {
-                    "name": "兔子",
+                    "name": "鴨子",
+                    "photo": "https://avatars.githubusercontent.com/u/47508893?v=4"
                 },
             },
             {
                 "id": "7c9f87b6e9de4b1283c9fda1d5ef4a92",
                 "order_no": "ORD202502000112",
-                "order_date": "2025-02-26T03:20:00+08:00",
+                "order_date": convertToUTC8("2025-02-26T03:20:00+08:00"),
                 "discount": 100,
                 "donate": 5000,
                 "subtotal": 11666,
@@ -286,6 +294,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "status": "resolve",
                 "customer": {
                     "name": "兔子",
+                    "photo": ""
                 },
             }
         ];
