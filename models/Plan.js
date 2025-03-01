@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { convertToUTC8 } = require("../utils/dateUtils");
+const { convertToUTC8, convertDayToUTC8 } = require("../utils/dateUtils");
 const userSchema = new mongoose.Schema(
   {
     title: {
