@@ -29,13 +29,13 @@ exports.getAllNews = handleErrorAsync(async (req, res, next) => {
 
 
 
-    if (keyWord) {
-        const regex = new RegExp(keyWord, 'i');
-        query.$or = [
-            { title: { $regex: regex } },
-            { content: { $regex: regex } }
-        ];
-    }
+    /*    if (keyWord) {
+           const regex = new RegExp(keyWord, 'i');
+           query.$or = [
+               { title: { $regex: regex } },
+               { content: { $regex: regex } }
+           ];
+       } */
     //  const currentPage = Math.max(parseInt(page) || 1, 1); // 確保 page 是正整數
     //const itemsPerPage = Math.max(parseInt(limit) || 10, 1); // 確保 limit 是正整數
 
