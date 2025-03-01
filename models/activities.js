@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { convertToUTC8 } = require("../utils/dateUtils");
 const newsSchema = new mongoose.Schema(
     {
         title: {
