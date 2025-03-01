@@ -1,24 +1,45 @@
 const mongoose = require("mongoose");
-const newsSchema = new mongoose.Schema(
+const orderSchema = new mongoose.Schema(
     {
-        title: {
+        id: {
+            typs: String
+        },
+        order_no: {
             type: String,
             required: true,
         },
-        content: {
-            type: String,
-            default: '',
-            required: true,
-        },
-
-        isEnabled: {
-            type: Boolean,
-            default: true,
-        },
-
-        createdAt: {
+        order_date: {
             type: Date,
             default: Date.now,
+            required: true,
+        },
+        discount: {
+            type: Number,
+            default: 0
+        },
+        subtotal: {
+            type: Number,
+            default: 0
+        },
+        shipping_fee: {
+            type: Number,
+            default: 0
+        },
+        total_amount: {
+            type: Number,
+            default: 0
+        },
+        currency: {
+            type: Number,
+            default: 0
+        },
+        payment_method: {
+            type: Number,
+            default: 0
+        },
+        status: {
+            type: Number,
+            default: 0
         },
         updatedAt: {
             type: Date,
@@ -31,7 +52,7 @@ const newsSchema = new mongoose.Schema(
             virtuals: true,
             transform: (doc, ret) => {
                 // 將日期轉換為 UTC+8 格式
-                ret.publicAt = convertDayToUTC8(ret.publicAt);
+
                 ret.updatedAt = convertToUTC8(ret.updatedAt);
 
                 delete ret._id; // 隱藏 MongoDB 預設的 _id 欄位
@@ -43,7 +64,7 @@ const newsSchema = new mongoose.Schema(
         toObject: {
             virtuals: true,
             transform: function (doc, ret) {
-                if (ret.createdAt) ret.createdAt = convertToUTC8(ret.createdAt);
+
                 if (ret.updatedAt) ret.updatedAt = convertToUTC8(ret.updatedAt);
 
                 return ret;
@@ -52,6 +73,6 @@ const newsSchema = new mongoose.Schema(
         },
     },
 );
-const News = mongoose.model("News", newsSchema);
+const Orders = mongoose.model("Orders", orderSchema);
 
-module.exports = News;
+module.exports = Orders;

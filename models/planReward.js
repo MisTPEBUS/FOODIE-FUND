@@ -52,7 +52,7 @@ const planRewardSchema = new mongoose.Schema(
             default: Date.now,
         },
 
-        updateAt: {
+        updatedAt: {
             type: Date,
             default: Date.now,
         },
@@ -63,21 +63,35 @@ const planRewardSchema = new mongoose.Schema(
             virtuals: true,
             transform: (doc, ret) => {
                 // 將日期轉換為 UTC+8 格式
-                ret.publicAt = convertDayToUTC8(ret.publicAt);
-                ret.updateAt = convertToUTC8(ret.updateAt);
 
+                ret.updatedAt = convertToUTC8(ret.updatedAt);
+                ret.startedAt = convertToUTC8(ret.startedAt);
+                ret.endAt = convertToUTC8(ret.endAt);
                 delete ret._id; // 隱藏 MongoDB 預設的 _id 欄位
                 delete ret.plan_id; // 隱藏 plan_id
                 return ret;
             },
+
         },
-        toObject: { virtuals: true },
+        toObject: {
+            virtuals: true,
+            transform: function (doc, ret) {
+
+                if (ret.updatedAt) ret.updatedAt = convertToUTC8(ret.updatedAt);
+                if (ret.startedAt) ret.startedAt = convertToUTC8(ret.startedAt);
+                if (ret.endAt) ret.endAt = convertToUTC8(ret.endAt);
+                return ret;
+            }
+
+        },
     },
 );
 
-// Middleware for `save` (update `updateAt` field)
+
+
+// Middleware for `save` (update `updatedAt` field)
 planRewardSchema.pre('save', function (next) {
-    this.updateAt = Date.now(); // 確保更新的時間是 UTC+0
+    this.updatedAt = Date.now(); // 確保更新的時間是 UTC+0
     next();
 });
 

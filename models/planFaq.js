@@ -45,19 +45,26 @@ const planFaqSchema = new mongoose.Schema(
         toJSON: {
             virtuals: true,
             transform: (doc, ret) => {
-                // 格式化 publicAt 為 UTC+8
-                if (ret.createdAt) {
-                    ret.createdAt = convertDayToUTC8(ret.createdAt);
-                }
-                // 格式化 updateAt 為 UTC+8
-                if (ret.updatedAt) {
-                    ret.updatedAt = convertDayToUTC8(ret.updatedAt);
-                }
-                delete ret._id;
+                // 將日期轉換為 UTC+8 格式
+                ret.createdAt = convertDayToUTC8(ret.createdAt);
+                ret.updatedAt = convertToUTC8(ret.updatedAt);
+
+                delete ret._id; // 隱藏 MongoDB 預設的 _id 欄位
+                delete ret.plan_id; // 隱藏 plan_id
                 return ret;
             },
+
         },
-        toObject: { virtuals: true },
+        toObject: {
+            virtuals: true,
+            transform: function (doc, ret) {
+                if (ret.createdAt) ret.createdAt = convertToUTC8(ret.createdAt);
+                if (ret.updatedAt) ret.updatedAt = convertToUTC8(ret.updatedAt);
+
+                return ret;
+            }
+
+        },
         timestamps: true,
     }
 );
