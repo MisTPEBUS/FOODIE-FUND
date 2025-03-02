@@ -14,7 +14,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
     const { plan_id } = req.params;
     console.log(plan_id);
-    console.log(`sadf`, req.user);
+
     let projects = [{
         "id": "66d66fb3217ebbebc04b1d50",
         "name": "貓貓咖啡廳",
