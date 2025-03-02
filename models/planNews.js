@@ -51,7 +51,8 @@ const planNewsSchema = new mongoose.Schema(
                 ret.updatedAt = convertToUTC8(ret.updatedAt);
                 ret.startedAt = convertToUTC8(ret.startedAt);
 
-
+                delete ret._id; // 隱藏 MongoDB 預設的 _id 欄位
+                delete ret.plan_id; // 隱藏 plan_id
                 return ret;
             },
 

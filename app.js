@@ -18,7 +18,7 @@ const plansRoute = require("./routes/plansRoute");
 
 
 dotenv.config({ path: "./config.env" });
-
+const crypto = require('crypto');
 const HASH_KEY = process.env.HASH_KEY || '';
 const HASH_IV = process.env.HASH_IV || '';
 const MERCHANT_ID = process.env.MERCHANT_ID || '';
@@ -70,6 +70,7 @@ function createTradeSha(tradeInfo) {
 // 建立一個建立訂單的 API 範例
 app.post('/create-order', (req, res) => {
   // 可根據需求調整參數，以下為範例參數
+  console.log(123);
   const params = {
     MerchantID: MERCHANT_ID,
     RespondType: 'JSON',
