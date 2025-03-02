@@ -126,6 +126,71 @@ app.post('/create-order', (req, res) => {
   });
 });
 
+
+/**
+ * 解密 TradeInfo
+ * @param {string} encrypted 加密後的字串（hex 格式）
+ * @returns {string} 解密後的原始查詢字串
+ */
+function decryptTradeInfo(encrypted) {
+  const decipher = crypto.createDecipheriv('aes-256-cbc', HASH_KEY, HASH_IV);
+  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
+
+/**
+ * 驗證 TradeSha 是否正確
+ * @param {string} tradeInfo 加密後的交易資訊
+ * @param {string} tradeSha 從通知中取得的 TradeSha
+ * @returns {boolean}
+ */
+function verifyTradeSha(tradeInfo, tradeSha) {
+  const rawString = `HashKey=${HASH_KEY}&${tradeInfo}&HashIV=${HASH_IV}`;
+  const sha = crypto.createHash('sha256').update(rawString).digest('hex').toUpperCase();
+  return sha === tradeSha;
+}
+
+// 藍新金流通知接收路由
+app.post('/api/newebpay/notify', (req, res) => {
+  console.log('接收到藍新金流通知:', req.body);
+
+  const { MerchantID, TradeInfo, TradeSha, Version } = req.body;
+  if (!MerchantID || !TradeInfo || !TradeSha) {
+    console.error('缺少必要參數');
+    return res.status(400).send('缺少必要參數');
+  }
+
+  // 驗證簽章正確性
+  if (!verifyTradeSha(TradeInfo, TradeSha)) {
+    console.error('驗證簽章失敗');
+    return res.status(400).send('驗證簽章失敗');
+  }
+
+  // 解密 TradeInfo 取得交易細節
+  let decryptedTradeInfo;
+  try {
+    decryptedTradeInfo = decryptTradeInfo(TradeInfo);
+    console.log('解密後的 TradeInfo:', decryptedTradeInfo);
+  } catch (error) {
+    console.error('解密失敗:', error);
+    return res.status(400).send('解密失敗');
+  }
+
+  // 假設解密後為 URL query string 格式，解析成物件
+  const params = new URLSearchParams(decryptedTradeInfo);
+  const orderData = {};
+  for (const [key, value] of params.entries()) {
+    orderData[key] = value;
+  }
+  console.log('解析後的訂單資料:', orderData);
+
+  // TODO: 根據 orderData 更新訂單狀態，例如寫入資料庫或通知其他系統
+
+  // 通知回覆：回傳 "1|OK" 表示成功處理通知（請參照藍新金流文件確認回覆內容）
+  res.send('1|OK');
+});
+
 // 404 錯誤
 app.use(function (req, res, next) {
   res.status(404).json({
