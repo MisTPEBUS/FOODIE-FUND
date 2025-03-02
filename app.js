@@ -59,10 +59,7 @@ app.use(cors({
 // 如果需要處理 OPTIONS 預檢請求，也可以這樣做：
 app.options('*', cors());
 
-app.post('/create-order', (req, res) => {
-  // 處理訂單建立
-  res.json({ message: '訂單建立成功' });
-});
+
 
 app.use(logger("dev"));
 app.use(express.json());
