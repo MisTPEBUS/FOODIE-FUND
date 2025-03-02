@@ -108,7 +108,7 @@ app.post('/create-order', (req, res) => {
     TimeStamp: Math.floor(Date.now() / 1000).toString(),
     Version: '1.5',
     MerchantOrderNo: 'ORDER' + Date.now(), // 訂單編號須唯一
-    Amt: 10, // 交易金額
+    Amt: 100, // 交易金額
     ItemDesc: '測試商品'
     // 其他參數請依藍新科技文件補充
   };
