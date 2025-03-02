@@ -47,6 +47,39 @@ mongoose.connect(constr).then(() => console.log("連線資料成功"));
 const app = express();
 
 
+
+const session = require('express-session');
+app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
+app.use(cors({
+  origin: 'https://mistpebus.github.io', // 允許前端網域
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// 如果需要處理 OPTIONS 預檢請求，也可以這樣做：
+app.options('*', cors());
+
+app.post('/create-order', (req, res) => {
+  // 處理訂單建立
+  res.json({ message: '訂單建立成功' });
+});
+
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerFile));
+
+app.use("/v1/api/auth", usersRouter);
+
+app.use("/v1/api/admin/account", AccountRouter);
+app.use("/v1/api/admin/upload", UploadRouter);
+app.use("/v1/api/news", newsRouter);
+app.use("/v1/api/plan", plansRoute);
+app.use("/v1/api/dashboard", dashboardRouter);
+
+
 /**
  * 將參數轉換成 URL 查詢字串，再用 AES-256-CBC 加密產生 TradeInfo
  */
@@ -95,28 +128,6 @@ app.post('/create-order', (req, res) => {
     // 如有其他必要欄位，請依照文件補充
   });
 });
-
-const session = require('express-session');
-app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
-app.use(cors({
-  origin: 'https://mistpebus.github.io'
-}));
-
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/api-doc", swaggerUI.serve, swaggerUI.setup(swaggerFile));
-
-app.use("/v1/api/auth", usersRouter);
-
-app.use("/v1/api/admin/account", AccountRouter);
-app.use("/v1/api/admin/upload", UploadRouter);
-app.use("/v1/api/news", newsRouter);
-app.use("/v1/api/plan", plansRoute);
-app.use("/v1/api/dashboard", dashboardRouter);
 
 // 404 錯誤
 app.use(function (req, res, next) {
