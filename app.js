@@ -98,7 +98,10 @@ app.post('/create-order', (req, res) => {
 
 const session = require('express-session');
 app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
-app.use(cors());
+app.use(cors({
+  origin: 'https://mistpebus.github.io'
+}));
+
 
 app.use(logger("dev"));
 app.use(express.json());
