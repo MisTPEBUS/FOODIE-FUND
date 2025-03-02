@@ -18,6 +18,13 @@ const plansRoute = require("./routes/plansRoute");
 
 
 dotenv.config({ path: "./config.env" });
+
+const HASH_KEY = process.env.HASH_KEY || '';
+const HASH_IV = process.env.HASH_IV || '';
+const MERCHANT_ID = process.env.MERCHANT_ID || '';
+
+
+
 const mongoose = require("mongoose");
 
 // 程式出現重大錯誤時
@@ -37,6 +44,56 @@ mongoose.set("strictQuery", false);
 mongoose.connect(constr).then(() => console.log("連線資料成功"));
 
 const app = express();
+
+
+/**
+ * 將參數轉換成 URL 查詢字串，再用 AES-256-CBC 加密產生 TradeInfo
+ */
+function createTradeInfo(params) {
+  // 將物件轉換為 URL query 字串，注意參數排序請參考藍新科技文件
+  const queryString = new URLSearchParams(params).toString();
+  const cipher = crypto.createCipheriv('aes-256-cbc', HASH_KEY, HASH_IV);
+  let encrypted = cipher.update(queryString, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  return encrypted;
+}
+
+/**
+ * 依據加密後的 TradeInfo 與參數，產生 TradeSha
+ */
+function createTradeSha(tradeInfo) {
+  const rawString = `HashKey=${HASH_KEY}&${tradeInfo}&HashIV=${HASH_IV}`;
+  const sha = crypto.createHash('sha256').update(rawString).digest('hex');
+  return sha.toUpperCase();
+}
+
+// 建立一個建立訂單的 API 範例
+app.post('/create-order', (req, res) => {
+  // 可根據需求調整參數，以下為範例參數
+  const params = {
+    MerchantID: MERCHANT_ID,
+    RespondType: 'JSON',
+    TimeStamp: Math.floor(Date.now() / 1000).toString(),
+    Version: '1.5',
+    MerchantOrderNo: 'ORDER' + Date.now(), // 訂單編號須唯一
+    Amt: 1000, // 交易金額
+    ItemDesc: '測試商品'
+    // 其他參數請依藍新科技文件補充
+  };
+
+  const tradeInfo = createTradeInfo(params);
+  const tradeSha = createTradeSha(tradeInfo);
+
+  // 回傳資料給前端，前端可依此組成 HTML 表單並提交到藍新科技金流平台
+  res.json({
+    MerchantID: params.MerchantID,
+    TradeInfo: tradeInfo,
+    TradeSha: tradeSha,
+    Version: params.Version
+    // 如有其他必要欄位，請依照文件補充
+  });
+});
+
 const session = require('express-session');
 app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
 app.use(cors());
