@@ -50,7 +50,7 @@ const app = express();
 
 const session = require('express-session');
 app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
-const allowedOrigins = ['https://foodiefund.vercel.app', 'https://mistpebus.github.io'];
+const allowedOrigins = ['https://foodiefund.vercel.app', 'https://mistpebus.github.io', 'http://localhost:3000/'];
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
