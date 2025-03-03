@@ -50,16 +50,20 @@ const app = express();
 
 const session = require('express-session');
 app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
-app.use(cors({
-  origin: 'https://mistpebus.github.io', // 允許前端網域
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors(
+  {
+    origin: 'https://mistpebus.github.io', // 允許前端網域
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  },
+  {
+    origin: 'https://foodiefund.vercel.app/', // 允許前端網域
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 
 // 如果需要處理 OPTIONS 預檢請求，也可以這樣做：
 app.options('*', cors());
-
-
 
 app.use(logger("dev"));
 app.use(express.json());
