@@ -29,8 +29,8 @@ const apiLimiter = rateLimit({
 const planController = require('../controllers/planController');
 const planNewsController = require('../controllers/planNewsController');
 const planFaqController = require('../controllers/planFaqController');
-const planCommentController = require('../controllers/planCommentController');
-const planCommentReplyController = require('../controllers/planCommentController');
+
+const planCommentReplyController = require('../controllers/planCommentReplyController');
 const planRewardsController = require('../controllers/planRewardsController');
 const { isAuth } = require('../services/auth');
 
@@ -75,11 +75,11 @@ router.get('/:plan_id/faqs/:id', planFaqController.getClientFaqsByID);
 
 
 //留言
-router.get('/:plan_id/comment', isAuth, planCommentController.createComment);
-router.post('/:plan_id/comment', isAuth, planCommentController.deleteComment);
+router.get('/:plan_id/comment', isAuth, planCommentReplyController.getAllComments);
+router.post('/:plan_id/comment', isAuth, planCommentReplyController.createComment);
 //回復
-router.get('/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.createComment);
-router.post('/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.deleteComment);
+/* router.get('/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.createComment); */
+router.post('/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.createCommentReply);
 
 
 module.exports = router;

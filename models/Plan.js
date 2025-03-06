@@ -2,26 +2,51 @@ const mongoose = require("mongoose");
 const { convertToUTC8, convertDayToUTC8 } = require("../utils/dateUtils");
 const userSchema = new mongoose.Schema(
   {
-    title: {
-      type: String,
-      required: true,
-    },
-    intro: {
+    //A一班募資 B 群眾募資
+    activeType: {
       type: String,
       default: '',
     },
-    isActive: {
-      type: Boolean,
-      default: false,
+    location: {
+      type: String,
+      default: '',
+    },
+    restaurantType: {
+      type: String,
+      default: '',
     },
     image: {
       type: String,
       default: '',
     },
-    startedAt: {
-      type: Date,
-      default: Date.now,
+    title: {
+      type: String,
+      required: true,
     },
+    proposer: {
+      type: String,
+      required: true,
+    },
+
+
+    email: {
+      type: String,
+      default: '',
+    },
+    phone: {
+      type: String,
+      default: '',
+    },
+
+    address: {
+      type: String,
+      default: '',
+    },
+    info: {
+      type: String,
+      default: '',
+    },
+
     endAt: {
       type: Date,
       default: Date.now,
@@ -31,11 +56,10 @@ const userSchema = new mongoose.Schema(
       default: Date.now,
     },
     users_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required },
-    publicAt: {
+    activeTime: {
       type: Date,
       default: Date.now,
     },
-
     createdAt: {
       type: Date,
       default: Date.now,
@@ -72,5 +96,5 @@ const userSchema = new mongoose.Schema(
   },
 );
 /* userSchema.index({ email: 1, memberType: 1 }, { unique: true }); */
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("Plans", userSchema);
 module.exports = User;

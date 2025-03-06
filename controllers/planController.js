@@ -349,6 +349,9 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
 
     // Success(res, "請求成功，回傳所需數據")
 });
+exports.getPlanClient = handleErrorAsync(async (req, res, next) => {
+    //
+});
 exports.getPlanById = handleErrorAsync(async (req, res, next) => {
     const { plan_id } = req.params;
     console.log(plan_id)
@@ -372,9 +375,7 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
     }
 });
 
-exports.deletePlanByID = handleErrorAsync(async (req, res, next) => {
 
-});
 exports.updatePlan = handleErrorAsync(async (req, res, next) => {
 
 });

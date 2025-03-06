@@ -10,8 +10,7 @@ const rateLimit = require("express-rate-limit");
 const planController = require('../controllers/planController');
 const planNewsController = require('../controllers/planNewsController');
 const planFaqController = require('../controllers/planFaqController');
-const planCommentController = require('../controllers/planCommentController');
-const planCommentReplyController = require('../controllers/planCommentController');
+
 const { isAuth } = require('../services/auth');
 
 
@@ -62,12 +61,7 @@ router.post('/plan/:plan_id/faqs', isAuth, planFaqController.createFaq);
 router.put('/plan/:plan_id/faqs/:id', isAuth, planFaqController.updateFaqById);
 router.delete('/plan/:plan_id/faqs/:id', isAuth, planFaqController.deleteFaqById);
 
-//留言
-router.get('/plan/:plan_id/comment', isAuth, planCommentController.createComment);
-router.post('/plan/:plan_id/comment', isAuth, planCommentController.deleteComment);
-//回復
-router.get('/plan/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.createComment);
-router.post('/plan/:plan_id/commentReply/:comment_id', isAuth, planCommentReplyController.deleteComment);
+
 
 
 module.exports = router;
