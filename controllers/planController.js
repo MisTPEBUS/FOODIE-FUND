@@ -80,9 +80,34 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             name: p.title,
             status: "resolve"
         }));
-        if (req.user.name != "lulume") {
+        if (req.user.name != "lulume" || req.user.name != "default") {
+            // 查詢 MongoDB，並確保 `projectId` 是 ObjectId 類型
+            let project = await Plan.findById(new mongoose.Types.ObjectId(plan_id));
 
-            return Success(res, "請求成功，回傳所需數據", { projects, steps, plan, orders, comments });
+            // 定義預設欄位
+            const defaultValues = {
+                title: "",
+                info: "",
+                email: "",
+                phone: "",
+                proposer: "",
+                activeTime: "",
+                repurchaseRate: 0,
+                address: "",
+                endAt: "",
+                coverage: 0,
+                avgAmount: 0,
+                targetAmount: 0,
+                totalOrders: 0,
+                totalRefunds: 0,
+                avgDonation: 0
+            };
+
+            console.log(project);
+
+            // 轉換 `project` 為普通物件，並補齊不存在的欄位
+            let formattedProject = { ...defaultValues, ...project.toObject() };
+            return Success(res, "請求成功，回傳所需數據", { projects, steps, plan: formattedProject ?? defaultValues, orders, comments });
 
         }
         else if (plan_id == "66d66fb3217ebbebc04b1d50") {
