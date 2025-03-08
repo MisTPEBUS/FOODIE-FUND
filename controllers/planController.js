@@ -41,7 +41,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         "status": "reject"
     }];
     console.log(req.user.id);
-    let projects = await Plan.find({ user_id: req.user.id }).select("_id title");
+    let projects = await Plan.find({ user_id: req.user.id }).select("_id title") ?? [];
 
 
     try {
@@ -78,31 +78,8 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
 
 
         if (req.user.name != "lulume") {
-            projects = [];
-            let formattedProjects = projects.map(p => ({
-                id: p._id.toString(),
-                name: p.title,
-                status: "reject" // 預設為 reject
-            }));
 
-            // 建立 `id` 到 `status` 的映射
-            let statusMap = projects_t.reduce((map, item) => {
-                map[item.id] = item.status;
-                return map;
-            }, {});
-
-            // 合併數據
-            let mergedProjects = formattedProjects.map(p => ({
-                ...p,
-                status: statusMap[p.id] || "reject" // 若匹配到則使用 `projects_t` 的 status，否則為 "reject"
-            }));
-
-            // 合併 `projects_t` 中沒有出現在 `projects` 的額外數據
-            let extraProjects = projects_t.filter(t => !formattedProjects.some(p => p.id === t.id));
-
-            // 最終合併所有項目
-            let finalProjects = [...mergedProjects, ...extraProjects];
-            return Success(res, "請求成功，回傳所需數據", { projects: finalProjects, steps, plan, orders, comments });
+            return Success(res, "請求成功，回傳所需數據", { projects, steps, plan, orders, comments });
 
         }
         else if (plan_id == "66d66fb3217ebbebc04b1d50") {
