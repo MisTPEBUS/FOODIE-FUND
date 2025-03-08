@@ -43,7 +43,7 @@ const validatePlanId = (req, res, next) => {
 };
 
 //提案計畫
-router.post('/', isAuth, planController.createPlan);
+router.post('/', isAuth, uploadPlanNewsMiddleware, planController.createPlan);
 
 //Admin
 /* router.get('/admin/planList', isAuth, planController.getPlanList);

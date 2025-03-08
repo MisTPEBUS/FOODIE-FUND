@@ -10,6 +10,7 @@ const {
 const { convertActiveTime, convertDayToUTC8, convertToUTC8 } = require('../utils/dateUtils.js');
 const { getCoverage, getTotalOrders, getTotalRefunds, getAvgDonation, getAvgAmount, getRepurchaseRate } = require('../utils/calUtils.js');
 const Plan = require('../models/planModel.js');
+const Plans = require('../models/planModel.js');
 
 
 
@@ -370,7 +371,6 @@ exports.getPlanById = handleErrorAsync(async (req, res, next) => {
 
 exports.createPlan = handleErrorAsync(async (req, res, next) => {
     try {
-
         const {
             activeType,
             location,
@@ -383,11 +383,8 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
             address,
             info,
             endAt,
-            users_id,
         } = req.body;
-
-        // 建立新資料（會自動觸發Schema驗證）
-        const newPlan = await Plan.create({
+        let filteredData = {
             activeType,
             location,
             restaurantType,
@@ -399,10 +396,83 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
             address,
             info,
             endAt,
-            users_id,
-        });
+            targetAmount
+        };
+        // 建立新資料（會自動觸發Schema驗證）
+        /*  const newPlan = await Plan.create({
+             activeType,
+             location,
+             restaurantType,
+             image,
+             title,
+             proposer,
+             email,
+             phone,
+             address,
+             info,
+             endAt,
+             users_id,
+         }); */
+        console.log(req.files);
+        if (req.files && req.files.length > 0) {
+            const file = req.files[0];
+            const blob = bucket.file(
+                `images/${uuidv4()}.${file.originalname.split(".").pop()}`,
+            );
+            const blobStream = blob.createWriteStream();
+            blobStream.end(file.buffer);
 
-        Success(res, '新增成功', newPlan, 201);
+            blobStream.on("finish", async () => {
+                try {
+                    const config = {
+                        action: "read",
+                        expires: "12-31-2500",
+                    };
+
+                    const [fileUrl] = await blob.getSignedUrl(config);
+
+                    // 添加圖片 URL 和計畫 ID
+                    filteredData.image = fileUrl;
+                    filteredData.users_id = req.user.id;
+
+                    // 儲存到 MongoDB
+                    const newPlan = await Plans.create({ ...filteredData });
+
+                    if (!newPlan) {
+                        throw appError("建立失敗!", next, 400);
+                    }
+
+                    Success(res, "已建立貼文", newPlan, 201);
+                } catch (error) {
+                    next(error);
+                }
+            });
+
+            blobStream.on("error", (err) => {
+                console.error(err);
+                return next(appError("上傳失敗", next, 500));
+            });
+        } else {
+            // 沒有圖片，直接儲存
+            filteredData.image = ''; // 空字串
+            filteredData.users_id = req.user.id;
+
+
+
+            try {
+                // 儲存到 MongoDB
+                const newPlan = await Plans.create({ ...filteredData });
+
+                if (!newPlan) {
+                    throw appError("建立失敗!", next, 400);
+                }
+
+                Success(res, "已建立貼文", newPlan, 201);
+            } catch (error) {
+                next(error);
+            }
+        }
+        //Success(res, '新增成功', newPlan, 201);
 
     } catch (error) {
         if (error.name === 'ValidationError') {

@@ -61,6 +61,10 @@ const userSchema = new mongoose.Schema(
       },
       default: () => Date.now() + 7 * 24 * 60 * 60 * 1000, // 預設為一週後
     },
+    targetAmount: {
+      type: Number,
+      default: 0
+    },
     updatedAt: {
       type: Date,
       default: Date.now,
