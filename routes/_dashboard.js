@@ -21,6 +21,7 @@ const validatePlanId = (req, res, next) => {
 };
 
 router.get('/plan/:plan_id', isAuth, planController.getPlanAdmin);
+router.get('/plan/:plan_id/detail', isAuth, planController.getPlanAdminByID);
 router.put('/plan/:plan_id', isAuth, planController.updatePlanById);
 
 //計畫回饋
