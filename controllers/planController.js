@@ -9,7 +9,7 @@ const {
 } = require("../services/handleResponse.js");
 const { convertActiveTime, convertDayToUTC8, convertToUTC8 } = require('../utils/dateUtils.js');
 const { getCoverage, getTotalOrders, getTotalRefunds, getAvgDonation, getAvgAmount, getRepurchaseRate } = require('../utils/calUtils.js');
-const Plans = require('../models/plan.js');
+const Plan = require('../models/plan.js');
 
 
 
@@ -387,7 +387,7 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
         } = req.body;
 
         // 建立新資料（會自動觸發Schema驗證）
-        const newPlan = await Plans.create({
+        const newPlan = await Plan.create({
             activeType,
             location,
             restaurantType,
