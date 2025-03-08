@@ -22,7 +22,7 @@ const bucket = firebaseAdmin.storage().bucket();
 exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
     const { plan_id } = req.params;
-    console.log('675114b5391490f4d463ff42', req.user);
+    console.log('req.user', req.user);
 
 
     const projects_t = [{
@@ -41,9 +41,9 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         "status": "reject"
     }];
 
-    let projects = await Plan.find({ user_id: '675114b5391490f4d463ff42' }).select("_id title");
+    let projects = await Plan.find({ user_id: req.user.id }).select("_id title");
 
-
+    console.log('projects', projects);
 
 
     let steps = [
