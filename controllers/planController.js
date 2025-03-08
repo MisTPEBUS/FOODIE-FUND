@@ -370,33 +370,33 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         }
 
         // 轉換 `projects` 為統一格式
-        /* 
-                formattedProjects = projects.map(p => ({
-                    id: p._id.toString(),
-                    name: p.title,
-                    status: "reject" // 預設為 reject
-                }));
-        
-                // 建立 `id` 到 `status` 的映射
-                statusMap = projects_t.reduce((map, item) => {
-                    map[item.id] = item.status;
-                    return map;
-                }, {});
-        
-                // 合併數據
-                mergedProjects = formattedProjects.map(p => ({
-                    ...p,
-                    status: statusMap[p.id] || "reject" // 若匹配到則使用 `projects_t` 的 status，否則為 "reject"
-                }));
-        
-                // 合併 `projects_t` 中沒有出現在 `projects` 的額外數據
-                extraProjects = projects_t.filter(t => !formattedProjects.some(p => p.id === t.id));
-        
-                // 最終合併所有項目
-                finalProjects = [...mergedProjects, ...extraProjects]; */
+
+        formattedProjects = projects.map(p => ({
+            id: p._id.toString(),
+            name: p.title,
+            status: "reject" // 預設為 reject
+        }));
+
+        // 建立 `id` 到 `status` 的映射
+        statusMap = projects_t.reduce((map, item) => {
+            map[item.id] = item.status;
+            return map;
+        }, {});
+
+        // 合併數據
+        mergedProjects = formattedProjects.map(p => ({
+            ...p,
+            status: statusMap[p.id] || "reject" // 若匹配到則使用 `projects_t` 的 status，否則為 "reject"
+        }));
+
+        // 合併 `projects_t` 中沒有出現在 `projects` 的額外數據
+        extraProjects = projects_t.filter(t => !formattedProjects.some(p => p.id === t.id));
+
+        // 最終合併所有項目
+        finalPojrects = [...mergedProjects, ...extraProjects];
 
 
-        Success(res, "請求成功，回傳所需數據", { projects: projects, steps, plan, orders, comments })
+        Success(res, "請求成功，回傳所需數據", { projects: finalPojrects, steps, plan, orders, comments })
     } catch (error) {
         console.log(error.message);
     }
