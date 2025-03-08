@@ -22,7 +22,7 @@ const bucket = firebaseAdmin.storage().bucket();
 async function getUpdatedPlan(plan_id) {
     try {
         // 查詢資料庫，確保 `plan_id` 是 `ObjectId`
-        let project = await Plan.findById(mongoose.Types.ObjectId(plan_id));
+
 
         // 預設欄位，確保所有欄位存在
         let defaultPlan = {
@@ -43,6 +43,8 @@ async function getUpdatedPlan(plan_id) {
             avgDonation: 0
         };
 
+        if (plan_id === "default") return defaultPlan;
+        let project = await Plan.findById(mongoose.Types.ObjectId(plan_id));
         // 如果 `project` 查不到，回傳預設值
         if (!project) {
             return defaultPlan;
