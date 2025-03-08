@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     },
     targetAmount: { type: Number, default: 0 },
     updatedAt: { type: Date, default: Date.now },
-    users_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: [true, '使用者 ID 為必填'] },
+    user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: [true, '使用者 ID 為必填'] },
     activeTime: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now, select: false },
   },

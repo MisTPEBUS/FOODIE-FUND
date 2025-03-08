@@ -13,6 +13,8 @@ const Plan = require('../models/planModel.js');
 
 const { v4: uuidv4 } = require("uuid");
 const firebaseAdmin = require("../services/firebase.js");
+const { default: mongoose } = require('mongoose');
+
 const bucket = firebaseAdmin.storage().bucket();
 
 
@@ -21,9 +23,10 @@ const bucket = firebaseAdmin.storage().bucket();
 exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
     const { plan_id } = req.params;
-    console.log(plan_id);
+    console.log('66d47ab0acd4eea1593b1e92', req.user);
 
-    let projects = [{
+
+    const projects_t = [{
         "id": "66d66fb3217ebbebc04b1d50",
         "name": "貓貓咖啡廳",
         "status": "resolve"
@@ -37,7 +40,13 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         "id": "zcfd369d2bebc04b1d517eb0",
         "name": "Test",
         "status": "reject"
-    }]
+    }];
+
+    let projects = await Plan.find({ user_id: req.user.id }).select("_id title");
+
+
+
+
     let steps = [
         { label: "提案內容", status: "pending" }, // ✅ 已完成
         { label: "設定金流", status: "pending" }, // 🟢 進行中
@@ -353,9 +362,35 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         };
 
     }
-    Success(res, "請求成功，回傳所需數據", { projects, steps, plan, orders, comments })
 
-    // Success(res, "請求成功，回傳所需數據")
+    // 轉換 `projects` 為統一格式
+    let formattedProjects = projects.map(p => ({
+        id: p._id.toString(),
+        name: p.title,
+        status: "reject" // 預設為 reject
+    }));
+
+    // 建立 `id` 到 `status` 的映射
+    let statusMap = projects_t.reduce((map, item) => {
+        map[item.id] = item.status;
+        return map;
+    }, {});
+
+    // 合併數據
+    let mergedProjects = formattedProjects.map(p => ({
+        ...p,
+        status: statusMap[p.id] || "reject" // 若匹配到則使用 `projects_t` 的 status，否則為 "reject"
+    }));
+
+    // 合併 `projects_t` 中沒有出現在 `projects` 的額外數據
+    let extraProjects = projects_t.filter(t => !formattedProjects.some(p => p.id === t.id));
+
+    // 最終合併所有項目
+    let finalProjects = [...mergedProjects, ...extraProjects];
+
+    console.log(finalProjects);
+    Success(res, "請求成功，回傳所需數據", { projects: finalProjects, steps, plan, orders, comments })
+
 });
 exports.getPlanClient = handleErrorAsync(async (req, res, next) => {
     //
@@ -487,7 +522,7 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
     }
 });
 
-exports.updatePlan = handleErrorAsync(async (req, res, next) => {
+exports.updatePlanById = handleErrorAsync(async (req, res, next) => {
     try {
         const planId = req.params.id;
         const updateData = req.body;
