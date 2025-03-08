@@ -247,7 +247,7 @@ app.use(function (err, req, res, next) {
   // production
   else if (process.env.NODE_ENV === "production") {
     if (err.name === "ValidationError") {
-      err.message = "欄位未填寫正確";
+
       err.isOperational = true;
       return resErrorProd(err, res);
     }

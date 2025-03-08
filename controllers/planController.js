@@ -10,7 +10,10 @@ const {
 const { convertActiveTime, convertDayToUTC8, convertToUTC8 } = require('../utils/dateUtils.js');
 const { getCoverage, getTotalOrders, getTotalRefunds, getAvgDonation, getAvgAmount, getRepurchaseRate } = require('../utils/calUtils.js');
 const Plan = require('../models/planModel.js');
-const Plans = require('../models/planModel.js');
+
+const { v4: uuidv4 } = require("uuid");
+const firebaseAdmin = require("../services/firebase.js");
+const bucket = firebaseAdmin.storage().bucket();
 
 
 
@@ -382,6 +385,7 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
             phone,
             address,
             info,
+            targetAmount,
             endAt,
         } = req.body;
         let filteredData = {
@@ -436,7 +440,7 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
                     filteredData.users_id = req.user.id;
 
                     // 儲存到 MongoDB
-                    const newPlan = await Plans.create({ ...filteredData });
+                    const newPlan = await Plan.create({ ...filteredData });
 
                     if (!newPlan) {
                         throw appError("建立失敗!", next, 400);
@@ -461,7 +465,7 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
 
             try {
                 // 儲存到 MongoDB
-                const newPlan = await Plans.create({ ...filteredData });
+                const newPlan = await Plan.create({ ...filteredData });
 
                 if (!newPlan) {
                     throw appError("建立失敗!", next, 400);
@@ -476,12 +480,10 @@ exports.createPlan = handleErrorAsync(async (req, res, next) => {
 
     } catch (error) {
         if (error.name === 'ValidationError') {
-            // 處理 Schema 驗證錯誤
             const messages = Object.values(error.errors).map(err => err.message);
             return appError(messages.join(', '), next, 400);
         }
-
-        appError(error.message, next, 500);
+        return appError(error.message, next, 500);
     }
 });
 
