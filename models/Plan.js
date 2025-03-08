@@ -22,8 +22,7 @@ const userSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      required: [true, '標題為必填'],
-      minlength: [3, '標題最少需要 3 個字'],
+      required: [true, '標題為必填']
     },
     proposer: {
       type: String,
@@ -50,7 +49,7 @@ const userSchema = new mongoose.Schema(
     info: {
       type: String,
       default: '',
-      maxlength: [200, '資訊不能超過 200 個字'],
+      maxlength: [300, '資訊不能超過 300 個字'],
     },
     endAt: {
       type: Date,
