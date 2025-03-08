@@ -9,7 +9,7 @@ const {
 } = require("../services/handleResponse.js");
 const { convertActiveTime, convertDayToUTC8, convertToUTC8 } = require('../utils/dateUtils.js');
 const { getCoverage, getTotalOrders, getTotalRefunds, getAvgDonation, getAvgAmount, getRepurchaseRate } = require('../utils/calUtils.js');
-const Plan = require('../models/plan.js');
+const Plan = require('../models/planModel.js');
 
 
 
