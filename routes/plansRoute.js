@@ -43,13 +43,14 @@ const validatePlanId = (req, res, next) => {
 };
 
 //提案計畫
+router.post('/', isAuth, planController.createPlan);
+
 //Admin
 /* router.get('/admin/planList', isAuth, planController.getPlanList);
 router.get('/', isAuth, planController.getAllPlans);
-
-router.get('/:id', isAuth, planController.getPlanById);
-router.post('/', isAuth, planController.createPlan);
 router.put('/:id', isAuth, planController.updatePlanById);
+router.get('/:id', isAuth, planController.getPlanById);
+
 router.delete('/:id', isAuth, planController.deletePlanById); */
 
 //讀取計畫

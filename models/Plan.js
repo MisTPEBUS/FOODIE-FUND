@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const { convertToUTC8, convertDayToUTC8 } = require("../utils/dateUtils");
+
 const userSchema = new mongoose.Schema(
   {
-    //A一班募資 B 群眾募資
     activeType: {
       type: String,
-      default: '',
+      enum: ['A', 'B'],
+      default: 'A',
     },
     location: {
       type: String,
@@ -21,23 +22,27 @@ const userSchema = new mongoose.Schema(
     },
     title: {
       type: String,
-      required: true,
+      required: [true, '標題為必填'],
+      minlength: [3, '標題最少需要 3 個字'],
     },
     proposer: {
       type: String,
-      required: true,
+      required: [true, '提案者為必填'],
     },
-
-
     email: {
       type: String,
-      default: '',
+      required: [true, '信箱為必填'],
+      match: [/^\S+@\S+\.\S+$/, 'Email 格式不正確'],
     },
     phone: {
       type: String,
-      default: '',
+      validate: {
+        validator: function (v) {
+          return /^09\d{8}$/.test(v);
+        },
+        message: props => `${props.value} 不是有效的手機號碼格式！`
+      },
     },
-
     address: {
       type: String,
       default: '',
@@ -45,17 +50,27 @@ const userSchema = new mongoose.Schema(
     info: {
       type: String,
       default: '',
+      maxlength: [200, '資訊不能超過 200 個字'],
     },
-
     endAt: {
       type: Date,
-      default: Date.now,
+      validate: {
+        validator: function (value) {
+          return value > Date.now();
+        },
+        message: '結束日期必須大於今天',
+      },
+      default: () => Date.now() + 7 * 24 * 60 * 60 * 1000, // 預設為一週後
     },
     updatedAt: {
       type: Date,
       default: Date.now,
     },
-    users_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required },
+    users_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: [true, '使用者 ID 為必填'],
+    },
     activeTime: {
       type: Date,
       default: Date.now,
@@ -71,16 +86,14 @@ const userSchema = new mongoose.Schema(
     toJSON: {
       virtuals: true,
       transform: (doc, ret) => {
-        // 將日期轉換為 UTC+8 格式
         ret.publicAt = convertDayToUTC8(ret.publicAt);
         ret.updatedAt = convertToUTC8(ret.updatedAt);
         ret.startedAt = convertToUTC8(ret.startedAt);
 
-        delete ret._id; // 隱藏 MongoDB 預設的 _id 欄位
-        delete ret.plan_id; // 隱藏 plan_id
+        delete ret._id;
+        delete ret.plan_id;
         return ret;
       },
-
     },
     toObject: {
       virtuals: true,
@@ -88,13 +101,11 @@ const userSchema = new mongoose.Schema(
         if (ret.createdAt) ret.createdAt = convertToUTC8(ret.createdAt);
         if (ret.updatedAt) ret.updatedAt = convertToUTC8(ret.updatedAt);
         if (ret.startedAt) ret.startedAt = convertToUTC8(ret.startedAt);
-
         return ret;
-      }
-
+      },
     },
   },
 );
-/* userSchema.index({ email: 1, memberType: 1 }, { unique: true }); */
-const User = mongoose.model("Plans", userSchema);
-module.exports = User;
+
+const Plans = mongoose.model("Plans", userSchema);
+module.exports = Plans;

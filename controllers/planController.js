@@ -9,6 +9,8 @@ const {
 } = require("../services/handleResponse.js");
 const { convertActiveTime, convertDayToUTC8, convertToUTC8 } = require('../utils/dateUtils.js');
 const { getCoverage, getTotalOrders, getTotalRefunds, getAvgDonation, getAvgAmount, getRepurchaseRate } = require('../utils/calUtils.js');
+const Plans = require('../models/plan.js');
+
 
 exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
@@ -366,18 +368,76 @@ exports.getPlanById = handleErrorAsync(async (req, res, next) => {
 
 exports.createPlan = handleErrorAsync(async (req, res, next) => {
     try {
-        //檢查欄位
 
-        //新增
-        Success(res, 新增成功, {}, 201);
+        const {
+            activeType,
+            location,
+            restaurantType,
+            image,
+            title,
+            proposer,
+            email,
+            phone,
+            address,
+            info,
+            endAt,
+            users_id,
+        } = req.body;
+
+        // 建立新資料（會自動觸發Schema驗證）
+        const newPlan = await Plans.create({
+            activeType,
+            location,
+            restaurantType,
+            image,
+            title,
+            proposer,
+            email,
+            phone,
+            address,
+            info,
+            endAt,
+            users_id,
+        });
+
+        Success(res, '新增成功', newPlan, 201);
+
     } catch (error) {
-        appError(error.message, next, 400, 400);
+        if (error.name === 'ValidationError') {
+            // 處理 Schema 驗證錯誤
+            const messages = Object.values(error.errors).map(err => err.message);
+            return appError(messages.join(', '), next, 400);
+        }
+
+        appError(error.message, next, 500);
     }
 });
 
-
 exports.updatePlan = handleErrorAsync(async (req, res, next) => {
+    try {
+        const planId = req.params.id;
+        const updateData = req.body;
 
+        const updatedPlan = await Plan.findByIdAndUpdate(
+            planId,
+            updateData,
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedPlan) {
+            return appError('找不到指定的資料', next, 404);
+        }
+
+        Success(res, '更新成功', updatedPlan);
+
+    } catch (error) {
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(err => err.message);
+            return appError(messages.join(', '), next, 400);
+        }
+
+        appError(error.message, next, 500);
+    }
 });
 
 
