@@ -13,6 +13,7 @@ const Plans = require('../models/plan.js');
 
 
 
+
 exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
     const { plan_id } = req.params;

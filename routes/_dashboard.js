@@ -5,8 +5,6 @@ const { uploadMiddleware, uploadPlanNewsMiddleware } = require("../services/imag
 const router = express.Router();
 const rateLimit = require("express-rate-limit");
 
-
-
 const planController = require('../controllers/planController');
 const planNewsController = require('../controllers/planNewsController');
 const planFaqController = require('../controllers/planFaqController');
@@ -35,7 +33,6 @@ router.delete('/plan/:plan_id/rewards/:id', planRewardsController.deleteRewardBy
 //Admin
 /* router.get('/admin/planList', isAuth, planController.getPlanList);
 router.get('/', isAuth, planController.getAllPlans);
-
 router.get('/:id', isAuth, planController.getPlanById);
 router.post('/', isAuth, planController.createPlan);
 router.put('/:id', isAuth, planController.updatePlanById);
