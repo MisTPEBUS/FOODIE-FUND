@@ -368,12 +368,15 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             };
 
         }
+        else {
+
+        }
 
         // 轉換 `projects` 為統一格式
-
+        console.log(projects)
         formattedProjects = projects.map(p => ({
-            id: p._id.toString(),
-            name: p.title,
+            id: p.id,
+            name: p.name,
             status: "reject" // 預設為 reject
         }));
 
