@@ -19,6 +19,53 @@ const bucket = firebaseAdmin.storage().bucket();
 
 
 
+async function getUpdatedPlan(plan_id) {
+    try {
+        // 查詢資料庫，確保 `plan_id` 是 `ObjectId`
+        let project = await Plan.findById(mongoose.Types.ObjectId(plan_id));
+
+        // 預設欄位，確保所有欄位存在
+        let defaultPlan = {
+            title: "",
+            info: "",
+            email: "",
+            phone: "",
+            proposer: "",
+            activeTime: "",
+            repurchaseRate: 0,
+            address: "",
+            endAt: "",
+            coverage: 0,
+            avgAmount: 0,
+            targetAmount: 0,
+            totalOrders: 0,
+            totalRefunds: 0,
+            avgDonation: 0
+        };
+
+        // 如果 `project` 查不到，回傳預設值
+        if (!project) {
+            return defaultPlan;
+        }
+
+        // 轉換 MongoDB 文檔為普通物件
+        let projectData = project.toObject();
+
+        // 根據 `defaultPlan` 修改數據，若 `projectData` 沒有對應的欄位，則保留原始類型
+        let updatedPlan = {};
+        for (let key in defaultPlan) {
+            updatedPlan[key] = projectData.hasOwnProperty(key) ? projectData[key] : defaultPlan[key];
+        }
+
+        return updatedPlan;
+    } catch (error) {
+        console.error("Error fetching plan:", error);
+        return null; // 或者回傳錯誤訊息
+    }
+}
+
+
+
 exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
     const { timeSort, type = "", keyWord, area = "", page = 1, limit = 6, cate } = req.query;
     const { plan_id } = req.params;
@@ -82,7 +129,8 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         }));
         if (req.user.name != "lulume") {
 
-            return Success(res, "請求成功，回傳所需數據", { projects, steps, plan, orders, comments });
+            const p = await getUpdatedPlan(plan_id);
+            return Success(res, "請求成功，回傳所需數據", { projects, steps, plan: p, orders, comments });
 
         }
         else if (plan_id == "66d66fb3217ebbebc04b1d50") {
@@ -368,9 +416,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             };
 
         }
-        else {
 
-        }
 
         // 轉換 `projects` 為統一格式
         console.log(projects)
@@ -398,8 +444,9 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         // 最終合併所有項目
         finalPojrects = [...mergedProjects, ...extraProjects];
 
-
-        Success(res, "請求成功，回傳所需數據", { projects: finalPojrects, steps, plan, orders, comments })
+        const p = await getUpdatedPlan(plan_id);
+        console.log(p)
+        Success(res, "請求成功，回傳所需數據", { projects: finalPojrects, steps, plan: p ?? plan, orders, comments })
     } catch (error) {
         console.log(error.message);
     }
