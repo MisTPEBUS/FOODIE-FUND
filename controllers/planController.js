@@ -389,7 +389,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
             };
         }
         else if (plan_id == "zcfd369d2bebc04b1d517eb0") {
-            console.log(12133);
+
             steps = [
                 { label: "提案內容", status: "completed" }, // ✅ 已完成
                 { label: "設定金流", status: "current" }, // 🟢 進行中
@@ -419,7 +419,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
 
 
         // 轉換 `projects` 為統一格式
-        console.log(projects)
+        console.log(plan)
         formattedProjects = projects.map(p => ({
             id: p.id,
             name: p.name,
@@ -445,8 +445,9 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         finalPojrects = [...mergedProjects, ...extraProjects];
 
         const p = await getUpdatedPlan(plan_id);
-        console.log(p)
-        Success(res, "請求成功，回傳所需數據", { projects: finalPojrects, steps, plan: p ?? plan, orders, comments })
+        plan = p.title == '' ? plan : p;
+
+        Success(res, "請求成功，回傳所需數據", { projects: finalPojrects, steps, plan, orders, comments })
     } catch (error) {
         console.log(error.message);
     }
