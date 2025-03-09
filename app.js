@@ -52,6 +52,7 @@ const session = require('express-session');
 app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
 const allowedOrigins = [
   'https://foodiefund.vercel.app',
+  'https://react-hw-mocha.vercel.app',
   'https://mistpebus.github.io',
   'http://127.0.0.1:3000',
   'http://localhost:3000'  // Removed the trailing slash
