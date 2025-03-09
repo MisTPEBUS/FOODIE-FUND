@@ -693,6 +693,114 @@ exports.getPlanAdminByID = handleErrorAsync(async (req, res, next) => {
 });
 
 
+exports.updatePlanAdminByID = handleErrorAsync(async (req, res, next) => {
+    try {
+
+
+        const { plan_id } = req.params; // 从 URL 获取 plan ID
+        const user_id = req.user.id;
+
+
+
+        if (!mongoose.Types.ObjectId.isValid(plan_id)) {
+            return res.status(400).json({ message: "Invalid plan_id format" });
+        }
+
+        let existingPlan = await Plan.findById({ _id: plan_id });
+
+        if (!existingPlan) {
+            return res.status(404).json({ message: "Plan not found" });
+        }
+
+        if (!plan_id) {
+            return appError("請提供要更新的計畫 ID", next, 400);
+        }
+
+
+        // 從 req.body 提取更新的字段（如果沒有，則不更新）
+        const updateData = {};
+        const allowedFields = [
+            "activeType", "location", "restaurantType", "title",
+            "proposer", "email", "phone", "address", "info",
+            "endAt", "targetAmount"
+        ];
+        allowedFields.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                updateData[field] = req.body[field];
+            }
+        });
+
+        if (req.files && req.files.length > 0) {
+            const file = req.files[0];
+            const blob = bucket.file(`images/${uuidv4()}.${file.originalname.split(".").pop()}`);
+            const blobStream = blob.createWriteStream();
+
+            blobStream.end(file.buffer);
+
+            blobStream.on("finish", async () => {
+                try {
+                    const config = {
+                        action: "read",
+                        expires: "12-31-2500",
+                    };
+                    const [fileUrl] = await blob.getSignedUrl(config);
+
+                    // 更新圖片 URL
+                    updateData.image = fileUrl;
+
+                    // 執行更新
+                    const updatedPlan = await Plan.findByIdAndUpdate(
+                        plan_id,
+                        { ...updateData, user_id },
+                        {
+                            new: true, // 返回更新後的數據
+                            runValidators: true, // 遵守 Schema 驗證
+                        }
+                    );
+
+                    if (!updatedPlan) {
+                        return appError("更新失敗!", next, 400);
+                    }
+
+                    return Success(res, "貼文已更新", updatedPlan, 200);
+                } catch (error) {
+                    next(error);
+                }
+            });
+
+            blobStream.on("error", (err) => {
+                console.error(err);
+                return next(appError("圖片上傳失敗", next, 500));
+            });
+        } else {
+            // 沒有新圖片，直接更新
+            const updatedPlan = await Plan.findByIdAndUpdate(
+                { _id: plan_id },
+                updateData,
+                {
+                    new: true,
+                    runValidators: true,
+                }
+            );
+
+
+            if (!updatedPlan) {
+                return appError("更新失敗!", next, 400);
+            }
+
+            return Success(res, "貼文已更新", updatedPlan, 200);
+        }
+    } catch (error) {
+        if (error.name === "ValidationError") {
+            const messages = Object.values(error.errors).map((err) => err.message);
+            return appError(messages.join(", "), next, 400);
+        }
+        return appError(error.message, next, 500);
+    }
+});
+
+
+
 
 exports.getPlanClient = handleErrorAsync(async (req, res, next) => {
     //

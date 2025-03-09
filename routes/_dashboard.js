@@ -22,13 +22,13 @@ const validatePlanId = (req, res, next) => {
 
 router.get('/plan/:plan_id', isAuth, planController.getPlanAdmin);
 router.get('/plan/:plan_id/detail', isAuth, planController.getPlanAdminByID);
-/* router.put('/plan/:plan_id', isAuth, planController.updatePlanById);
- */
+router.put('/plan/:plan_id/detail', isAuth, uploadPlanNewsMiddleware, planController.updatePlanAdminByID);
+
 //計畫回饋
 router.get('/plan/:plan_id/rewards', planRewardsController.getAllRewards);
 router.get('/plan/:plan_id/rewards/:id', planRewardsController.getRewardByID);
-router.post('/plan/:plan_id/rewards', uploadPlanNewsMiddleware, planRewardsController.createReward);
-router.put('/plan/:plan_id/rewards/:id', uploadPlanNewsMiddleware, planRewardsController.updateRewardByID);
+router.post('/plan/:plan_id/rewards', isAuth, uploadPlanNewsMiddleware, planRewardsController.createReward);
+router.put('/plan/:plan_id/rewards/:id', isAuth, uploadPlanNewsMiddleware, planRewardsController.updateRewardByID);
 router.delete('/plan/:plan_id/rewards/:id', planRewardsController.deleteRewardByID);
 
 //Admin
