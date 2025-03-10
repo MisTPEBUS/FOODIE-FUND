@@ -51,26 +51,30 @@ const app = express();
 const session = require('express-session');
 app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
 const allowedOrigins = [
-  'https://foodiefund.vercel.app',
-  'https://notify-react-next-3372.vercel.app',
-  'https://mistpebus.github.io',
-  'http://127.0.0.1:3000',
-  'http://localhost:3000'  // Removed the trailing slash
+  "https://ccore.newebpay.com",  // ✅ 藍新金流 API
+  "https://foodiefund.vercel.app", // ✅ 你的前端
+  "https://notify-react-next-3372.vercel.app",
+  "https://mistpebus.github.io",
+  "http://127.0.0.1:3000",
+  "http://localhost:3000"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      console.error("❌ CORS 阻擋:", origin);
+      callback(new Error("Not allowed by CORS"));
     }
   },
-  methods: ["POST", "GET"],
+  methods: ["POST", "GET", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
+  credentials: true
 }));
-// 如果需要處理 OPTIONS 預檢請求，也可以這樣做：
-app.options('*', cors());
+
+// ✅ 確保 OPTIONS 預檢請求通過
+app.options("*", cors());
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -208,8 +212,13 @@ app.post("/api/payment-result", (req, res) => {
   // 取得訂單編號 (order_id)
   const orderId = req.body.MerchantOrderNo || "unknown";
 
-  // 轉跳到前端 `/payment-result/:order_id`
-  res.redirect(`https://foodiefund.vercel.app/payment-successful/${orderId}`);
+  // ✅ 確保允許跨域
+  res.setHeader("Access-Control-Allow-Origin", "https://foodiefund.vercel.app");
+  res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  // ✅ 讓前端處理轉跳 (避免 CORS 問題)
+  res.json({ redirectUrl: `https://foodiefund.vercel.app/payment-successful/${orderId}` });
 });
 
 // 404 錯誤
