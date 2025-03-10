@@ -65,7 +65,9 @@ app.use(cors({
     } else {
       callback(new Error('Not allowed by CORS'));
     }
-  }
+  },
+  methods: ["POST", "GET"],
+  allowedHeaders: ["Content-Type"],
 }));
 // 如果需要處理 OPTIONS 預檢請求，也可以這樣做：
 app.options('*', cors());
