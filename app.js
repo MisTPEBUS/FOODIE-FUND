@@ -222,9 +222,11 @@ app.post("/api/payment-result", (req, res) => {
   res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  // ✅ 讓前端處理轉跳 (避免 CORS 問題)
-  res.json({ redirectUrl: `https://foodiefund.vercel.app/payment-successful` });
+  // ✅ 直接讓用戶瀏覽器跳轉到前端
+  res.redirect(302, `https://foodiefund.vercel.app/payment-successful`);
 });
+
+
 
 // 404 錯誤
 app.use(function (req, res, next) {
