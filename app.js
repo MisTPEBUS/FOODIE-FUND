@@ -52,7 +52,7 @@ const session = require('express-session');
 app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
 const allowedOrigins = [
   'https://foodiefund.vercel.app',
-  'https://react-hw-mocha.vercel.app',
+  'https://notify-react-next-3372.vercel.app/',
   'https://mistpebus.github.io',
   'http://127.0.0.1:3000',
   'http://localhost:3000'  // Removed the trailing slash
@@ -198,6 +198,16 @@ app.post('/api/newebpay/notify', (req, res) => {
 
   // 通知回覆：回傳 "1|OK" 表示成功處理通知（請參照藍新金流文件確認回覆內容）
   res.send('1|OK');
+});
+
+app.post("/api/payment-result", (req, res) => {
+  console.log("📢 收到藍新付款結果:", req.body);
+
+  // 取得訂單編號 (order_id)
+  const orderId = req.body.MerchantOrderNo || "unknown";
+
+  // 轉跳到前端 `/payment-result/:order_id`
+  res.redirect(`https://foodiefund.vercel.app/payment-successful/${orderId}`);
 });
 
 // 404 錯誤
