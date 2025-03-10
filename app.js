@@ -58,8 +58,13 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "http://localhost:3000"
 ];
+app.use(cors({
+  origin: "*", // 允許所有來源
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // 允許的 HTTP 方法
+  allowedHeaders: ["Content-Type", "Authorization"], // 允許的標頭
+}));
 
-app.use(cors(/* {
+/* app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
@@ -71,10 +76,10 @@ app.use(cors(/* {
   methods: ["POST", "GET", "OPTIONS"],
   allowedHeaders: ["Content-Type"],
   credentials: true
-} */));
+})); */
 
 // ✅ 確保 OPTIONS 預檢請求通過
-app.options("*", cors());
+/* app.options("*", cors()); */
 
 app.use(logger("dev"));
 app.use(express.json());
