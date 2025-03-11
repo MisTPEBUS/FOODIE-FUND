@@ -65,6 +65,56 @@ async function getUpdatedPlan(plan_id) {
         return null; // 或者回傳錯誤訊息
     }
 }
+async function getUpdatedPlanD(plan_id) {
+    try {
+        // 查詢資料庫，確保 `plan_id` 是 `ObjectId`
+
+
+        // 預設欄位，確保所有欄位存在
+        let defaultPlan = {
+            activeType: "A",
+            location: "臺北",
+            restaurantType: "",
+            image: "",
+            title: "",
+            info: "",
+            email: "",
+            phone: "",
+            proposer: "",
+            activeTime: "",
+            repurchaseRate: 0,
+            address: "",
+            endAt: "",
+            coverage: 0,
+            avgAmount: 0,
+            targetAmount: 0,
+            totalOrders: 0,
+            totalRefunds: 0,
+            avgDonation: 0
+        };
+
+        if (plan_id === "default") return defaultPlan;
+        let project = await Plan.findById(mongoose.Types.ObjectId(plan_id));
+        // 如果 `project` 查不到，回傳預設值
+        if (!project) {
+            return defaultPlan;
+        }
+
+        // 轉換 MongoDB 文檔為普通物件
+        let projectData = project.toObject();
+
+        // 根據 `defaultPlan` 修改數據，若 `projectData` 沒有對應的欄位，則保留原始類型
+        let updatedPlan = {};
+        for (let key in defaultPlan) {
+            updatedPlan[key] = projectData.hasOwnProperty(key) ? projectData[key] : defaultPlan[key];
+        }
+
+        return updatedPlan;
+    } catch (error) {
+        console.error("Error fetching plan:", error);
+        return null; // 或者回傳錯誤訊息
+    }
+}
 
 
 
@@ -459,7 +509,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
 exports.getPlanAdminByID = handleErrorAsync(async (req, res, next) => {
 
     const { plan_id } = req.params;
-    let resVal = await getUpdatedPlan(plan_id);
+    let resVal = await getUpdatedPlanD(plan_id);
     let orders = [
 
     ];
