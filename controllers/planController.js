@@ -687,7 +687,7 @@ exports.getPlanAdminByID = handleErrorAsync(async (req, res, next) => {
 
     }
 
-
+    plan = plan == {} ? plan : resVal;
     Success(res, "請求成功，回傳所需數據", { plan })
 
 });
