@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: [true, '使用者 ID 為必填'] },
     activeTime: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now, select: false },
-    startedAt: { type: Date, default: Date.now, select: false },
+    startedAt: { type: Date, default: Date.now, },
   },
   {
     versionKey: false,
