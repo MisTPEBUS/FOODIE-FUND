@@ -50,7 +50,7 @@ const userSchema = new mongoose.Schema(
       transform: (doc, ret) => {
         if (ret.createdAt) ret.createdAt = convertToUTC8(ret.createdAt);
         if (ret.updatedAt) ret.updatedAt = convertToUTC8(ret.updatedAt);
-        if (ret.activeTime) ret.activeTime = convertActiveTime(ret.endAt);
+        if (ret.activeTime) ret.activeTime = convertActiveTime(ret.createdAt);
         if (ret.endAt) ret.endAt = convertToUTC8(ret.endAt);
         return ret;
       },

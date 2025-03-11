@@ -85,6 +85,7 @@ async function getUpdatedPlanD(plan_id) {
             repurchaseRate: 0,
             address: "",
             endAt: "",
+            startedAt: "",
             coverage: 0,
             avgAmount: 0,
             targetAmount: 0,
