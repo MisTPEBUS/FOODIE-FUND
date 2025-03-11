@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { convertToUTC8 } = require("../utils/dateUtils");
+const { convertToUTC8, convertActiveTime } = require("../utils/dateUtils");
 
 const userSchema = new mongoose.Schema(
   {
@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema(
     user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: [true, '使用者 ID 為必填'] },
     activeTime: { type: Date, default: Date.now },
     createdAt: { type: Date, default: Date.now, select: false },
+    startedAt: { type: Date, default: Date.now, select: false },
   },
   {
     versionKey: false,
@@ -49,7 +50,7 @@ const userSchema = new mongoose.Schema(
       transform: (doc, ret) => {
         if (ret.createdAt) ret.createdAt = convertToUTC8(ret.createdAt);
         if (ret.updatedAt) ret.updatedAt = convertToUTC8(ret.updatedAt);
-        if (ret.activeTime) ret.activeTime = convertToUTC8(ret.activeTime);
+        if (ret.activeTime) ret.activeTime = convertActiveTime(ret.startedAt);
         if (ret.endAt) ret.endAt = convertToUTC8(ret.endAt);
         return ret;
       },
