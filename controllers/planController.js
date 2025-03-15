@@ -716,7 +716,7 @@ exports.getPlanAdminByID = handleErrorAsync(async (req, res, next) => {
             "avgDonation": getAvgDonation(orders),
         };
     }
-    else if (plan_id == "zcfd369d2bebc04b1d517eb0") {
+    else if (plan_id == "zcfd369d2bebc04b1d517eb09") {
 
         plan = {
             "title": "Test",
