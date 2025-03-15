@@ -22,12 +22,14 @@ function convertActiveTime(time) {
     const now = new Date();
     // 計算兩個時間的差值（以毫秒為單位）
     const diffMs = now - specifiedDate;
-
+    console.log(diffMs);
+    console.log(specifiedDate);
     // 計算天數
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
 
     const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
     return `${diffDays} 天 ${diffHours} 小時`;
 
 }
