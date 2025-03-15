@@ -145,6 +145,32 @@ app.post('/create-order', (req, res) => {
     // 如有其他必要欄位，請依照文件補充
   });
 });
+app.post('/create-order-test', (req, res) => {
+  // 可根據需求調整參數，以下為範例參數
+  console.log(123);
+  const params = {
+    MerchantID: MERCHANT_ID,
+    RespondType: 'JSON',
+    TimeStamp: Math.floor(Date.now() / 1000).toString(),
+    Version: '1.5',
+    MerchantOrderNo: 'ORDER' + Date.now(), // 訂單編號須唯一
+    Amt: 100, // 交易金額
+    ItemDesc: '測試商品'
+    // 其他參數請依藍新科技文件補充
+  };
+
+  const tradeInfo = createTradeInfo(params);
+  const tradeSha = createTradeSha(tradeInfo);
+
+  // 回傳資料給前端，前端可依此組成 HTML 表單並提交到藍新科技金流平台
+  res.json({
+    MerchantID: params.MerchantID,
+    TradeInfo: tradeInfo,
+    TradeSha: tradeSha,
+    Version: params.Version
+    // 如有其他必要欄位，請依照文件補充
+  });
+});
 
 
 /**
@@ -223,7 +249,7 @@ app.post("/api/payment-result", (req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   // ✅ 直接讓用戶瀏覽器跳轉到前端
-  res.redirect(302, `https://foodiefund.vercel.app/payment-successful`);
+  res.redirect(302, `https://foodiefund.vercel.app/payment-successful?OrderNo=${orderId}`);
 });
 
 
