@@ -134,11 +134,6 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         "id": "66fb66d32bebc04b1d517eb0",
         "name": "金華火腿",
         "status": "resolve"
-    },
-    {
-        "id": "zcfd369d2bebc04b1d517eb0",
-        "name": "Test",
-        "status": "reject"
     }];
     console.log(req.user.id);
     let projects = await Plan.find({ user_id: req.user.id }).select("_id title") ?? [];
@@ -716,7 +711,7 @@ exports.getPlanAdminByID = handleErrorAsync(async (req, res, next) => {
             "avgDonation": getAvgDonation(orders),
         };
     }
-    else if (plan_id == "zcfd369d2bebc04b1d517eb09") {
+    else if (plan_id == "zcfd369d2bebc04b1d517eb0") {
 
         plan = {
             "title": "Test",
