@@ -19,6 +19,9 @@ function convertDayToUTC8(date = new Date()) {
 }
 function convertActiveTime(time) {
     const specifiedDate = new Date(time);
+    if (isNaN(specifiedDate.getTime())) {
+        return "0 天 0 小時"; // 無效日期回傳 0
+    }
     const now = new Date();
     // 計算兩個時間的差值（以毫秒為單位）
     const diffMs = now - specifiedDate;
