@@ -121,7 +121,7 @@ function createTradeSha(tradeInfo) {
 // 建立一個建立訂單的 API 範例
 app.post('/create-order', (req, res) => {
   // 可根據需求調整參數，以下為範例參數
-  console.log(123);
+  console.log(req.body);
   const params = {
     MerchantID: MERCHANT_ID,
     RespondType: 'JSON',
