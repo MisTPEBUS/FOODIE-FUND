@@ -18,28 +18,17 @@ function convertDayToUTC8(date = new Date()) {
     return moment(date).tz("Asia/Taipei").format("YYYY-MM-DD");
 }
 function convertActiveTime(time) {
-    if (typeof time !== "string") {
-        return "時間格式錯誤";
-    }
-
-    // 解析時間，部分環境不支援 "+00:00"，需要手動處理
-    let formattedTime = time.replace("+00:00", "Z");
-    const specifiedDate = new Date(formattedTime);
-
-    // 檢查是否為有效日期
-    if (isNaN(specifiedDate.getTime())) {
-        return "無效的日期格式";
-    }
-
+    const specifiedDate = new Date(time);
     const now = new Date();
+    // 計算兩個時間的差值（以毫秒為單位）
     const diffMs = now - specifiedDate;
 
-    // 計算時間差
+    // 計算天數
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+
     const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-
     return `${diffDays} 天 ${diffHours} 小時`;
-
 
 }
 

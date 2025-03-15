@@ -134,6 +134,11 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
         "id": "66fb66d32bebc04b1d517eb0",
         "name": "金華火腿",
         "status": "resolve"
+    },
+    {
+        "id": "zcfd369d2bebc04b1d517eb0",
+        "name": "Test",
+        "status": "reject"
     }];
     console.log(req.user.id);
     let projects = await Plan.find({ user_id: req.user.id }).select("_id title") ?? [];
@@ -243,7 +248,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "email": "ttppoo12144@gmail.com",
                 "phone": "123456789",
                 "proposer": "兔子",
-                "activeTime": convertActiveTime("2025-02-27T01:20:00.511+00:00"),
+                "activeTime": convertActiveTime("2025-02-27T01:20:00"),
                 "repurchaseRate": 0,
                 "address": "地球某個角落",
                 "endAt": "2025-12-26",
@@ -424,7 +429,7 @@ exports.getPlanAdmin = handleErrorAsync(async (req, res, next) => {
                 "email": "abcd@gmail.com",
                 "phone": "123456789",
                 "proposer": "abcd@gmail.com",
-                "activeTime": convertActiveTime("2025-01-27T01:20:00.511+00:00"),
+                "activeTime": convertActiveTime("2025-01-27T01:20:00"),
                 "repurchaseRate": getRepurchaseRate(orders),
                 "address": "地球某個角落",
                 "endAt": "2025-08-26",
