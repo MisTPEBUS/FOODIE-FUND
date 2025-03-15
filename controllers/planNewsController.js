@@ -408,7 +408,7 @@ exports.updateNewsById = handleErrorAsync(async (req, res, next) => {
         ));
     }
 
-    const allowedFields = ["title", "content", "isActive", "isTop", "publicAt,intro"];
+    const allowedFields = ["title", "content", "isActive", "isTop", "publicAt", "intro"];
     const filteredData = {};
     if (typeof updateData.isTop !== 'undefined') { updateData.isTop = convertToBoolean(updateData.isTop); }
     if (typeof updateData.isActive !== 'undefined') { updateData.isActive = convertToBoolean(updateData.isActive); }
