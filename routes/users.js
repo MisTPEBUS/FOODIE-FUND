@@ -180,7 +180,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
       });
 
       /* res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
-      res.redirect(`${process.env.FRONTEST_URL}/redirect?${params.toString()}`);
+      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
     }
 
   }))
