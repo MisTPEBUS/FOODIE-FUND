@@ -179,8 +179,8 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         photo: user.photo,
       });
 
+      /* res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-
     }
 
   }))
