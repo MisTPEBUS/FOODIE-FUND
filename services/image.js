@@ -13,7 +13,7 @@ const upload = multer({
 
     const ext = path.extname(file.originalname).toLowerCase();
 
-    if (ext !== ".jpg" && ext !== ".png" && ext !== ".jpeg" && ext !== ".webp") {
+    if (ext !== ".jpg" && ext !== ".png" && ext !== ".jpeg" && ext !== ".webp" !== ".pdf") {
       cb(new Error("檔案格式錯誤，僅限上傳 jpg、jpeg 與 png 格式。"));
     }
     cb(null, true);
