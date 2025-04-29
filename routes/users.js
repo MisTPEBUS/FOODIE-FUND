@@ -4,73 +4,78 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 const User = require("../models/users.js");
 const jwt = require("jsonwebtoken");
-const {
-  appError,
-} = require("../services/handleResponse.js");
+const { appError } = require("../services/handleResponse.js");
 const { handleErrorAsync } = require("../services/handleResponse.js");
 const { isAuth, generateSendJWT } = require("../services/auth");
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const LineStrategy = require('passport-line').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
-const GitHubStrategy = require('passport-github').Strategy;
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const LineStrategy = require("passport-line").Strategy;
+const FacebookStrategy = require("passport-facebook").Strategy;
+const GitHubStrategy = require("passport-github").Strategy;
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
-console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET)
+console.log(process.env.GOOGLE_AUTH_CLIENT_SECRET);
 /*   callbackURL: `${process.env.SWAGGER_HOST}/v1/api/auth/google/callback`  */
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_AUTH_CLIENTID,
-  clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback`
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_AUTH_CLIENTID,
+      clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+      callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback`,
+    },
+    async (accessToken, refreshToken, profile, cb) => {
+      return cb(null, profile);
+    }
+  )
+);
+passport.use(
+  new GitHubStrategy(
+    {
+      clientID: process.env.GITHUB_CLIENT_ID,
+      clientSecret: process.env.GITHUB_SECRET_KEY,
+      callbackURL: `https://foodiefund.onrender.com/v1/api/auth/github/callback`,
+      /*   callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback` */
+    },
+    async (accessToken, refreshToken, profile, cb) => {
+      console.log("profile_666", profile);
+      return cb(null, profile);
+    }
+  )
+);
 
+passport.use(
+  new LineStrategy(
+    {
+      channelID: "2006309432",
+      channelSecret: "a0b71be06ffdb0a5edab1a54707f5751",
+      callbackURL: `${process.env.BACKENDURL}/v1/api/auth/line/callback`,
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      return done(null, profile);
+    }
+  )
+);
 
-},
-  async (accessToken, refreshToken, profile, cb) => {
-    return cb(null, profile);
-  }
-));
-passport.use(new GitHubStrategy({
-  clientID: process.env.GITHUB_CLIENT_ID,
-  clientSecret: process.env.GITHUB_SECRET_KEY,
-  callbackURL: `https://foodiefund.onrender.com/v1/api/auth/github/callback`
-  /*   callbackURL: `${process.env.BACKENDURL}/v1/api/auth/google/callback` */
-},
-  async (accessToken, refreshToken, profile, cb) => {
-    console.log('profile_666', profile);
-    return cb(null, profile);
-  }
-));
-
-passport.use(new LineStrategy({
-  channelID: '2006309432',
-  channelSecret: 'a0b71be06ffdb0a5edab1a54707f5751',
-  callbackURL: `${process.env.BACKENDURL}/v1/api/auth/line/callback`
-},
-  async (accessToken, refreshToken, profile, done) => {
-
-    return done(null, profile);
-  }
-));
-
-
-router.get('/line/callback',
-  passport.authenticate('line', { session: false }), handleErrorAsync(async (req, res, next) => {
+router.get(
+  "/line/callback",
+  passport.authenticate("line", { session: false }),
+  handleErrorAsync(async (req, res, next) => {
     const tmpID = req.user.id;
-    const user = await User.findOne({ oAuthID: tmpID, memberType: 'line' });
-    console.log('666', user);
-    console.log('6667', req.user.pictureUrl);
+    const user = await User.findOne({ oAuthID: tmpID, memberType: "line" });
+    console.log("666", user);
+    console.log("6667", req.user.pictureUrl);
     if (!user) {
       const tmp = {
         oAuthID: tmpID,
         name: req.user.displayName,
         phto: req.user.pictureUrl,
-        email: '',
+        email: "",
         password: req.user.id,
-        memberType: 'line'
+        memberType: "line",
       };
       const newUser = await User.create(tmp);
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
+        expiresIn: process.env.JWT_EXPIRES_DAY,
       });
       const params = new URLSearchParams({
         token: token,
@@ -79,11 +84,9 @@ router.get('/line/callback',
         photo: req.user.pictureUrl,
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-
-    }
-    else {
+    } else {
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
+        expiresIn: process.env.JWT_EXPIRES_DAY,
       });
       const params = new URLSearchParams({
         token: token,
@@ -93,25 +96,28 @@ router.get('/line/callback',
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
-  }));
+  })
+);
 
-router.get('/github/callback',
-  passport.authenticate('github', { session: false }), handleErrorAsync(async (req, res, next) => {
+router.get(
+  "/github/callback",
+  passport.authenticate("github", { session: false }),
+  handleErrorAsync(async (req, res, next) => {
     const tmpID = req.user.id;
-    const user = await User.findOne({ oAuthID: tmpID, memberType: 'github' });
+    const user = await User.findOne({ oAuthID: tmpID, memberType: "github" });
 
     if (!user) {
       const tmp = {
         oAuthID: tmpID,
         name: req.user.displayName,
-        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
-        email: '',
+        photo: req.user.photos.length > 0 ? req.user.photos[0].value : "",
+        email: "",
         password: tmpID,
-        memberType: 'github'
+        memberType: "github",
       };
       const newUser = await User.create(tmp);
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
+        expiresIn: process.env.JWT_EXPIRES_DAY,
       });
       const params = new URLSearchParams({
         token: token,
@@ -121,42 +127,47 @@ router.get('/github/callback',
       });
 
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-    }
-    else {
-      console.log('user', user)
+    } else {
+      console.log("user", user);
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
+        expiresIn: process.env.JWT_EXPIRES_DAY,
       });
       const params = new URLSearchParams({
         token: token,
         name: user.name,
         email: user.email,
-        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
+        photo: req.user.photos.length > 0 ? req.user.photos[0].value : "",
       });
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
     }
-  }));
+  })
+);
 
-router.get('/google/callback', passport.authenticate('google', { session: false }, /* {
+router.get(
+  "/google/callback",
+  passport.authenticate(
+    "google",
+    { session: false } /* {
   scope: ['email', 'profile'],
-} */),
+} */
+  ),
   handleErrorAsync(async (req, res, next) => {
-    const tmpEmail = (req.user.emails.length > 0) ? req.user.emails[0].value : '';
+    const tmpEmail = req.user.emails.length > 0 ? req.user.emails[0].value : "";
     const tmpID = req.user.id;
-    const user = await User.findOne({ oAuthID: tmpID, memberType: 'google' });
+    const user = await User.findOne({ oAuthID: tmpID, memberType: "google" });
 
     if (!user) {
       const tmp = {
         oAuthID: tmpID,
         name: req.user.displayName,
-        photo: (req.user.photos.length > 0) ? req.user.photos[0].value : '',
+        photo: req.user.photos.length > 0 ? req.user.photos[0].value : "",
         email: tmpEmail,
         password: req.user.id,
-        memberType: 'google'
+        memberType: "google",
       };
       const newUser = await User.create(tmp);
       const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
+        expiresIn: process.env.JWT_EXPIRES_DAY,
       });
       const params = new URLSearchParams({
         token: token,
@@ -166,11 +177,10 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
       });
 
       res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
-    }
-    else {
+    } else {
       //create
       const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES_DAY
+        expiresIn: process.env.JWT_EXPIRES_DAY,
       });
       const params = new URLSearchParams({
         token: token,
@@ -179,19 +189,26 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
         photo: user.photo,
       });
 
-      /* res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`); */
-      res.redirect(`http://localhost:3000/redirect?${params.toString()}`);
+      res.redirect(`${process.env.FRONTENDURL}/redirect?${params.toString()}`);
+      /* res.redirect(`http://localhost:3000/redirect?${params.toString()}`); */
     }
-
-  }))
-
-
+  })
+);
 
 //註冊
 router.post(
   "/sign_up",
   handleErrorAsync(async (req, res, next) => {
-    let { name, email, password, photo, phone, address, date_of_birth, remarks } = req.body;
+    let {
+      name,
+      email,
+      password,
+      photo,
+      phone,
+      address,
+      date_of_birth,
+      remarks,
+    } = req.body;
     if (!name || !email || !password) {
       return next(appError("傳入格式異常!請查閱API文件", next));
     }
@@ -215,7 +232,7 @@ router.post(
     }
     // find user
 
-    const isUser = await User.findOne({ email: email, memberType: 'system' });
+    const isUser = await User.findOne({ email: email, memberType: "system" });
 
     if (isUser) {
       return next(appError("使用者已經註冊", next, 409));
@@ -234,7 +251,7 @@ router.post(
         phone,
         address,
         date_of_birth,
-        remarks
+        remarks,
       });
       generateSendJWT(newUser, 201, res);
     } catch (err) {
@@ -302,14 +319,13 @@ router.post(
          } 
   }
  */
-  }),
+  })
 );
 
 //登入
 router.post(
   "/sign_in",
   handleErrorAsync(async (req, res, next) => {
-
     let { email, password } = req.body;
     if (!email || !password) {
       return next(appError("傳入格式異常!請查閱API文件", next));
@@ -323,8 +339,11 @@ router.post(
       return next(appError("Password欄位不能為空值！", next));
     }
 
-    const user = await User.findOne({ email: email, memberType: 'system' }).select("+password");
-    console.log(user)
+    const user = await User.findOne({
+      email: email,
+      memberType: "system",
+    }).select("+password");
+    console.log(user);
     if (!user) {
       return next(appError("使用者未註冊!", next));
     }
@@ -332,7 +351,6 @@ router.post(
     /*  if (!user.confirmedAt) {
        return next(appError("email未驗證!", next, 403));
      } */
-
 
     const auth = await bcrypt.compare(password, user.password);
     if (!auth) {
@@ -397,7 +415,7 @@ router.post(
       }
     } 
  */
-  }),
+  })
 );
 
 //更新密碼
@@ -492,9 +510,7 @@ router.patch(
       }
     } 
  */
-  }),
+  })
 );
-
-
 
 module.exports = router;
