@@ -16,15 +16,12 @@ const dotenv = require("dotenv");
 
 const plansRoute = require("./routes/plansRoute");
 
-
 dotenv.config({ path: "./config.env" });
-const crypto = require('crypto');
+const crypto = require("crypto");
 
-const HASH_KEY = process.env.HASH_KEY || '';
-const HASH_IV = process.env.HASH_IV || '';
-const MERCHANT_ID = process.env.MERCHANT_ID || '';
-
-
+const HASH_KEY = process.env.HASH_KEY || "";
+const HASH_IV = process.env.HASH_IV || "";
+const MERCHANT_ID = process.env.MERCHANT_ID || "";
 
 const mongoose = require("mongoose");
 
@@ -37,7 +34,7 @@ process.on("uncaughtException", (err) => {
 
 const constr = process.env.DATABASE.replace(
   "<password>",
-  process.env.DATABASE_PASSWORD,
+  process.env.DATABASE_PASSWORD
 );
 
 mongoose.set("strictQuery", false);
@@ -46,23 +43,29 @@ mongoose.connect(constr).then(() => console.log("連線資料成功"));
 
 const app = express();
 
-
-
-const session = require('express-session');
-app.use(session({ secret: 'a0b71be06ffdb0a5edab1a54707f5751', resave: true, saveUninitialized: true }));
+const session = require("express-session");
+app.use(
+  session({
+    secret: "a0b71be06ffdb0a5edab1a54707f5751",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 const allowedOrigins = [
-  "https://ccore.newebpay.com",  // ✅ 藍新金流 API
+  "https://ccore.newebpay.com", // ✅ 藍新金流 API
   "https://foodiefund.vercel.app", // ✅ 你的前端
   "https://notify-react-next-3372.vercel.app",
   "https://mistpebus.github.io",
   "http://127.0.0.1:3000",
-  "http://localhost:3000"
+  "http://localhost:3000",
 ];
-app.use(cors({
-  origin: "*", // 允許所有來源
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // 允許的 HTTP 方法
-  allowedHeaders: ["Content-Type", "Authorization"], // 允許的標頭
-}));
+app.use(
+  cors({
+    origin: "*", // 允許所有來源
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // 允許的 HTTP 方法
+    allowedHeaders: ["Content-Type", "Authorization"], // 允許的標頭
+  })
+);
 
 /* app.use(cors({
   origin: function (origin, callback) {
@@ -96,16 +99,15 @@ app.use("/v1/api/news", newsRouter);
 app.use("/v1/api/plan", plansRoute);
 app.use("/v1/api/dashboard", dashboardRouter);
 
-
 /**
  * 將參數轉換成 URL 查詢字串，再用 AES-256-CBC 加密產生 TradeInfo
  */
 function createTradeInfo(params) {
   // 將物件轉換為 URL query 字串，注意參數排序請參考藍新科技文件
   const queryString = new URLSearchParams(params).toString();
-  const cipher = crypto.createCipheriv('aes-256-cbc', HASH_KEY, HASH_IV);
-  let encrypted = cipher.update(queryString, 'utf8', 'hex');
-  encrypted += cipher.final('hex');
+  const cipher = crypto.createCipheriv("aes-256-cbc", HASH_KEY, HASH_IV);
+  let encrypted = cipher.update(queryString, "utf8", "hex");
+  encrypted += cipher.final("hex");
   return encrypted;
 }
 
@@ -114,22 +116,22 @@ function createTradeInfo(params) {
  */
 function createTradeSha(tradeInfo) {
   const rawString = `HashKey=${HASH_KEY}&${tradeInfo}&HashIV=${HASH_IV}`;
-  const sha = crypto.createHash('sha256').update(rawString).digest('hex');
+  const sha = crypto.createHash("sha256").update(rawString).digest("hex");
   return sha.toUpperCase();
 }
 
 // 建立一個建立訂單的 API 範例
-app.post('/create-order', (req, res) => {
+app.post("/create-order", (req, res) => {
   // 可根據需求調整參數，以下為範例參數
   console.log(req.body);
   const params = {
     MerchantID: MERCHANT_ID,
-    RespondType: 'JSON',
+    RespondType: "JSON",
     TimeStamp: Math.floor(Date.now() / 1000).toString(),
-    Version: '1.5',
-    MerchantOrderNo: 'ORDER' + Date.now(), // 訂單編號須唯一
+    Version: "1.5",
+    MerchantOrderNo: "ORDER" + Date.now(), // 訂單編號須唯一
     Amt: 8888, // 交易金額
-    ItemDesc: '測試商品'
+    ItemDesc: "測試商品",
     // 其他參數請依藍新科技文件補充
   };
 
@@ -141,21 +143,21 @@ app.post('/create-order', (req, res) => {
     MerchantID: params.MerchantID,
     TradeInfo: tradeInfo,
     TradeSha: tradeSha,
-    Version: params.Version
+    Version: params.Version,
     // 如有其他必要欄位，請依照文件補充
   });
 });
-app.post('/create-order-test', (req, res) => {
+app.post("/create-order-test", (req, res) => {
   // 可根據需求調整參數，以下為範例參數
   console.log(123);
   const params = {
     MerchantID: MERCHANT_ID,
-    RespondType: 'JSON',
+    RespondType: "JSON",
     TimeStamp: Math.floor(Date.now() / 1000).toString(),
-    Version: '1.5',
-    MerchantOrderNo: 'ORDER' + Date.now(), // 訂單編號須唯一
+    Version: "1.5",
+    MerchantOrderNo: "ORDER" + Date.now(), // 訂單編號須唯一
     Amt: 100, // 交易金額
-    ItemDesc: '測試商品'
+    ItemDesc: "測試商品",
     // 其他參數請依藍新科技文件補充
   };
 
@@ -167,11 +169,10 @@ app.post('/create-order-test', (req, res) => {
     MerchantID: params.MerchantID,
     TradeInfo: tradeInfo,
     TradeSha: tradeSha,
-    Version: params.Version
+    Version: params.Version,
     // 如有其他必要欄位，請依照文件補充
   });
 });
-
 
 /**
  * 解密 TradeInfo
@@ -179,9 +180,9 @@ app.post('/create-order-test', (req, res) => {
  * @returns {string} 解密後的原始查詢字串
  */
 function decryptTradeInfo(encrypted) {
-  const decipher = crypto.createDecipheriv('aes-256-cbc', HASH_KEY, HASH_IV);
-  let decrypted = decipher.update(encrypted, 'hex', 'utf8');
-  decrypted += decipher.final('utf8');
+  const decipher = crypto.createDecipheriv("aes-256-cbc", HASH_KEY, HASH_IV);
+  let decrypted = decipher.update(encrypted, "hex", "utf8");
+  decrypted += decipher.final("utf8");
   return decrypted;
 }
 
@@ -193,34 +194,38 @@ function decryptTradeInfo(encrypted) {
  */
 function verifyTradeSha(tradeInfo, tradeSha) {
   const rawString = `HashKey=${HASH_KEY}&${tradeInfo}&HashIV=${HASH_IV}`;
-  const sha = crypto.createHash('sha256').update(rawString).digest('hex').toUpperCase();
+  const sha = crypto
+    .createHash("sha256")
+    .update(rawString)
+    .digest("hex")
+    .toUpperCase();
   return sha === tradeSha;
 }
 
 // 藍新金流通知接收路由
-app.post('/api/newebpay/notify', (req, res) => {
-  console.log('接收到藍新金流通知:', req.body);
+app.post("/api/newebpay/notify", (req, res) => {
+  console.log("接收到藍新金流通知:", req.body);
 
   const { MerchantID, TradeInfo, TradeSha, Version } = req.body;
   if (!MerchantID || !TradeInfo || !TradeSha) {
-    console.error('缺少必要參數');
-    return res.status(400).send('缺少必要參數');
+    console.error("缺少必要參數");
+    return res.status(400).send("缺少必要參數");
   }
 
   // 驗證簽章正確性
   if (!verifyTradeSha(TradeInfo, TradeSha)) {
-    console.error('驗證簽章失敗');
-    return res.status(400).send('驗證簽章失敗');
+    console.error("驗證簽章失敗");
+    return res.status(400).send("驗證簽章失敗");
   }
 
   // 解密 TradeInfo 取得交易細節
   let decryptedTradeInfo;
   try {
     decryptedTradeInfo = decryptTradeInfo(TradeInfo);
-    console.log('解密後的 TradeInfo:', decryptedTradeInfo);
+    console.log("解密後的 TradeInfo:", decryptedTradeInfo);
   } catch (error) {
-    console.error('解密失敗:', error);
-    return res.status(400).send('解密失敗');
+    console.error("解密失敗:", error);
+    return res.status(400).send("解密失敗");
   }
 
   // 假設解密後為 URL query string 格式，解析成物件
@@ -229,12 +234,12 @@ app.post('/api/newebpay/notify', (req, res) => {
   for (const [key, value] of params.entries()) {
     orderData[key] = value;
   }
-  console.log('解析後的訂單資料:', orderData);
+  console.log("解析後的訂單資料:", orderData);
 
   // TODO: 根據 orderData 更新訂單狀態，例如寫入資料庫或通知其他系統
 
   // 通知回覆：回傳 "1|OK" 表示成功處理通知（請參照藍新金流文件確認回覆內容）
-  res.send('1|OK');
+  res.send("1|OK");
 });
 
 app.post("/api/payment-result", (req, res) => {
@@ -249,10 +254,79 @@ app.post("/api/payment-result", (req, res) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
   // ✅ 直接讓用戶瀏覽器跳轉到前端
-  res.redirect(302, `https://foodiefund.vercel.app/payment-successful?OrderNo=${orderId}`);
+  res.redirect(
+    302,
+    `https://foodiefund.vercel.app/payment-successful?OrderNo=${orderId}`
+  );
 });
 
+app.get("/login", (req, res) => {
+  const state = "RANDOM_STRING";
+  const scope = "profile openid email";
+  const LINE_CLIENT_ID = process.env.LINE_CLIENT_ID;
+  const LINE_REDIRECT_URI = process.env.LINE_REDIRECT_URI;
 
+  const authUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${LINE_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+    LINE_REDIRECT_URI
+  )}&state=${state}&scope=${scope}`;
+
+  res.redirect(authUrl);
+});
+
+app.get("/callback", async (req, res) => {
+  const LINE_CLIENT_ID = process.env.LINE_CLIENT_ID;
+  const LINE_REDIRECT_URI = process.env.LINE_REDIRECT_URI;
+  const LINE_CLIENT_SECRET = process.env.LINE_CLIENT_SECRET;
+
+  const { code, state } = req.query;
+
+  if (!code) {
+    return res.status(400).send("Missing authorization code");
+  }
+
+  try {
+    // 3. 用 code 換 access token
+    const tokenResponse = await axios.post(
+      "https://api.line.me/oauth2/v2.1/token",
+      qs.stringify({
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: LINE_REDIRECT_URI,
+        client_id: LINE_CLIENT_ID,
+        client_secret: LINE_CLIENT_SECRET,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      }
+    );
+
+    const { access_token, id_token } = tokenResponse.data;
+
+    // 4. 解碼 id_token 取得使用者資訊（如需要）
+    const decoded = jwt.decode(id_token);
+
+    // 可選：用 access_token 呼叫 LINE Profile API（若 scope 有 profile）
+    const profile = await axios.get("https://api.line.me/v2/profile", {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    res.json({
+      message: "Login success",
+      user: {
+        lineId: profile.data.userId,
+        displayName: profile.data.displayName,
+        email: decoded?.email,
+      },
+    });
+  } catch (error) {
+    console.error("LINE OAuth Error:", error);
+    res.status(500).send("LINE authentication failed");
+  }
+});
 
 // 404 錯誤
 app.use(function (req, res, next) {
@@ -302,7 +376,6 @@ app.use(function (err, req, res, next) {
   // production
   else if (process.env.NODE_ENV === "production") {
     if (err.name === "ValidationError") {
-
       err.isOperational = true;
       return resErrorProd(err, res);
     }
