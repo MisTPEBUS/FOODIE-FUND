@@ -7,7 +7,7 @@ const axios = require("axios");
 
 const swaggerUI = require("swagger-ui-express");
 const swaggerFile = require("./swagger_output.json");
-
+const jwt = require("jsonwebtoken");
 const dashboardRouter = require("./routes/_dashboard");
 const usersRouter = require("./routes/users");
 const AccountRouter = require("./routes/Account");
