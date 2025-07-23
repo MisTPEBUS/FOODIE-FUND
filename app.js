@@ -288,15 +288,16 @@ app.get("/callback", async (req, res) => {
 
   try {
     // 3. 用 code 換 access token
+    const params = new URLSearchParams({
+      grant_type: "authorization_code",
+      code,
+      redirect_uri: LINE_REDIRECT_URI,
+      client_id: LINE_CLIENT_ID,
+      client_secret: LINE_CLIENT_SECRET,
+    });
     const tokenResponse = await axios.post(
       "https://api.line.me/oauth2/v2.1/token",
-      qs.stringify({
-        grant_type: "authorization_code",
-        code,
-        redirect_uri: LINE_REDIRECT_URI,
-        client_id: LINE_CLIENT_ID,
-        client_secret: LINE_CLIENT_SECRET,
-      }),
+      params,
       {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
