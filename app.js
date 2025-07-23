@@ -279,7 +279,7 @@ app.get("/callback", async (req, res) => {
   const LINE_CLIENT_SECRET = process.env.LINE_CLIENT_SECRET;
 
   const { code, state } = req.query;
-
+  console.log(code, state);
   if (!code) {
     return res.status(400).send("Missing authorization code");
   }
