@@ -279,9 +279,10 @@ app.get("/callback", async (req, res) => {
   const LINE_CLIENT_SECRET = process.env.LINE_CLIENT_SECRET;
 
   const { code, state } = req.query;
+  console.log(req.query);
   console.log(code, state);
   if (!code) {
-    return res.status(400).send("Missing authorization code");
+    return res.status(400).send("權限XXX 請求失敗，缺少 code 參數");
   }
 
   try {
